@@ -15,7 +15,8 @@ The source system is a Next.js 16 + Supabase app. Everything below was written f
 | 5 | [docs/05-saas-requirements.md](docs/05-saas-requirements.md) | What has to change or be added to make this a SaaS: tenancy, auth, security, configuration, platform features, phasing |
 | 6 | [docs/06-known-issues.md](docs/06-known-issues.md) | Bugs, inconsistencies and limitations in the current system, so they are not copied |
 | 7 | [docs/07-runbook.md](docs/07-runbook.md) | How the current system is run: environment, database bootstrap, seeding, import/export, backups, deploy |
-| — | [reference/supabase-sql/](reference/supabase-sql/) | The current schema SQL, sanitised (placeholder names), for reference |
+| — | [migrations/0001_initial_schema.sql](migrations/0001_initial_schema.sql) | One idempotent file that creates the complete database structure: all 26 tables, keys, constraints, indexes. No data |
+| — | [reference/supabase-sql/](reference/supabase-sql/) | The original incremental SQL files, sanitised (placeholder names), kept only to show how the schema evolved |
 
 ## The product in one paragraph
 

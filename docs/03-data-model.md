@@ -171,6 +171,10 @@ RLS disabled, `grant all to anon`.
 - No RLS statements (Supabase default; app still reads/writes them with anon): everything else.
 - No policies anywhere.
 
+## Consolidated migration
+
+[../migrations/0001_initial_schema.sql](../migrations/0001_initial_schema.sql) creates the final structure of all 26 tables in one idempotent file: every column, key, unique constraint and index, with no seed rows and without the source system's anon grants (those are listed in a commented-out block). Use it to stand up a structurally identical empty database. The per-file history below is only needed to understand how the production database got there.
+
 ## Apply order for a fresh database (current system)
 
 1. `users.sql`, then seed users with the script (rotate the passwords)

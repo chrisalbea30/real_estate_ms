@@ -28,7 +28,7 @@ Node 20+ (Next 16 requirement); the project was last built on Node 24.
 
 ## Database bootstrap (fresh Supabase project)
 
-1. Run the SQL files in the order given in [03-data-model.md](03-data-model.md) through the Supabase SQL editor. They are plain files; there is no migration tool.
+1. Run [../migrations/0001_initial_schema.sql](../migrations/0001_initial_schema.sql) in the Supabase SQL editor; it creates the whole structure in one go. (The original incremental files and their order are listed in [03-data-model.md](03-data-model.md) for history. There is no migration tool.)
 2. Create a public Storage bucket named `dms-files`.
 3. Seed users with `node scripts/seed-users.js` after replacing its passwords, or create users from Settings once an Admin exists.
 4. `role_permissions` needs no seed; missing rows mean allow. Use Settings → Role Permissions to restrict roles.
