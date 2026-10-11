@@ -1,5 +1,7 @@
 'use server'
 
+import { getWorkspaceUsage } from '@/lib/usage'
+import { planOf } from '@/lib/plans'
 import { revalidatePath } from 'next/cache'
 import { AppError, requireContext, requirePerm, type AppContext } from '@/lib/context'
 import { createServerSupabase, type ServerSupabase } from '@/lib/supabase/server'
@@ -172,6 +174,13 @@ export async function savePropertyAction(input: PropertyInput): Promise<ActionRe
       const others = ctx.properties.filter((p) => p.id !== data.id && p.active)
       if (others.length === 0) throw new AppError('At least one property must stay active.')
     }
+    if (data.active) {
+      const limit = planOf(ctx.org.plan).properties
+      const activeOthers = ctx.properties.filter((p) => p.id !== data.id && p.active).length
+      if (limit != null && activeOthers + 1 > limit) {
+        throw new AppError(`The ${planOf(ctx.org.plan).name} plan allows ${limit} active ${limit === 1 ? 'property' : 'properties'} per workspace. Ask us to change your plan under Settings, Billing.`)
+      }
+    }
     const payload = { name: data.name, timezone: data.timezone, address: data.address || null, active: data.active }
     const row = data.id
       ? must(await supabase.from('properties').update(payload).eq('id', data.id).eq('organization_id', ctx.org.id).select().single(), 'Update property')
@@ -279,6 +288,11 @@ export async function removeMemberAction(membershipId: string): Promise<ActionRe
 async function insertInvitation(supabase: ServerSupabase, ctx: AppContext, email: string, roleId: string): Promise<Invitation> {
   // One live link per address: retire older pending invitations for the same email.
   await supabase.from('invitations').update({ status: 'revoked' }).eq('organization_id', ctx.org.id).eq('email', email).eq('status', 'pending')
+  // People limit of the plan: members plus invitations still waiting count as people.
+  const usage = await getWorkspaceUsage(ctx)
+  if (usage.seatLimit != null && usage.seatsUsed + 1 > usage.seatLimit) {
+    throw new AppError(`This workspace has reached its limit of ${usage.seatLimit} people on the ${usage.plan.name} plan. Remove someone, cancel a waiting invitation, or add people to your plan under Settings, Billing.`)
+  }
   const row = must(
     await supabase.from('invitations').insert({ organization_id: ctx.org.id, email, role_id: roleId, invited_by: ctx.userId }).select().single(),
     'Create invitation',

@@ -2011,7 +2011,7 @@ While this box is showing:
 - On a phone: tap **More** (bottom right), then **Settings** under **Admin**.
 - Your own profile is always reachable, even if you cannot see **Settings**: on a computer click the person icon (**Your profile**) at the bottom of the sidebar; on a phone tap **More**, then **Profile**.
 
-Settings is split into ten pages: **Profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Team**, **Roles**, **Data** and **Billing**. On a computer they are listed on the left. On a phone they are a row of buttons across the top that you can swipe sideways.
+Settings is split into eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data** and **Billing**. Opening Settings takes you to **Workspace**. People without permission for Settings see only **Your profile**.
 
 **Who can see which pages**
 - **Profile** is open to everyone.
@@ -2022,6 +2022,30 @@ Settings is split into ten pages: **Profile**, **Organisation**, **Invoices**, *
 **Good to know**
 - On most pages the **Save changes** button stays grey until you actually change something. The text next to it says "You have unsaved changes." or "All changes saved."
 - Forms such as **Add property** or **Invite a team member** open as a pop-up in the middle of the screen on a computer. On a phone they slide up from the bottom. Close them with the **X** or **Cancel**.
+
+#### Workspace
+
+**What it's for:** Seeing your whole workspace on one page: the plan, how many people, properties and files it uses, and shortcuts to manage everything.
+
+A workspace is one business with its own data, people and settings. You pay per workspace.
+
+1. Open **Settings**. The **Workspace** page opens first. You can also tap the workspace box at the top of the menu and choose **Manage workspace**.
+2. Read the top box: your plan, the days left in a free trial, and the price for your number of people.
+3. Read the four meters:
+   **People** is members plus invitations still waiting, against the number your plan covers.
+   **Properties** is the number of active properties against the plan.
+   **Rooms** is not limited on any plan.
+   **Files** is the space used by receipts, documents and photos against the storage allowance.
+4. Under **People**, see who can sign in. Tap **Manage people** to change roles or remove someone.
+5. Tap **Invite people** (top right) to invite someone new. If the plan is full the button reads **Add people to your plan** and opens Billing.
+6. Under **Your data**, see how many bookings, expenses, revenue lines, invoices and documents you have. Tap **Export** to download them.
+7. Under **Manage**, tap any card to open that settings page.
+8. Tap **Create another workspace** only for a separate business. It gets its own data, people and price.
+
+**Good to know**
+- Bookings, expenses and other records are never capped. Only files count towards the storage allowance.
+- A person is anyone who can sign in, plus invitations still waiting. Guests, suppliers and partners you only keep records about do not count.
+- Removing a member or cancelling a waiting invitation frees a place straight away.
 
 #### Profile
 
@@ -2221,15 +2245,15 @@ There are nine lists, shown as tabs: **Expense**, **Booking sources**, **Revenue
 - Prefer deactivating to deleting. An inactive method disappears from forms but stays on old records. If you delete a method, old bookings and expenses keep its name as text but are no longer connected to it.
 - The bin icon only shows if your role is allowed to **Delete** in Settings.
 
-#### Team
+#### People
 
 **What it's for:** Who can sign in to your organisation, and with which role.
 
 The page has two boxes: **Members** (people who already have access) and **Invitations** (links you have created).
 
 **To invite a team member**
-1. Open **Settings**, then **Team**.
-2. Tap **Invite** (top right).
+1. Open **Settings**, then **People**.
+2. Tap **Invite people** (top right).
 3. Type the person's **Email** and choose their **Role**.
 4. Tap **Create invitation**.
 5. A pop-up called **Share the invitation** shows the **Invitation link**. Tap **Copy** and paste the link into a message to the person, or tap **Open in your email app** to start a ready-written email to them.
@@ -2241,7 +2265,7 @@ The page has two boxes: **Members** (people who already have access) and **Invit
 3. They tap **Accept invitation**. The app opens in your organisation.
 
 **To see a link again, or make a new one**
-1. Open **Settings**, then **Team** and find the person under **Invitations**.
+1. Open **Settings**, then **People** and find the person under **Invitations**.
 2. Tap the copy icon (**Show link**) to see and copy the link again. This is only offered while the invitation is pending.
 3. Or tap the circular-arrow icon (**Resend (new link)**) to create a fresh link. The old link stops working.
 
@@ -2351,19 +2375,19 @@ Each role is a tab along the top. The number on the tab is how many members have
 
 #### Billing
 
-**What it's for:** Seeing which plan your organisation is on and how to change it.
+**What it's for:** Seeing which plan the workspace is on, what it costs, and how to change it.
 
-**To ask for an upgrade or a change of plan**
+How the price works: you pay per workspace. Each plan includes a number of people, and each extra person adds a small monthly amount. Every plan includes every screen.
+
 1. Open **Settings**, then **Billing**.
-2. Tap **Contact us to upgrade** (top right), or **Ask to switch** / **Talk to us** under the plan you want.
-3. Your email program opens with a message already written. Add the plan you are interested in and send it.
+2. Read the top box: your plan, the days left in a trial, **People** used against the plan, **Properties**, and the price.
+3. Under **Plans**, set **People who will sign in** with the **+** and **-** buttons. The price of each plan changes to match. Switch between **Monthly** and **Yearly**. The cheapest plan for that number of people is marked "Best fit".
+4. To choose a plan, add people or extend a trial, tap **Contact us to change** or the button on a plan. Your email app opens with a ready-written message. Send it and we set it up.
 
 **Good to know**
-- You cannot pay online in the app. There is no card form and nothing is charged automatically. **Payment method** shows "None on file". Plan changes, trial extensions and invoices are arranged by email with the people who run the service.
-- A new organisation starts on a free **Trial** plan of 14 days. The top box shows how many days are left, or **Trial ended**.
-- At the time of writing the app does not lock you out or limit anything when the trial ends. The date is shown for information.
-- The **Plans** box lists Starter ($24 a month), Growth ($65 a month) and Enterprise (**Custom**), with what each includes. These are the prices when billed yearly; the page says paying monthly costs a little more. Your own plan is marked **Current** and its button reads **Your plan**.
-- The buttons only open an email. If nothing happens when you tap them, your device has no email program set up. Write to the support address shown in the note on the page instead.
+- Online card payment is not available yet. Nothing is ever charged automatically.
+- You cannot change the plan yourself; only the service operator can.
+- When the workspace reaches the number of people in its plan, new invitations are refused until you free a place or add people.
 
 ---
 
@@ -2504,8 +2528,8 @@ Short recipes for everyday jobs. Each one points to the full instructions above.
 4. Tap **Post adjustment**.
 
 ### 13. Add a new team member
-1. Open **Settings**, then **Team**.
-2. Tap **Invite**.
+1. Open **Settings**, then **People**.
+2. Tap **Invite people**.
 3. Type their **Email**, choose their **Role** and tap **Create invitation**.
 4. Tap **Copy** to copy the **Invitation link**, or tap **Open in your email app**.
 5. Send the link to the person yourself. It works for 7 days.

@@ -5,6 +5,7 @@ import { APP_NAME, APP_TAGLINE } from '@/lib/brand'
 import { HeroMock } from '@/components/marketing/HeroMock'
 import { Pricing } from '@/components/marketing/Pricing'
 import { FAQ } from '@/components/marketing/FAQ'
+import { TRIAL_DAYS } from '@/lib/plans'
 
 export const metadata: Metadata = {
   title: `${APP_NAME} · ${APP_TAGLINE}`,
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
 }
 
 const FEATURES = [
-  { icon: BedDouble, title: 'Bookings, occupancy and invoices', text: 'Record stays in seconds, see the month calendar by room, send a tax invoice with a public link. Split payments, deposits and balances due are tracked per booking.' },
-  { icon: Camera, title: 'Receipts scanned into expenses', text: 'Snap a receipt with your phone. Supplier, date, amount, currency and category are read for you and the image is attached to the expense.' },
+  { icon: BedDouble, title: 'Bookings, occupancy and invoices', text: 'Record stays in seconds, see the month calendar by room, share a tax invoice by link. Split payments, deposits and balances due are tracked per booking.' },
+  { icon: Camera, title: 'Receipts scanned into expenses', text: 'Snap a receipt with your phone. Supplier, date, amount, currency and category are read for you, and you can keep the photo with the expense.' },
   { icon: Banknote, title: 'One revenue table everyone trusts', text: 'A booking becomes exactly one revenue row. Manual income sits beside it. Overview, partner dashboard and budget all sum the same table.' },
   { icon: Scale, title: 'Legal and accounting review', text: 'Share expenses and bookings with your lawyer or accountant. They accept, query or reject with notes, then export the month in one click.' },
   { icon: Landmark, title: 'Budgets and partner reporting', text: 'Revenue matrix by room, OPEX and CAPEX items, rent schedule, budget vs actual, capital contributions, ownership and work hours per partner.' },
@@ -51,7 +52,7 @@ export default function LandingPage() {
                 See how it works
               </Link>
             </div>
-            <p className="mt-4 text-sm text-white/55">14-day trial · No card required · Cancel anytime</p>
+            <p className="mt-4 text-sm text-white/55">{TRIAL_DAYS}-day free trial · No card required · Priced per workspace and per person</p>
           </div>
           <div className="animate-in [animation-delay:120ms]">
             <HeroMock />
@@ -110,7 +111,7 @@ export default function LandingPage() {
           <div className="mt-12 grid gap-4 sm:grid-cols-3">
             {[
               { n: '1', t: 'Create your workspace', d: 'Organisation, property, timezone, currency and rooms in one short form.' },
-              { n: '2', t: 'Invite your team', d: 'Owner, Manager, Finance, Legal, Partner, Staff and Viewer roles, or build your own.' },
+              { n: '2', t: 'Invite your people', d: 'Send each person a link and pick their role: Owner, Manager, Finance, Legal, Partner, Staff or Viewer, or build your own.' },
               { n: '3', t: 'Work from your phone', d: 'Record bookings and receipts on the go. Partners and advisers get their dashboards on the desk.' },
             ].map((s) => (
               <div key={s.n} className="flex gap-4">
@@ -164,15 +165,15 @@ export default function LandingPage() {
           <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-gold-400">Built to be trusted</p>
-              <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">Your data, your tenant, your rules</h2>
-              <p className="mt-4 text-white/70">Multi-tenant from the first line of the schema, not bolted on later.</p>
+              <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">Your workspace, your people, your data</h2>
+              <p className="mt-4 text-white/70">Each business gets its own workspace. Nobody outside it can see anything inside it, and inside it each person sees only what their role allows.</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { icon: ShieldCheck, t: 'Row-level security', d: 'Every table is isolated by organisation and permission inside the database itself.' },
-                { icon: Users, t: 'Roles you control', d: 'Seven templates plus a per-module view / add / edit / delete editor for custom roles.' },
-                { icon: Lock, t: 'Private files, encrypted vault', d: 'Attachments served through short-lived signed links. Stored logins encrypted with AES-256.' },
-                { icon: FileSearch, t: 'Audit log', d: 'Who changed what and when, on every business record.' },
+                { icon: ShieldCheck, t: 'A private workspace', d: 'Your bookings, money and files are kept apart from every other customer, and the database itself enforces it.' },
+                { icon: Users, t: 'People and roles you control', d: 'Invite people by link and give each a role. Seven ready-made roles, or set view, add, edit and delete screen by screen.' },
+                { icon: Lock, t: 'Private files, locked passwords', d: 'Receipts and documents open only for signed-in members. Passwords you store for other services are encrypted.' },
+                { icon: FileSearch, t: 'Your data stays yours', d: 'Export every list to Excel whenever you like, and see who changed what and when in the change history.' },
               ].map((s) => (
                 <div key={s.t} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
                   <s.icon className="h-5 w-5 text-gold-400" />
@@ -189,8 +190,8 @@ export default function LandingPage() {
       <section id="pricing" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary">Pricing</p>
-          <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">Simple plans that grow with your rooms</h2>
-          <p className="mt-4 text-muted">Start free for 14 days. Upgrade when the trial ends, or not at all.</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-balance sm:text-4xl">One price per workspace. Add people as your team grows.</h2>
+          <p className="mt-4 text-muted">Every plan includes every screen. You choose how many people sign in. Try it free for {TRIAL_DAYS} days, no card needed.</p>
         </div>
         <div className="mt-12">
           <Pricing />

@@ -44,6 +44,10 @@ for (const t of saas) (await tableExists(t)) ? ok(`table ${t} (0002)`) : bad(`ta
 const col = await fetch(`${url}/rest/v1/guests?select=organization_id&limit=0`, { headers })
 col.status === 200 || col.status === 206 ? ok('guests.organization_id present') : bad('guests.organization_id missing: run migrations/0002_saas_tenancy.sql')
 
+// 0003: plan limits
+const seats = await fetch(`${url}/rest/v1/organizations?select=extra_seats&limit=0`, { headers })
+seats.status === 200 || seats.status === 206 ? ok('plan limits (0003)') : bad('organizations.extra_seats missing: run migrations/0003_plans_and_limits.sql (limits are still checked by the app, but not locked in the database)')
+
 // RPC functions
 const rpc = await fetch(`${url}/rest/v1/rpc/app_role_template`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_role: 'Owner' }) })
 rpc.ok ? ok('function app_role_template()') : bad('function app_role_template() missing or PostgREST schema cache stale (run: notify pgrst, \'reload schema\';)')

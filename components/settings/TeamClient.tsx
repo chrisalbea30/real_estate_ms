@@ -28,13 +28,14 @@ function inviteStatus(i: Invitation): 'pending' | 'expired' | 'accepted' | 'revo
   return i.status
 }
 
-export function TeamClient({ members, roles, invitations, currentUserId }: { members: TeamMember[]; roles: RoleLite[]; invitations: Invitation[]; currentUserId: string }) {
+export function TeamClient({ members, roles, invitations, currentUserId, seats, planName, openInvite }: { members: TeamMember[]; roles: RoleLite[]; invitations: Invitation[]; currentUserId: string; seats: { used: number; limit: number | null }; planName: string; openInvite?: boolean }) {
   const router = useRouter()
   const toast = useToast()
   const confirm = useConfirm()
   const { can, org } = useApp()
   const editable = can('settings', 'edit')
-  const [inviteOpen, setInviteOpen] = useState(false)
+  const full = seats.limit != null && seats.used >= seats.limit
+  const [inviteOpen, setInviteOpen] = useState(Boolean(openInvite) && !full)
   const [share, setShare] = useState<Invitation | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
 
@@ -181,16 +182,22 @@ export function TeamClient({ members, roles, invitations, currentUserId }: { mem
   return (
     <div>
       <PageHeader
-        title="Team"
-        subtitle={`${members.length} member${members.length === 1 ? '' : 's'} · ${pendingCount} pending invitation${pendingCount === 1 ? '' : 's'}`}
+        title="People"
+        subtitle={`${members.length} member${members.length === 1 ? '' : 's'} · ${pendingCount} invitation${pendingCount === 1 ? '' : 's'} waiting · ${seats.limit == null ? `${seats.used} people` : `${seats.used} of ${seats.limit} people on ${planName}`}`}
         actions={
           editable && (
-            <button className="btn-primary" onClick={() => setInviteOpen(true)}>
-              <UserPlus className="h-4 w-4" /> Invite
+            <button className="btn-primary" onClick={() => setInviteOpen(true)} disabled={full} title={full ? 'Your plan is full' : undefined}>
+              <UserPlus className="h-4 w-4" /> Invite people
             </button>
           )
         }
       />
+
+      {full && (
+        <div className="mb-4 rounded-xl border border-warning/30 bg-warning-soft px-4 py-3 text-sm text-warning">
+          This workspace uses all {seats.limit} people included in its plan. Members and invitations that are still waiting both count. Remove someone or cancel a waiting invitation, or <a href="/app/settings/billing" className="font-semibold underline">add people to your plan</a>.
+        </div>
+      )}
 
       <SettingsCard title="Members" description="Who can sign in to this organisation and with which role. Roles are edited under Roles.">
         {members.length === 0 ? (

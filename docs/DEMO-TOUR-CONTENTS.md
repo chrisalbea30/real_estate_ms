@@ -2,7 +2,7 @@
 
 Use this page to jump to one section of the script, [DEMO-TOUR.md](DEMO-TOUR.md). Each title opens that section. The app links use http://localhost:3000. If you present from your live site, find-and-replace that with your site address.
 
-- Full tour: about 97 minutes, 38 sections.
+- Full tour: about 99 minutes, 38 sections.
 - Short version (15 minutes): sections 5, 7 (skip the email step), 10, 11 (scan only), 13 and 15 (first and fourth tab only).
 - Read first: [Before you start](DEMO-TOUR.md#before-you-start).
 - At the end: [Appendix A. Coverage checklist](DEMO-TOUR.md#appendix-a-coverage-checklist) and [Appendix B. If they ask](DEMO-TOUR.md#appendix-b-if-they-ask).
@@ -68,10 +68,10 @@ Sections that add "Demo" records and depend on each other: 7 adds the demo booki
 | 28 | [Settings: Categories](DEMO-TOUR.md#28-settings-categories) | 1 min | [http://localhost:3000/app/settings/categories](http://localhost:3000/app/settings/categories) | The nine drop-down lists you can change. |
 | 29 | [Settings: Properties](DEMO-TOUR.md#29-settings-properties) | 1 min | [http://localhost:3000/app/settings/properties](http://localhost:3000/app/settings/properties) | Several properties in one organisation and the workspace switcher. |
 | 30 | [Settings: Payments](DEMO-TOUR.md#30-settings-payments) | 1 min | [http://localhost:3000/app/settings/payments](http://localhost:3000/app/settings/payments) | Payment methods linked to accounts. |
-| 31 | [Settings: Team](DEMO-TOUR.md#31-settings-team) | 2 min | [http://localhost:3000/app/settings/team](http://localhost:3000/app/settings/team) | Members, and an invitation link created and copied live. |
+| 31 | [Settings: People](DEMO-TOUR.md#31-settings-people) | 2 min | [http://localhost:3000/app/settings/team](http://localhost:3000/app/settings/team) | Members, the people limit of the plan, and an invitation link created and copied live. |
 | 32 | [Settings: Roles](DEMO-TOUR.md#32-settings-roles) | 2 min | [http://localhost:3000/app/settings/roles](http://localhost:3000/app/settings/roles) | The permission grid per role and a custom role. |
 | 33 | [Settings: Data](DEMO-TOUR.md#33-settings-data) | 3 min | [http://localhost:3000/app/settings/data](http://localhost:3000/app/settings/data) | Export of every list, the audit log, and the Reset data box (shown, not run). |
-| 34 | [Settings: Billing](DEMO-TOUR.md#34-settings-billing) | 1 min | [http://localhost:3000/app/settings/billing](http://localhost:3000/app/settings/billing) | The plan, the trial and how an upgrade is requested. |
+| 34 | [Settings: Workspace and Billing](DEMO-TOUR.md#34-settings-workspace-and-billing) | 3 min | [http://localhost:3000/app/settings/workspace](http://localhost:3000/app/settings/workspace) | The workspace page (plan, people, properties, files, data) and the price per workspace and per person. |
 
 ## Finish
 
@@ -82,4 +82,4 @@ Sections that add "Demo" records and depend on each other: 7 adds the demo booki
 | 37 | [Dark theme](DEMO-TOUR.md#37-dark-theme) | 1 min | [http://localhost:3000/app](http://localhost:3000/app) | Light, dark and automatic theme. |
 | 38 | [Closing](DEMO-TOUR.md#38-closing) | 2 min | [http://localhost:3000/app](http://localhost:3000/app) | The recap, the three honest limits and the next step. |
 
-Total: 97 minutes.
+Total: 99 minutes.

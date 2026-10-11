@@ -62,8 +62,8 @@ export function OnboardingForm({ hasOrg }: { hasOrg: boolean }) {
         <span className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-soft text-primary-soft-fg">
           <Building2 className="h-6 w-6" />
         </span>
-        <h1 className="font-display text-3xl font-semibold text-ink">{hasOrg ? 'Add another organisation' : 'Set up your workspace'}</h1>
-        <p className="mt-1 text-sm text-muted">Takes a minute. Everything can be changed later in Settings.</p>
+        <h1 className="font-display text-3xl font-semibold text-ink">{hasOrg ? 'Create another workspace' : 'Set up your workspace'}</h1>
+        <p className="mt-1 text-sm text-muted">{hasOrg ? 'A new workspace has its own data, people and plan, and is priced separately.' : 'Takes a minute. Everything can be changed later in Settings.'}</p>
         {hasOrg && (
           <p className="mt-2 text-sm">
             <Link href="/app" className="font-medium text-primary hover:underline">← Back to your workspace</Link>
@@ -74,7 +74,7 @@ export function OnboardingForm({ hasOrg }: { hasOrg: boolean }) {
       <form onSubmit={submit} className="card p-5 sm:p-6">
         <FormGrid>
           <FormError error={error} />
-          <TextField label="Organisation / company name" required value={form.org_name} onChange={set('org_name')} error={errors.org_name} placeholder="Seaview Resort Co." containerClassName="sm:col-span-2" autoFocus />
+          <TextField label="Workspace name (your business)" required value={form.org_name} onChange={set('org_name')} error={errors.org_name} placeholder="Seaview Resort Co." containerClassName="sm:col-span-2" autoFocus />
           <TextField label="First property name" value={form.property_name} onChange={set('property_name')} error={errors.property_name} placeholder="Seaview Resort" hint="Defaults to the organisation name" containerClassName="sm:col-span-2" />
           <SelectField label="Property timezone" value={timezone} onChange={set('timezone')} options={tzOptions} error={errors.timezone} />
           <SelectField label="Base currency" value={form.currency} onChange={set('currency')} options={COMMON_CURRENCIES} error={errors.currency} hint="All amounts are stored in this currency" />
@@ -87,7 +87,7 @@ export function OnboardingForm({ hasOrg }: { hasOrg: boolean }) {
 
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
           <ul className="space-y-1 text-xs text-muted">
-            <li className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> You become the Owner of this organisation</li>
+            <li className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> You become the Owner of this workspace and can invite your people next</li>
             <li className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-success" /> Bank and Cash accounts plus payment methods are created</li>
           </ul>
           <button className="btn-primary sm:min-w-44" disabled={busy}>

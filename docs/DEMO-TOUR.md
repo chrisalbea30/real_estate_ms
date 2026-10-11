@@ -4,7 +4,7 @@ Links use http://localhost:3000. If you present from your live site, find-and-re
 
 This is one continuous presentation of the whole app, in story order. Each section tells you where to go, what to say and exactly what to click. Button and field names are in **bold** and are written as they appear on screen. To jump to one section only, use [DEMO-TOUR-CONTENTS.md](DEMO-TOUR-CONTENTS.md).
 
-Full tour: about 97 minutes. Short version: 15 minutes (see below).
+Full tour: about 99 minutes. Short version: 15 minutes (see below).
 
 ---
 
@@ -423,7 +423,7 @@ Do these before the audience arrives.
 **Say:** Settings has ten pages, listed on the left. The first one is personal and is open to everyone, whatever their role.
 
 **Do:**
-1. Point at the ten pages: **Profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Team**, **Roles**, **Data**, **Billing**.
+1. Point at the eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data**, **Billing**.
 2. Show **Display name** (**Full name**) and the locked **Email**.
 3. Show **Change password**: **Current password**, **New password**, **Confirm new password**, **Update password**. Do not change it.
 4. Under **Appearance** show **Light**, **Dark**, **Auto**.
@@ -494,18 +494,20 @@ Do these before the audience arrives.
 2. Tap the pencil icon (**Edit**) on "Cash" to show **Name**, **Account**, **Order** and **Active**. Close it.
 3. Point at **Add method**. Say: this is why "Cash" on the demo booking raised the Cash balance in section 12.
 
-## 31. Settings: Team
+## 31. Settings: People
 
 **Time:** 2 min | **Go to:** [http://localhost:3000/app/settings/team](http://localhost:3000/app/settings/team)
 
-**Say:** You decide who gets in and with which role. Inviting someone takes ten seconds.
+**Say:** You decide who gets in and with which role. Inviting someone takes ten seconds, and you always see how many people your plan covers.
 
 **Do:**
-1. Show the two boxes **Members** and **Invitations**. Your own row is marked **You**. Point at the **Role** drop-down, the **Active** switch (off means **Suspended**) and the bin icon (**Remove from organisation**).
-2. Tap **Invite**. **Email** "reception@seaview.com", **Role** "Staff". Tap **Create invitation**.
-3. In **Share the invitation**, point at the **Invitation link**. Tap **Copy**. Point at **Open in your email app**. Tap **Done**.
-4. Say honestly: the app does not send the invitation. You paste the link into a message yourself. It works once and for 7 days.
-5. Under **Invitations**, show the status, the **Expires** column, the copy icon (**Show link**), the circular arrow (**Resend (new link)**) and the stop icon (**Revoke**).
+1. Read the line under the title: members, invitations waiting, and "N of 5 people on Free trial". Say: every member and every invitation still waiting counts as one person on the plan.
+2. Show the two boxes **Members** and **Invitations**. Your own row is marked **You**. Point at the **Role** drop-down, the **Active** switch (off means **Suspended**) and the bin icon (**Remove from organisation**).
+3. Tap **Invite people**. **Email** "reception@seaview.com", **Role** "Staff". Tap **Create invitation**.
+4. In **Share the invitation**, point at the **Invitation link**. Tap **Copy**. Point at **Open in your email app**. Tap **Done**.
+5. Say honestly: the app does not send the invitation. You paste the link into a message yourself. It works once and for 7 days.
+6. Under **Invitations**, show the status, the **Expires** column, the copy icon (**Show link**), the circular arrow (**Resend (new link)**) and the stop icon (**Revoke**).
+7. Say: when the plan is full, **Invite people** switches off and a yellow box explains how to free a place or add people to the plan. The same **Invite people** button is at the bottom of the sidebar and in the workspace box at the top of the menu.
 
 **Clean up:** keep the invitation; it is used in section 35. If you skip section 35, tap **Revoke** and confirm.
 
@@ -537,16 +539,21 @@ Do these before the audience arrives.
 4. Use the **All tables** drop-down to choose "guests" and find the demo booking being added, changed and deleted. Say: list names appear in technical form here.
 5. Scroll to the red **Reset data** box and read its description ("Danger zone"). Show the tick boxes, **Select all**, the box where the organisation name must be typed, and the grey **Delete selected data** button. **Do not tick anything and do not run it.** Say: it deletes permanently, only an Owner sees it, and it never touches settings, rooms, team or roles.
 
-## 34. Settings: Billing
+## 34. Settings: Workspace and Billing
 
-**Time:** 1 min | **Go to:** [http://localhost:3000/app/settings/billing](http://localhost:3000/app/settings/billing)
+**Time:** 3 min | **Go to:** [http://localhost:3000/app/settings/workspace](http://localhost:3000/app/settings/workspace)
 
-**Say:** You always see which plan you are on. Changing plan today is done by email with us.
+**Say:** One page shows what this workspace is: its plan, its people, its properties and its data. The price is simple: one price per workspace, with people included, and a small amount for each extra person.
 
 **Do:**
-1. Show the top box with the plan (**Trial**) and the days left or **Trial ended**. Show **Payment method** "None on file".
-2. Under **Plans**, show Starter, Growth and Enterprise (**Custom**), the one marked **Current**, and the buttons **Ask to switch** / **Talk to us**.
-3. Point at **Contact us to upgrade**. Say honestly: there is no card form, nothing is charged automatically, and the button opens an email.
+1. On **Workspace**, read the top box: the plan (**Free trial**), the days left, and what a paid plan would cost for your number of people.
+2. Read the four meters: **People** (members plus invitations waiting, against the plan), **Properties**, **Rooms** (not limited on any plan) and **Files** (receipts, documents and photos against the storage allowance).
+3. Show the **People** box and **Manage people**. Point at **Invite people** at the top right.
+4. Show **Your data**: the number of bookings, expenses, revenue lines, invoices and documents. Say: records are not capped on any plan, the data is theirs, and **Export** gets all of it out.
+5. Show **Manage** (shortcuts to every settings page) and **Create another workspace**. Say: a second business is a second workspace, priced separately.
+6. Tap **Plan and price** to open **Billing**. Under **Plans**, tap the **+** next to **People who will sign in** and watch the prices change. Switch **Monthly** / **Yearly**. Point at "Best fit".
+7. Point at **Contact us to change**. Say honestly: there is no card form, nothing is charged automatically, and the button opens an email.
+8. Tap the workspace box at the top of the sidebar: it lists your workspaces and properties, and holds **Manage workspace**, **Invite people** and **Create another workspace**.
 
 ## 35. Roles demo
 
@@ -627,7 +634,7 @@ Every screen, tab and feature, and the section where it is shown.
 | Sidebar and its six groups | 4 |
 | Currency switch and rate refresh dot | 4 |
 | Theme switch (light, dark, automatic) | 1, 25, 37 |
-| Workspace / property switcher, New organisation | 3, 4, 29 |
+| Workspace box in the menu: switch workspace or property, Manage workspace, Invite people, Create another workspace | 3, 4, 29, 34 |
 | Phone bottom bar, More menu, top bar | 4, 36 |
 | Install on phone (Android, iPhone) | 36 |
 | Search | 7 |
@@ -712,12 +719,13 @@ Every screen, tab and feature, and the section where it is shown.
 | Categories: nine lists | 28 |
 | Properties: Add property, Switch to this property, Manage rooms | 29 |
 | Payments: methods linked to accounts | 30 |
-| Team: Members, Invite, Invitation link, Resend, Revoke, role change, suspend, remove | 31, 35 |
+| People: Members, Invite people, Invitation link, Resend, Revoke, role change, suspend, remove, people limit of the plan | 31, 35 |
 | Roles: permission matrix (View, Add, Edit, Delete), Add role, Rename, Delete | 32 |
 | Data: export tables, Export everything | 33 |
 | Data: Audit log | 33 |
 | Data: Reset data (shown, not run) | 33 |
-| Billing: plan, trial, Contact us to upgrade | 34 |
+| Workspace: plan, people, properties, rooms and files meters, your data, manage shortcuts, create another workspace | 34 |
+| Billing: plan, trial, price per workspace and per person, plan calculator, Contact us to change | 34 |
 | Roles and who can see what (live with a Staff account) | 32, 35 |
 
 ---
@@ -728,6 +736,9 @@ Short, honest answers.
 
 **Does it send emails?**
 No. The app sends no invoices, invitations, reminders or password resets by itself. For an invoice or an invitation it opens a ready-written message in your own email app, or gives you a link to copy, and you send it.
+
+**How is the price worked out?**
+Per workspace. Each plan includes a number of people, and each extra person adds a small monthly amount. Every plan includes every screen. Members and invitations still waiting count as people; guests, suppliers and partners you only record do not. Bookings and other records are not capped; only files count towards a storage allowance.
 
 **Can guests pay online? Can I pay my subscription by card?**
 Not today. Online payment is not connected. Guest payments are recorded by hand on the booking. The Billing page shows the plans and opens an email to us; nothing is charged automatically.

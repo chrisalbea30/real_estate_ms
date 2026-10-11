@@ -3,7 +3,8 @@
 import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { ChevronDown, LogOut, MoreHorizontal, Plus, RefreshCw, UserCircle2, Check } from 'lucide-react'
+import { Briefcase, ChevronDown, LogOut, MoreHorizontal, Plus, RefreshCw, UserCircle2, UserPlus, Check } from 'lucide-react'
+import { trialState } from '@/lib/plans'
 import { APP_NAME } from '@/lib/brand'
 import { Logo } from '@/components/Logo'
 import { MODULES, MODULE_GROUPS, moduleForPath, type ModuleDef } from '@/lib/modules'
@@ -64,12 +65,12 @@ function CurrencyToggle({ className }: { className?: string }) {
 
 /* ---------------- Org / property switcher ---------------- */
 function ContextSwitcher({ className, compact }: { className?: string; compact?: boolean }) {
-  const { org, property, properties, memberships } = useApp()
+  const { org, property, properties, memberships, can } = useApp()
   const [open, setOpen] = useState(false)
   const [pending, start] = useTransition()
   const multiOrg = memberships.length > 1
-  const multiProp = properties.filter((p) => p.active).length > 1
-  const canSwitch = multiOrg || multiProp
+  const canSwitch = true
+  const admin = can('settings', 'view')
 
   return (
     <>
@@ -84,11 +85,11 @@ function ContextSwitcher({ className, compact }: { className?: string; compact?:
         </div>
         {canSwitch && <ChevronDown className="h-4 w-4 shrink-0 text-muted" />}
       </button>
-      <Modal open={open} onClose={() => setOpen(false)} title="Switch workspace" size="sm">
+      <Modal open={open} onClose={() => setOpen(false)} title="Workspace" subtitle={org.name} size="sm">
         {pending && <p className="mb-3 text-xs text-muted">Switching…</p>}
         {multiOrg && (
           <div className="mb-4">
-            <div className="label">Organisation</div>
+            <div className="label">Your workspaces</div>
             <div className="space-y-1">
               {memberships.map((m) => (
                 <button
@@ -120,11 +121,36 @@ function ContextSwitcher({ className, compact }: { className?: string; compact?:
               ))}
           </div>
         </div>
-        <Link href="/onboarding" className="mt-4 flex items-center gap-2 text-sm font-medium text-primary hover:underline" onClick={() => setOpen(false)}>
-          <Plus className="h-4 w-4" /> New organisation
-        </Link>
+        <div className="mt-4 grid gap-2 border-t border-line pt-4">
+          {admin && (
+            <Link href="/app/settings/workspace" className="btn-secondary justify-start" onClick={() => setOpen(false)}>
+              <Briefcase className="h-4 w-4" /> Manage workspace
+            </Link>
+          )}
+          {can('settings', 'edit') && (
+            <Link href="/app/settings/team?invite=1" className="btn-secondary justify-start" onClick={() => setOpen(false)}>
+              <UserPlus className="h-4 w-4" /> Invite people
+            </Link>
+          )}
+          <Link href="/onboarding" className="btn-ghost justify-start" onClick={() => setOpen(false)}>
+            <Plus className="h-4 w-4" /> Create another workspace
+          </Link>
+        </div>
       </Modal>
     </>
+  )
+}
+
+/* ---------------- Trial notice ---------------- */
+function TrialNotice({ className }: { className?: string }) {
+  const { org, today, can } = useApp()
+  const t = trialState(org.plan, org.trial_ends_at ? org.trial_ends_at.slice(0, 10) : null, today)
+  if (!t.onTrial || t.daysLeft === null) return null
+  const href = can('settings', 'view') ? '/app/settings/billing' : '/app/settings/profile'
+  return (
+    <Link href={href} className={cn('block rounded-xl border px-3 py-2 text-xs', t.ended ? 'border-danger/30 bg-danger-soft text-danger' : t.daysLeft <= 3 ? 'border-warning/30 bg-warning-soft text-warning' : 'border-line bg-surface-2 text-ink-2', className)}>
+      <span className="font-semibold">{t.ended ? 'Your free trial has ended.' : `Free trial: ${t.daysLeft} day${t.daysLeft === 1 ? '' : 's'} left.`}</span> {t.ended ? 'Choose a plan to keep going.' : 'See plans.'}
+    </Link>
   )
 }
 
@@ -132,7 +158,7 @@ function ContextSwitcher({ className, compact }: { className?: string; compact?:
 function Sidebar() {
   const pathname = usePathname()
   const allowed = useAllowedModules()
-  const { user, role } = useApp()
+  const { user, role, can } = useApp()
 
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 flex-col border-r border-line bg-surface lg:flex">
@@ -174,6 +200,12 @@ function Sidebar() {
         })}
       </nav>
       <div className="space-y-3 border-t border-line p-3">
+        <TrialNotice />
+        {can('settings', 'edit') && (
+          <Link href="/app/settings/team?invite=1" className="btn-soft btn-sm w-full">
+            <UserPlus className="h-4 w-4" /> Invite people
+          </Link>
+        )}
         <div className="flex items-center justify-between gap-2">
           <CurrencyToggle />
           <ThemeToggle compact />
@@ -259,7 +291,7 @@ function BottomNav({ onMore }: { onMore: () => void }) {
 function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname()
   const allowed = useAllowedModules()
-  const { user, role, org } = useApp()
+  const { user, role, org, can } = useApp()
   return (
     <Modal open={open} onClose={onClose} title="Menu" subtitle={org.name} size="md">
       <div className="mb-4 flex items-center gap-3 rounded-xl bg-surface-2 p-3">
@@ -295,6 +327,12 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
           </div>
         )
       })}
+      <TrialNotice className="mb-3" />
+      {can('settings', 'edit') && (
+        <Link href="/app/settings/team?invite=1" onClick={onClose} className="btn-soft mb-2 w-full">
+          <UserPlus className="h-4 w-4" /> Invite people
+        </Link>
+      )}
       <div className="mt-2 flex gap-2">
         <Link href="/app/settings/profile" onClick={onClose} className="btn-secondary flex-1">
           <UserCircle2 className="h-4 w-4" /> Profile

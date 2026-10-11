@@ -17,7 +17,7 @@ npm run dev                 # http://localhost:3000
 
 ### Supabase setup (once per project)
 
-1. SQL editor → run `migrations/0001_initial_schema.sql`, then `migrations/0002_saas_tenancy.sql` (idempotent; creates tenancy, roles, ledger, invoices, RLS, the private bucket).
+1. SQL editor → run `migrations/0001_initial_schema.sql`, then `migrations/0002_saas_tenancy.sql` and `migrations/0003_plans_and_limits.sql` (idempotent; creates tenancy, roles, ledger, invoices, RLS, the private bucket).
 2. Authentication → URL configuration → add `http://localhost:3000/auth/callback` and your production callback to **Redirect URLs**; set the Site URL.
 3. Authentication → Providers → Email enabled (confirmation on or off, both work).
 4. `.env`: add `OPENAI_API_KEY` (receipt scanning), `CREDENTIALS_ENCRYPTION_KEY` (login vault), `CRON_SECRET` (FX refresh) — see `.env.example`.
@@ -45,7 +45,8 @@ Sign up at `/signup` (you are signed in immediately; no email is sent unless `EM
 | [docs/DEMO-TOUR.md](docs/DEMO-TOUR.md) | **Presenter's script** for a live demo, with links and what to click; jump list in [DEMO-TOUR-CONTENTS.md](docs/DEMO-TOUR-CONTENTS.md); designed page in [DEMO-TOUR.html](docs/DEMO-TOUR.html) (rebuild with `node scripts/build-tour-html.mjs`) |
 | [docs/08-app-guide.md](docs/08-app-guide.md) | **How this application is built**: stack, layout, tenancy, module recipe, UI kit, mobile rules |
 | [docs/01-overview.md](docs/01-overview.md) … [docs/07-runbook.md](docs/07-runbook.md) | Notes on the original single-tenant system: screens, formulas, data model, known issues, SaaS requirements |
-| [migrations/](migrations/) | `0001` original structure, `0002` SaaS layer |
+| [migrations/](migrations/) | `0001` original structure, `0002` SaaS layer, `0003` plan limits (people and properties per workspace) |
+| [lib/plans.ts](lib/plans.ts) | **Pricing and plan limits in one place** (per workspace, people included, price per extra person) |
 | [reference/supabase-sql/](reference/supabase-sql/) | The original incremental SQL (history only) |
 
 ## Deployment
