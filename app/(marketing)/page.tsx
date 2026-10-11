@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, BedDouble, Receipt, Banknote, Scale, Landmark, ClipboardList, ShieldCheck, Smartphone, Lock, FileSearch, Users, Sparkles, Camera, Download, History } from 'lucide-react'
+import { PlayCircle, ArrowRight, BedDouble, Receipt, Banknote, Scale, Landmark, ClipboardList, ShieldCheck, Smartphone, Lock, FileSearch, Users, Sparkles, Camera, Download, History } from 'lucide-react'
 import { APP_NAME, APP_TAGLINE } from '@/lib/brand'
 import { HeroMock } from '@/components/marketing/HeroMock'
 import { Pricing } from '@/components/marketing/Pricing'
@@ -48,8 +48,8 @@ export default function LandingPage() {
               <Link href="/signup" className="btn bg-gold-400 text-burgundy-950 hover:bg-gold-300 px-6 text-base">
                 {SIGNUP_CTA} <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="#how" className="btn border border-white/25 bg-white/5 text-white hover:bg-white/10 px-6 text-base">
-                See how it works
+              <Link href="/videos" className="btn border border-white/25 bg-white/5 text-white hover:bg-white/10 px-6 text-base">
+                <PlayCircle className="h-4 w-4" /> Watch the 2-minute video
               </Link>
             </div>
             <p className="mt-4 text-sm text-white/55">{SHOW_PRICING ? `${TRIAL_DAYS}-day free trial · No card required · Priced per workspace and per person` : 'Set up in a minute · No card required'}</p>

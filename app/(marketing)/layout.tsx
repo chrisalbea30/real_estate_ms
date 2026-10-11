@@ -23,6 +23,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <ul className="space-y-2 text-sm text-ink-2">
               <li><Link href="/#features" className="hover:text-primary">Features</Link></li>
               <li><Link href="/#how" className="hover:text-primary">How it works</Link></li>
+              <li><Link href="/videos" className="hover:text-primary">Videos</Link></li>
               {SHOW_PRICING && <li><Link href="/#pricing" className="hover:text-primary">Pricing</Link></li>}
               <li><Link href="/#faq" className="hover:text-primary">FAQ</Link></li>
             </ul>

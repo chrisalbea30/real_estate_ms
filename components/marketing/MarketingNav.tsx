@@ -13,6 +13,7 @@ const LINKS = [
   { href: '/#features', label: 'Features' },
   { href: '/#how', label: 'How it works' },
   { href: '/#mobile', label: 'Mobile' },
+  { href: '/videos', label: 'Videos' },
   ...(SHOW_PRICING ? [{ href: '/#pricing', label: 'Pricing' }] : []),
   { href: '/#faq', label: 'FAQ' },
 ]
