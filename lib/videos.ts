@@ -150,6 +150,15 @@ export const VIDEO_GROUPS: VideoGroup[] = [
         audience: 'Owners, managers and finance',
       },
       {
+        slug: 'expenses',
+        file: '/videos/Sojourn_Tutorial_12_Expenses.mp4',
+        title: 'Expenses',
+        seconds: 60,
+        summary: 'Every cost of the business with its receipt attached. Photograph a receipt and the form fills itself in for you to check.',
+        points: ['Adding an expense: supplier, category, amount and how it was paid', 'Scanning a receipt photo to fill in the form', 'Keeping the receipt or invoice with the expense', 'Sharing an expense with your accountant or lawyer, and filtering and exporting the list'],
+        audience: 'Managers and finance',
+      },
+      {
         slug: 'accounts',
         file: '/videos/Sojourn_Tutorial_13_Accounts.mp4',
         title: 'Accounts',
@@ -221,9 +230,18 @@ export const VIDEO_GROUPS: VideoGroup[] = [
     ],
   },
   {
-    name: 'Company and settings',
-    blurb: 'Keeping passwords safe and making the system fit your business.',
+    name: 'Company and admin settings',
+    blurb: 'Company papers, shared passwords, and the administrator’s controls.',
     chapters: [
+      {
+        slug: 'documents',
+        file: '/videos/Sojourn_Tutorial_20_Documents.mp4',
+        title: 'Documents',
+        seconds: 20,
+        summary: 'One archive for the company’s important papers, such as permits, contracts, insurance and certificates, so anyone who needs one can find it.',
+        points: ['Uploading a document and giving it a category and date', 'Finding a document by name or category', 'Opening a stored file'],
+        audience: 'Owners and managers',
+      },
       {
         slug: 'login-keys',
         file: '/videos/Sojourn_Tutorial_21_Login_Keys.mp4',
@@ -234,11 +252,11 @@ export const VIDEO_GROUPS: VideoGroup[] = [
         audience: 'Owners and managers',
       },
       {
-        slug: 'settings',
+        slug: 'admin-settings',
         file: '/videos/Sojourn_Tutorial_22_Settings.mp4',
-        title: 'Settings',
+        title: 'Admin settings',
         seconds: 122,
-        summary: 'Where you shape the system around your business: your people and what each can see, your properties, your invoice details and your own lists.',
+        summary: 'The administrator’s area, where you shape the system around your business: your people and what each can see, your properties, your invoice details and your own lists.',
         points: ['Your workspace and the people in it, and inviting someone by link', 'Roles: what each person can view, add, edit and delete', 'Currency, tax, invoice details and your own categories', 'Exporting your data and the history of every change'],
         audience: 'Owners and administrators',
       },
