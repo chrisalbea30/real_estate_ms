@@ -23,7 +23,7 @@ export async function saveAccountAction(input: AccountInput): Promise<ActionResu
     const payload = {
       name: data.name,
       type: data.type,
-      currency: data.currency || (ctx.org.settings.base_currency ?? 'THB'),
+      currency: data.currency || (ctx.org.settings.base_currency ?? 'EUR'),
       opening_balance: num(data.opening_balance) ?? 0,
       notes: data.notes || null,
       active: data.active,

@@ -8,7 +8,7 @@ import { Building2, Check } from 'lucide-react'
 import { createOrganizationAction } from '@/app/onboarding/actions'
 import { TextField, SelectField, MoneyField, FormGrid, FormError } from '@/components/ui/Field'
 import { Spinner } from '@/components/ui/Spinner'
-import { COMMON_CURRENCIES } from '@/lib/currency'
+import { COMMON_CURRENCIES, DEFAULT_CURRENCY } from '@/lib/currency'
 
 const TIMEZONES = [
   'Asia/Bangkok', 'Asia/Singapore', 'Asia/Kuala_Lumpur', 'Asia/Jakarta', 'Asia/Ho_Chi_Minh', 'Asia/Manila', 'Asia/Hong_Kong', 'Asia/Tokyo', 'Asia/Dubai', 'Asia/Kolkata',
@@ -19,7 +19,7 @@ const TIMEZONES = [
 
 export function OnboardingForm({ hasOrg }: { hasOrg: boolean }) {
   const router = useRouter()
-  const [form, setForm] = useState({ org_name: '', property_name: '', timezone: '', currency: 'THB', vat_rate: '7', room_count: '10', room_prefix: 'Room' })
+  const [form, setForm] = useState({ org_name: '', property_name: '', timezone: '', currency: DEFAULT_CURRENCY, vat_rate: '0', room_count: '10', room_prefix: 'Room' })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)

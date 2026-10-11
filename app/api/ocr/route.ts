@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   if (image.length > 12 * 1024 * 1024) return NextResponse.json({ error: 'Image too large (max ~8 MB)' }, { status: 413 })
 
   const categories = ctx.org.settings.categories?.expense ?? []
-  const base = ctx.org.settings.base_currency ?? 'THB'
+  const base = ctx.org.settings.base_currency ?? 'EUR'
 
   const schema = {
     type: 'object',

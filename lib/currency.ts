@@ -29,4 +29,8 @@ export function convert(amount: number, from: string, to: string, table: RateTab
   return r == null ? amount : amount * r
 }
 
-export const COMMON_CURRENCIES = ['THB', 'EUR', 'USD', 'GBP', 'AUD', 'SGD', 'JPY', 'CHF', 'MYR', 'IDR', 'VND', 'PHP', 'INR', 'HKD', 'CNY', 'KRW']
+/** Currency a new workspace starts with. */
+export const DEFAULT_CURRENCY = 'EUR'
+
+/** Currencies offered in the app. THB is hidden for now: add 'THB' back to this list to offer it again. */
+export const COMMON_CURRENCIES = ['EUR', 'USD', 'GBP', 'AUD', 'SGD', 'JPY', 'CHF', 'MYR', 'IDR', 'VND', 'PHP', 'INR', 'HKD', 'CNY', 'KRW']

@@ -49,7 +49,7 @@ export async function saveExpenseAction(input: ExpenseInput): Promise<ActionResu
     const ctx = await requirePerm('expenses', data.id ? 'edit' : 'add')
     const supabase = await createServerSupabase()
 
-    const base = (ctx.org.settings.base_currency ?? 'THB').toUpperCase()
+    const base = (ctx.org.settings.base_currency ?? 'EUR').toUpperCase()
     const currency = data.currency || base
     const amount = num(data.amount) ?? 0
 

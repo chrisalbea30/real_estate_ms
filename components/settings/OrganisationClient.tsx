@@ -19,7 +19,7 @@ function initial(org: Organization) {
   const s = org.settings ?? ({} as Organization['settings'])
   return {
     name: org.name,
-    base_currency: s.base_currency ?? 'THB',
+    base_currency: s.base_currency ?? 'EUR',
     display_currencies: s.display_currencies ?? [],
     vat_rate: String(s.vat_rate ?? 0),
     prices_include_vat: s.prices_include_vat ?? true,
@@ -43,7 +43,7 @@ export function OrganisationClient({ org }: { org: Organization }) {
   const [error, setError] = useState<string | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const dirty = JSON.stringify(form) !== snapshot
-  const originalCurrency = org.settings?.base_currency ?? 'THB'
+  const originalCurrency = org.settings?.base_currency ?? 'EUR'
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }))
 

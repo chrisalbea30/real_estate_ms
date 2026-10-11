@@ -100,7 +100,7 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
             </div>
 
             <p className="mt-6 text-xs text-muted">
-              Amount in words: <span className="font-medium text-ink">{numberToWords(Math.round(inv.total))} {cur === 'THB' ? 'Baht' : cur} only</span>
+              Amount in words: <span className="font-medium text-ink">{numberToWords(Math.round(inv.total))} {({ THB: 'Baht', EUR: 'Euro', USD: 'US Dollars', GBP: 'Pounds' } as Record<string, string>)[cur] ?? cur} only</span>
               {inv.vat_rate > 0 && ' · VAT included in the price.'}
             </p>
 

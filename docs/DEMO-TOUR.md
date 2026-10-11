@@ -20,7 +20,7 @@ Do these before the audience arrives.
 2. **Sign in** at [http://localhost:3000/login](http://localhost:3000/login) as **admin@seaview.com**. You are the Owner of "Seaview Resort Co.", property "Seaview Resort", with Room 1 to Room 5.
 3. **Have a receipt photo ready** on the device you present from (a clear photo of any shop receipt, as a picture file, not a PDF). Try **Scan receipt** once before the demo. If it answers that receipt scanning "is not switched on for this service yet", the scanning service is not switched on; use the by-hand steps in section 11 instead and say so honestly.
 4. **Check the Log-in vault** at [http://localhost:3000/app/logins](http://localhost:3000/app/logins): it should list 5 log-ins and show no "vault is locked" box.
-5. **Decide the currency.** The figures are kept in THB. The switch at the bottom of the sidebar also offers **EUR** and **USD**. Pick the one your audience thinks in and tap the small dot next to the codes so it is green (fresh rates).
+5. **Decide the currency.** The figures are kept in EUR. The switch at the bottom of the sidebar also offers **USD**. Pick the one your audience thinks in and tap the small dot next to the codes so it is green (fresh rates).
 6. **Open the links in one browser window**, maximised, in the light theme. Allow pop-ups for the site (Print / PDF and invoices open new tabs). Keep one private (incognito) window ready for sections 2, 7 and 35.
 7. **Know what the app does not do**, and never claim otherwise: it sends no email by itself, online payment is not connected, and password reset by email is not available. See [Appendix B](#appendix-b-if-they-ask).
 
@@ -81,7 +81,7 @@ Do these before the audience arrives.
 **Do:**
 1. Point at the left sidebar and read the six groups: **Dashboards**, **Operations**, **Finance**, **Partners**, **Company**, **Admin**.
 2. Point at the box at the top of the sidebar: property "Seaview Resort", organisation "Seaview Resort Co.". Explain that tapping it opens **Switch workspace** (lists under **Organisation** and **Property**, plus a **New organisation** link). It can only be tapped when there is more than one active property or organisation. It is shown live in section 29.
-3. At the bottom of the sidebar, tap **EUR**, then **USD**, then **THB**. Every amount on the page changes at once. Say: this only changes what you see; records stay in the base currency, and converted figures are estimates at the latest rate.
+3. At the bottom of the sidebar, tap **USD**, then **EUR** again. Every amount on the page changes at once. Say: this only changes what you see; records stay in the base currency, and converted figures are estimates at the latest rate.
 4. Point at the small dot next to the currency codes. Green means the rates are less than a week old, amber means older or missing. Tap the dot to fetch new rates (daily European Central Bank rates).
 5. Point at the theme icon next to it (shown in section 37), your name and role (**Owner**), the person icon (**Your profile**) and the **Sign out** icon.
 6. Phone layout: make the browser window narrow until the sidebar disappears. Point at the bottom bar: **Home**, **Guests**, **Expenses**, **Revenue** and **More**. Tap **More** to open the **Menu** with every screen in the same six groups, plus **Profile** and **Sign out**. The top bar holds the property name, the currency switch and your initials. Widen the window again. (The full phone part is section 36.)
@@ -214,8 +214,8 @@ Do these before the audience arrives.
 8. If scanning is not switched on (the message says it "is not switched on for this service yet"): say so, then type it by hand: **Category** "Maintenance", **Supplier** "Demo Hardware Store", **Amount** 1250, **Payment method** "Cash", **Paid by** "General Manager", **Description** "Demo: light bulbs", tick **Share with legal**, attach the photo under **Receipt or invoice** with **Choose file**, wait for "File uploaded", and tap **Save expense**.
 
 **Do: foreign currency**
-9. Tap **Add expense**. Set **Currency** to "EUR" and type **Amount** 100. Point at the note under the amount showing roughly what it is worth in THB. Tap **Cancel**.
-10. Search "Channel Manager" (paid in EUR), then "Meta Ads" (paid in USD). Each line shows the original amount and the THB value. Say: the value is fixed once, with the rate on the day it was saved.
+9. Tap **Add expense**. Set **Currency** to "USD" and type **Amount** 100. Point at the note under the amount showing roughly what it is worth in EUR. Tap **Cancel**.
+10. Search "Meta Ads" (paid in USD). Each line shows the original amount and its EUR value. Say: the value is fixed once, with the rate on the day it was saved.
 11. Tap **Export** and say the file has both the original amount and **Amount (base)**.
 
 **Clean up:** keep the "Demo" expense. It is reviewed and then deleted in section 13.
@@ -437,7 +437,7 @@ Do these before the audience arrives.
 
 **Do:**
 1. Show **Organisation name** at the top of the **General** form.
-2. Under **Currencies**, show **Base currency** (THB) and **Display currencies** with **EUR** and **USD** selected. Say: never change the base currency on a running business; existing amounts are not converted.
+2. Under **Currencies**, show **Base currency** (EUR) and **Display currencies** with **USD** selected. Say: never change the base currency on a running business; existing amounts are not converted.
 3. Under **Tax and fiscal year**, show **VAT rate (%)**, the **Prices include VAT** switch and **Fiscal year starts in**.
 4. Under **Alerts**, show **Fire extinguisher warning (days before expiry)**, **Arrivals window (days)** and **Departures window (days)**.
 5. Under **Partners**, show **Partner hour rate**.

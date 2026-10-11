@@ -29,7 +29,7 @@ export function currencySymbol(code: string) {
   return CURRENCY_SYMBOLS[code] ?? code + ' '
 }
 
-export function formatMoney(amount: number | null | undefined, currency = 'THB', opts: { decimals?: number; sign?: boolean } = {}) {
+export function formatMoney(amount: number | null | undefined, currency = 'EUR', opts: { decimals?: number; sign?: boolean } = {}) {
   const n = Number(amount ?? 0)
   const decimals = opts.decimals ?? (Math.abs(n) < 100 && n % 1 !== 0 ? 2 : 0)
   const body = Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })

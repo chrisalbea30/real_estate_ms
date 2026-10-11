@@ -9,7 +9,7 @@ export function HeroMock() {
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-burgundy-950/80 p-4 shadow-pop backdrop-blur">
         <div className="flex items-center justify-between text-xs text-white/60">
           <span>Seaview Resort · Today</span>
-          <span className="rounded-full bg-white/10 px-2 py-0.5 text-white/80">THB</span>
+          <span className="rounded-full bg-white/10 px-2 py-0.5 text-white/80">EUR</span>
         </div>
         <div className="mt-3 grid grid-cols-3 gap-2">
           {[
@@ -28,7 +28,7 @@ export function HeroMock() {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[11px] text-white/60">Revenue · last 12 months</div>
-              <div className="font-display text-xl font-semibold text-white">฿4.82M</div>
+              <div className="font-display text-xl font-semibold text-white">€148,600</div>
             </div>
             <span className="flex items-center gap-1 rounded-full bg-success/20 px-2 py-0.5 text-[11px] font-semibold text-success">
               <TrendingUp className="h-3 w-3" /> +18%
@@ -43,7 +43,7 @@ export function HeroMock() {
         <div className="mt-3 space-y-2">
           {[
             { room: 'Room 4', name: 'M. Tanaka', note: 'Check-in 14:00 · TM30 pending', tone: 'bg-warning' },
-            { room: 'Room 8', name: 'L. Dubois', note: 'Balance due ฿6,500', tone: 'bg-danger' },
+            { room: 'Room 8', name: 'L. Dubois', note: 'Balance due €180', tone: 'bg-danger' },
           ].map((g) => (
             <div key={g.name} className="flex items-center gap-3 rounded-xl bg-white/[0.06] px-3 py-2">
               <span className={`h-2 w-2 rounded-full ${g.tone}`} />
@@ -58,7 +58,7 @@ export function HeroMock() {
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-xl border border-dashed border-gold-400/40 bg-gold-400/5 px-3 py-2 text-[11px] text-gold-300">
           <Receipt className="h-3.5 w-3.5" />
-          Receipt scanned: 7-Eleven · ฿1,240 · Operations
+          Receipt scanned: Island Market · €38 · Operations
         </div>
       </div>
     </div>

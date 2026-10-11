@@ -45,7 +45,7 @@ const AppContext = createContext<AppContextValue | null>(null)
 
 export function AppProvider({ snapshot, children }: { snapshot: AppSnapshot; children: React.ReactNode }) {
   const settings = snapshot.org.settings
-  const baseCurrency = settings?.base_currency ?? 'THB'
+  const baseCurrency = settings?.base_currency ?? 'EUR'
   const currencyOptions = useMemo(() => [baseCurrency, ...(settings?.display_currencies ?? []).filter((c) => c !== baseCurrency)], [baseCurrency, settings?.display_currencies])
 
   const [saved, setSaved] = useLocalStorage(`display_currency:${snapshot.org.id}`)

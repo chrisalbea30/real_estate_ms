@@ -162,7 +162,7 @@ export async function issueInvoiceAction(guestId: string, opts: { regenerate?: b
           year,
           seq,
           issued_date: guest.check_out <= today ? guest.check_out : today,
-          currency: settings.base_currency ?? 'THB',
+          currency: settings.base_currency ?? 'EUR',
           subtotal: r2(subtotal),
           vat_rate: vatRate,
           vat_amount: r2(vat),

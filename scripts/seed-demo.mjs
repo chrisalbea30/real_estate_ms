@@ -138,6 +138,20 @@ const toBase = (amount, cur) => {
   return { amount_base: Math.round(amount * r * 100) / 100, fx_rate: +r.toFixed(6) }
 }
 
+// ---------- money scale ----------
+// All figures below are written at Thai-baht size. For any other base currency
+// they are converted once (ECB rate) and rounded to natural-looking amounts.
+const K = BASE === 'THB' ? 1 : (BASE === 'EUR' ? 1 : rates[BASE] ?? 0) / (rates.THB || 37) || 1 / 37
+const money = (n) => {
+  if (K === 1 || n == null) return n
+  const v = n * K
+  const a = Math.abs(v)
+  return a >= 5000 ? Math.round(v / 100) * 100 : a >= 500 ? Math.round(v / 10) * 10 : a >= 50 ? Math.round(v) : Math.round(v * 100) / 100
+}
+/** A share of an already-converted amount (deposits, part payments). */
+const part = (n, step = 100) => (K === 1 ? round(n, step) : Math.round(n))
+if (K !== 1) console.log(`  amounts scaled from baht size to ${BASE} (x${K.toFixed(4)})`)
+
 // ---------- a sample file so attachments open ----------
 const samplePath = `org/${ORG}/documents/demo-sample-document.png`
 try {
@@ -161,6 +175,7 @@ const settings = {
     phone: inv.phone || '+63 900 000 0000',
     signatory: inv.signatory || 'General Manager',
   },
+  partner_hour_rate: BASE === 'THB' ? (org.settings.partner_hour_rate ?? 200) : org.settings.partner_hour_rate && org.settings.partner_hour_rate < 100 ? org.settings.partner_hour_rate : 6,
   external_links: org.settings.external_links?.length ? org.settings.external_links : [{ label: 'Tourism board portal', url: 'https://example.com/tourism-portal' }],
 }
 await api('PATCH', `/rest/v1/organizations?id=eq.${ORG}`, { settings })
@@ -183,7 +198,7 @@ const seasonal = (iso) => (['12', '01', '02', '03', '04'].includes(iso.slice(5, 
 
 const guestRow = (room, i, ci, co, over = {}) => {
   const nights = Math.max(1, diff(ci, co))
-  const rate = round(baseRate(i) * seasonal(ci) * (0.95 + rnd() * 0.15), 50)
+  const rate = money(round(baseRate(i) * seasonal(ci) * (0.95 + rnd() * 0.15), 50))
   const stay = rate * nights
   const name = guestName()
   const method = pick([pm('Bank Transfer'), pm('Card'), pm('Card'), pm('Cash')])
@@ -201,7 +216,7 @@ const guestRow = (room, i, ci, co, over = {}) => {
   }
   // split deposit + balance for longer stays
   if (!('payment' in over) && nights >= 4 && chance(0.5)) {
-    const dep = round(stay * 0.3, 100)
+    const dep = part(stay * 0.3)
     row.payment_1_date = addDays(ci, -int(7, 30)); row.payment_1_amount = dep
     row.payment_2_date = ci; row.payment_2_amount = stay - dep
   }
@@ -219,7 +234,7 @@ rooms.forEach((room, i) => {
     const co = addDays(d, nights)
     if (co > stopBefore) break
     const g = guestRow(room, i, d, co)
-    if (chance(0.06)) { g.payment = round(g.amount_thb_stay * 0.7, 100); g.payment_1_date = g.payment_1_amount = g.payment_2_date = g.payment_2_amount = null } // unpaid balance left behind
+    if (chance(0.06)) { g.payment = part(g.amount_thb_stay * 0.7); g.payment_1_date = g.payment_1_amount = g.payment_2_date = g.payment_2_amount = null } // unpaid balance left behind
     guests.push(g)
     d = addDays(co, int(0, 4))
   }
@@ -228,7 +243,7 @@ rooms.forEach((room, i) => {
 const scenario = [
   (r, i) => [guestRow(r, i, addDays(TODAY, -3), addDays(TODAY, 2), { tm30: true })],                                             // in-house, paid
   (r, i) => [guestRow(r, i, addDays(TODAY, -4), TODAY, {}), guestRow(r, i, TODAY, addDays(TODAY, 3), { tm30: false })],          // departs today + arrives today
-  (r, i) => { const g = guestRow(r, i, addDays(TODAY, -2), addDays(TODAY, 4), { tm30: false }); g.payment = round(g.amount_thb_stay * 0.4, 100); g.payment_1_date = g.payment_1_amount = g.payment_2_date = g.payment_2_amount = null; return [g] }, // in-house, balance due, TM30 pending
+  (r, i) => { const g = guestRow(r, i, addDays(TODAY, -2), addDays(TODAY, 4), { tm30: false }); g.payment = part(g.amount_thb_stay * 0.4); g.payment_1_date = g.payment_1_amount = g.payment_2_date = g.payment_2_amount = null; return [g] }, // in-house, balance due, TM30 pending
   (r, i) => [guestRow(r, i, addDays(TODAY, -5), addDays(TODAY, -1), {}), guestRow(r, i, addDays(TODAY, 1), addDays(TODAY, 5), { tm30: false })], // empty tonight, arriving tomorrow
   (r, i) => [guestRow(r, i, addDays(TODAY, -1), addDays(TODAY, 6), { tm30: true })],                                             // in-house, long stay
 ]
@@ -241,7 +256,7 @@ rooms.forEach((room, i) => {
     const nights = int(2, 6)
     const co = addDays(d, nights)
     const g = guestRow(room, i, d, co, { tm30: false })
-    const dep = round(g.amount_thb_stay * 0.3, 100)
+    const dep = part(g.amount_thb_stay * 0.3)
     Object.assign(g, { payment: dep, payment_1_date: addDays(TODAY, -int(1, 12)), payment_1_amount: dep, payment_2_date: null, payment_2_amount: null })
     guests.push(g)
     d = addDays(co, int(1, 6))
@@ -268,7 +283,7 @@ for (let m = 1; m <= MONTH; m++) {
   )
   if (m % 3 === 0) manualRevenue.push({ date: day(10), type: 'Other Platform', supplier: 'Event: private beach dinner', amount_thb: round(int(25000, 60000), 500), notes: 'Group booking, paid by transfer', show_on_legal: true })
 }
-await insert('revenue', manualRevenue.map((r) => ({ organization_id: ORG, property_id: PROP, guest_id: null, file_url: null, ...r })))
+await insert('revenue', manualRevenue.map((r) => ({ organization_id: ORG, property_id: PROP, guest_id: null, file_url: null, ...r, amount_thb: money(r.amount_thb) })))
 
 // =====================================================================
 // PARTNERS, CAPITAL, WORK, MEETINGS
@@ -279,7 +294,7 @@ const partnerDefs = [
   { name: 'Mika Sorensen', role: 'Operations Partner', share_percentage: 20, amount_to_found_thb: 1000000, nationality: 'Danish', bio: 'Works with the general manager on renovation and maintenance.' },
   { name: 'Lucia Ferreira', role: 'Silent Partner', share_percentage: 15, amount_to_found_thb: 750000, nationality: 'Portuguese', bio: 'Investor. Attends quarterly meetings.' },
 ]
-const partners = await insert('shareholders', partnerDefs.map((p, i) => ({ organization_id: ORG, ...p, hour_rate: org.settings.partner_hour_rate ?? 200, email: `${p.name.split(' ')[0].toLowerCase()}@seaview-partners.example`, phone: `+63 91${i} 555 01${i}${i}`, joined_date: `${YEAR - 1}-0${i + 3}-15`, active: true })))
+const partners = await insert('shareholders', partnerDefs.map((p, i) => ({ organization_id: ORG, ...p, amount_to_found_thb: money(p.amount_to_found_thb), hour_rate: settings.partner_hour_rate, email: `${p.name.split(' ')[0].toLowerCase()}@seaview-partners.example`, phone: `+63 91${i} 555 01${i}${i}`, joined_date: `${YEAR - 1}-0${i + 3}-15`, active: true })))
 const P = Object.fromEntries(partners.map((p) => [p.name, p]))
 
 const contrib = []
@@ -288,8 +303,8 @@ for (const p of partners) {
   const total = p.amount_to_found_thb * paidShare[p.name]
   const parts = [0.5, 0.3, 0.2]
   parts.forEach((f, i) => {
-    const amt = round(total * f, 1000)
-    const eur = rates[BASE] ? Math.round(amt / rates[BASE]) : null
+    const amt = K === 1 ? round(total * f, 1000) : Math.round((total * f) / 100) * 100
+    const eur = BASE === 'EUR' ? amt : rates[BASE] ? Math.round(amt / rates[BASE]) : null
     contrib.push({ organization_id: ORG, date: `${YEAR - (i === 0 ? 1 : 0)}-${pad(i === 0 ? 11 : i * 3)}-${pad(int(3, 25))}`, method: pick(['Bank Transfer', 'Bank Transfer', 'Wise']), shareholder: p.name, shareholder_id: p.id, amount_thb: amt, amount_eur: eur, notes: i === 0 ? 'Initial capital call' : i === 1 ? 'Second tranche' : 'Renovation top-up' })
   })
 }
@@ -349,10 +364,13 @@ const legalStatus = (date) => {
   if (r < 0.9) return ['Clarification Needed', 'Please attach the official receipt showing the tax number.', addDays(date, int(8, 20))]
   return ['Rejected', 'Personal expense, not deductible for the company.', addDays(date, int(8, 20))]
 }
-const expenses = expenseDefs.map(([date, category, subcategory, supplier, amount, currency, type, description, method, legal], i) => {
+const expenses = expenseDefs.map(([date, category, subcategory, supplier, amount0, currency, type, description, method, legal], i) => {
+  let amount = amount0
   const [st, notes, reviewed] = legal ? legalStatus(date) : ['Pending', null, null]
   const p = pm(method)
   const old = diff(date, TODAY) > 20
+  // Figures written at baht size are converted; real foreign invoices (USD, and the EUR software bill) are kept as they are.
+  if (currency === BASE && supplier !== 'Channel Manager GmbH') amount = money(amount)
   return {
     organization_id: ORG, property_id: PROP,
     audit: old ? pick(['Checked', 'Checked', 'YES']) : 'To check',
@@ -367,7 +385,7 @@ await insert('expenses', expenses, { chunk: 50 })
 
 // opening balances so the cash position reads sensibly
 for (const a of accounts) {
-  await api('PATCH', `/rest/v1/accounts?id=eq.${a.id}`, { opening_balance: a.type === 'cash' ? 60000 : 450000, notes: a.type === 'cash' ? 'Front desk safe' : 'Main operating account' })
+  await api('PATCH', `/rest/v1/accounts?id=eq.${a.id}`, { opening_balance: money(a.type === 'cash' ? 60000 : 450000), currency: BASE, notes: a.type === 'cash' ? 'Front desk safe' : 'Main operating account' })
 }
 const bank = accounts.find((a) => a.type === 'bank') ?? accounts[0]
 const cash = accounts.find((a) => a.type === 'cash') ?? accounts[0]
@@ -375,14 +393,14 @@ const cash = accounts.find((a) => a.type === 'cash') ?? accounts[0]
 const deposits = []
 for (let m = 1; m <= MONTH; m++) {
   const on = `${YEAR}-${pad(m)}-${pad(Math.min(27, m === MONTH ? Math.max(1, +TODAY.slice(8, 10) - 2) : 27))}`
-  const amt = m === MONTH ? 30000 : round(int(62000, 76000), 1000)
+  const amt = money(m === MONTH ? 30000 : round(int(62000, 76000), 1000))
   deposits.push({ account_id: cash.id, amount: -amt, occurred_on: on, description: 'Cash takings deposited to the bank' }, { account_id: bank.id, amount: amt, occurred_on: on, description: 'Cash deposit from the front desk' })
 }
 await insert('account_movements', [
   ...deposits,
-  { account_id: bank.id, amount: -40000, occurred_on: addDays(TODAY, -20), description: 'Cash withdrawal for the front desk float' },
-  { account_id: cash.id, amount: 40000, occurred_on: addDays(TODAY, -20), description: 'Float received from the bank account' },
-  { account_id: cash.id, amount: -1250, occurred_on: addDays(TODAY, -3), description: 'Cash count correction (till short)' },
+  { account_id: bank.id, amount: -money(40000), occurred_on: addDays(TODAY, -20), description: 'Cash withdrawal for the front desk float' },
+  { account_id: cash.id, amount: money(40000), occurred_on: addDays(TODAY, -20), description: 'Float received from the bank account' },
+  { account_id: cash.id, amount: -money(1250), occurred_on: addDays(TODAY, -3), description: 'Cash count correction (till short)' },
 ].map((m) => ({ organization_id: ORG, source_table: 'adjustment', source_id: null, ...m })))
 
 // =====================================================================
@@ -439,7 +457,7 @@ for (let back = 62; back >= 1; back--) {
   staff.forEach(([staff_name, role, department, rate], i) => {
     if ((dow + i) % 7 === 0) return // one day off a week, staggered
     if (chance(0.06)) return
-    hours.push({ organization_id: ORG, property_id: PROP, staff_name, role, department, date, hours: pick([8, 8, 8, 8, 9, 6, 8.5]), hourly_rate_thb: rate, notes: chance(0.04) ? 'Covered a colleague\'s shift' : null })
+    hours.push({ organization_id: ORG, property_id: PROP, staff_name, role, department, date, hours: pick([8, 8, 8, 8, 9, 6, 8.5]), hourly_rate_thb: money(rate), notes: chance(0.04) ? 'Covered a colleague\'s shift' : null })
   })
 }
 await insert('staff_hours', hours)
@@ -499,19 +517,19 @@ if (encKey?.length === 32) {
 // =====================================================================
 // BUDGET (current year)
 // =====================================================================
-await insert('budget_room_setup', rooms.map((r, i) => ({ organization_id: ORG, property_id: PROP, year: YEAR, room_name: r.name, high_season_rate_thb: round(baseRate(i) * 1.25, 50), low_season_rate_thb: round(baseRate(i) * 0.85, 50), target_occupancy_pct: 65, notes: null })))
+await insert('budget_room_setup', rooms.map((r, i) => ({ organization_id: ORG, property_id: PROP, year: YEAR, room_name: r.name, high_season_rate_thb: money(round(baseRate(i) * 1.25, 50)), low_season_rate_thb: money(round(baseRate(i) * 0.85, 50)), target_occupancy_pct: 65, notes: null })))
 const budRev = []
 rooms.forEach((r, i) => {
   for (let m = 1; m <= 12; m++) {
     const iso = `${YEAR}-${pad(m)}-01`
     const high = seasonal(iso) > 1
-    budRev.push({ organization_id: ORG, property_id: PROP, year: YEAR, month: m, room_name: r.name, amount_thb: round(baseRate(i) * seasonal(iso) * 30 * (high ? 0.72 : 0.58), 500), season: high ? 'High' : 'Low' })
+    budRev.push({ organization_id: ORG, property_id: PROP, year: YEAR, month: m, room_name: r.name, amount_thb: money(round(baseRate(i) * seasonal(iso) * 30 * (high ? 0.72 : 0.58), 500)), season: high ? 'High' : 'Low' })
   }
 })
 await insert('budget_revenue', budRev)
 const budExp = []
 const B = (category, item_name, monthly, expense_type = 'OPEX', months = null) => {
-  for (let m = 1; m <= 12; m++) if (!months || months.includes(m)) budExp.push({ organization_id: ORG, property_id: PROP, year: YEAR, month: m, category, subcategory: null, item_name, amount_thb: monthly, expense_type })
+  for (let m = 1; m <= 12; m++) if (!months || months.includes(m)) budExp.push({ organization_id: ORG, property_id: PROP, year: YEAR, month: m, category, subcategory: null, item_name, amount_thb: money(monthly), expense_type })
 }
 B('Rent', 'Land lease', 85000)
 B('Staff', 'Salaries', 135000)
@@ -528,7 +546,7 @@ B('Maintenance', 'Room 5 bathroom renovation', 180000, 'CAPEX', [5])
 B('Maintenance', 'New air conditioners', 60000, 'CAPEX', [6])
 B('Maintenance', 'Solar water heating', 240000, 'CAPEX', [11])
 await insert('budget_expenses', budExp)
-await insert('budget_rent', [0, 1, 2].map((i) => ({ organization_id: ORG, property_id: PROP, year_number: i + 1, year_label: `${YEAR - 1 + i}`, rent_thb: 1020000 + i * 51000, vat_amount: Math.round((1020000 + i * 51000) * ((org.settings.vat_rate ?? 0) / 100)) })))
+await insert('budget_rent', [0, 1, 2].map((i) => ({ organization_id: ORG, property_id: PROP, year_number: i + 1, year_label: `${YEAR - 1 + i}`, rent_thb: money(1020000 + i * 51000), vat_amount: Math.round(money(1020000 + i * 51000) * ((org.settings.vat_rate ?? 0) / 100)) })))
 
 // =====================================================================
 // INVOICES for recently departed guests

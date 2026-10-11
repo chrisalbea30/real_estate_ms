@@ -27,7 +27,7 @@ export function legalTone(status: LegalStatus | string | null | undefined): Badg
   }
 }
 
-/** "€120 ≈ ฿4,440" for foreign-currency expenses, plain base amount otherwise. */
+/** "$120 ≈ €107" for foreign-currency expenses, plain base amount otherwise. */
 export function ExpenseAmount({ expense, className }: { expense: Pick<Expense, 'amount' | 'amount_base' | 'currency'>; className?: string }) {
   const { fmt, baseCurrency } = useApp()
   if (!isForeign(expense, baseCurrency)) return <span className={className}>{fmt(expenseBase(expense))}</span>
