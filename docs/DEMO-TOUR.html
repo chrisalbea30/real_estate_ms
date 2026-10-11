@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>Sojourn Demo Tour</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: a fixed contents rail on the left, one reading column of numbered
+   stops on the right; on phones the rail folds into a drawer above the column. */
+:root {
+  --canvas: #FAF6F3; --surface: #FFFFFF; --surface-2: #F5EDE9; --line: #EADCD8; --line-2: #D9C6C0;
+  --ink: #26161A; --ink-2: #4A363C; --muted: #7A6368;
+  --wine: #800020; --wine-deep: #4D0013; --wine-soft: #FBE4E9; --wine-on: #FFFFFF;
+  --gold: #A5841D; --gold-soft: #FBF1D6; --ok: #1F7A4D; --ok-soft: #DDF3E6;
+  --shadow: 0 1px 2px rgba(38,22,26,.05), 0 14px 34px -20px rgba(128,0,32,.28);
+  --display: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+  --body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+  --rail: 19.5rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --canvas: #140A0D; --surface: #1D1014; --surface-2: #26161B; --line: #34222A; --line-2: #4A323B;
+  --ink: #F6EEEA; --ink-2: #DCCBCF; --muted: #A98F96;
+  --wine: #C4274F; --wine-deep: #2A0A12; --wine-soft: #3A0E1A; --wine-on: #FFFFFF;
+  --gold: #E3C565; --gold-soft: #33290F; --ok: #4CC38A; --ok-soft: #11301F;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 34px -20px rgba(0,0,0,.7); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --canvas: #140A0D; --surface: #1D1014; --surface-2: #26161B; --line: #34222A; --line-2: #4A323B;
+  --ink: #F6EEEA; --ink-2: #DCCBCF; --muted: #A98F96;
+  --wine: #C4274F; --wine-deep: #2A0A12; --wine-soft: #3A0E1A; --wine-on: #FFFFFF;
+  --gold: #E3C565; --gold-soft: #33290F; --ok: #4CC38A; --ok-soft: #11301F;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 34px -20px rgba(0,0,0,.7); color-scheme: dark }
+
+* { box-sizing: border-box }
+html { scroll-behavior: smooth; scroll-padding-top: 1rem }
+body { margin: 0; background: var(--canvas); color: var(--ink); font: 400 1rem/1.6 var(--body); -webkit-font-smoothing: antialiased }
+a { color: var(--wine); text-underline-offset: 3px }
+strong { font-weight: 650; color: var(--ink) }
+code { font: 0.86em var(--mono); background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: .1em .4em; overflow-wrap: anywhere }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.01em; text-wrap: balance; margin: 0 }
+button, input { font: inherit; color: inherit }
+:focus-visible { outline: 3px solid color-mix(in srgb, var(--wine) 45%, transparent); outline-offset: 2px; border-radius: 8px }
+
+.shell { display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); min-height: 100vh }
+.rail { position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto; border-right: 1px solid var(--line); background: var(--surface); padding: 1.25rem 1rem 2rem; display: flex; flex-direction: column; gap: 1rem }
+.main { min-width: 0; padding-block: 2.25rem 5rem; padding-inline: clamp(1rem, 4vw, 3.5rem) }
+.col { max-width: 50rem; margin-inline: auto; display: flex; flex-direction: column; gap: 1.5rem }
+
+.brand { display: flex; align-items: center; gap: .6rem; font: 600 1.15rem var(--display) }
+.brand svg { width: 2rem; height: 2rem; flex: none }
+.label { font-size: .68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted) }
+.progress { display: flex; flex-direction: column; gap: .4rem }
+.bar { height: .45rem; border-radius: 99px; background: var(--surface-2); overflow: hidden }
+.bar i { display: block; height: 100%; width: 0; background: var(--wine); border-radius: 99px; transition: width .3s }
+.progress small { color: var(--muted); font-size: .8rem; font-variant-numeric: tabular-nums }
+
+.field { display: flex; flex-direction: column; gap: .3rem }
+.field input { width: 100%; min-height: 2.5rem; border: 1px solid var(--line-2); border-radius: 10px; background: var(--canvas); padding: 0 .7rem; font-size: .85rem }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: .25rem; background: var(--surface-2); border-radius: 10px; padding: .25rem }
+.seg button { border: 0; background: transparent; border-radius: 8px; min-height: 2.1rem; font-size: .8rem; font-weight: 600; color: var(--muted); cursor: pointer }
+.seg button[aria-pressed="true"] { background: var(--wine); color: var(--wine-on) }
+.quick { display: flex; gap: .35rem; flex-wrap: wrap }
+.quick button { border: 1px solid var(--line-2); background: var(--surface); border-radius: 99px; padding: .2rem .65rem; font-size: .72rem; font-weight: 600; cursor: pointer; color: var(--ink-2) }
+
+.toc { display: flex; flex-direction: column; gap: .9rem }
+.toc ol { list-style: none; margin: .3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px }
+.toc a { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; align-items: baseline; gap: .35rem; padding: .34rem .5rem; border-radius: 8px; text-decoration: none; color: var(--ink-2); font-size: .86rem; line-height: 1.3 }
+.toc a:hover { background: var(--surface-2); color: var(--ink) }
+.toc a.active { background: var(--wine-soft); color: var(--ink); font-weight: 600 }
+.toc .n { font: 600 .78rem var(--display); color: var(--muted); font-variant-numeric: tabular-nums }
+.toc .t { color: var(--muted); font-size: .72rem; font-variant-numeric: tabular-nums }
+.toc li.done a { color: var(--muted) }
+.toc li.done .n { color: var(--ok) }
+.toc li.done .n::before { content: "✓ "; }
+.toc li[hidden] { display: none }
+
+.hero { background: var(--wine-deep); color: #F6EEEA; border-radius: 22px; padding: clamp(1.4rem, 4vw, 2.4rem); display: flex; flex-direction: column; gap: .9rem;
+  background-image: radial-gradient(60rem 22rem at 0% 0%, rgba(227,197,101,.2), transparent 60%), radial-gradient(40rem 20rem at 100% 0%, rgba(196,39,79,.5), transparent 60%) }
+.hero h1 { font-size: clamp(1.9rem, 5vw, 2.9rem); line-height: 1.05; color: #fff }
+.hero p { margin: 0; color: rgba(246,238,234,.8); max-width: 38rem }
+.hero .facts { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .3rem }
+.hero .facts span { border: 1px solid rgba(255,255,255,.2); border-radius: 99px; padding: .25rem .8rem; font-size: .8rem; font-variant-numeric: tabular-nums; color: #fff }
+.hero .facts b { color: #EBD68F; font-weight: 700 }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: clamp(1.1rem, 3vw, 1.75rem) }
+.panel > h2 { font-size: 1.45rem; margin-bottom: .75rem }
+.panel p { margin: .6rem 0; color: var(--ink-2); max-width: 65ch }
+
+.grouphead { display: flex; align-items: baseline; gap: .8rem; margin-top: 1.25rem }
+.grouphead h2 { font-size: 1.05rem; font-family: var(--body); font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--wine) }
+.grouphead::after { content: ""; flex: 1; height: 1px; background: var(--line-2) }
+
+.stop { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden }
+.stop[hidden] { display: none }
+.stop.done { box-shadow: none; opacity: .72 }
+.stop header { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .25rem 1rem; padding: 1.15rem clamp(1rem, 3vw, 1.6rem) 1rem; border-bottom: 1px solid var(--line) }
+.stop .num { grid-row: span 2; font: 600 2.6rem/1 var(--display); color: var(--wine); font-variant-numeric: tabular-nums; min-width: 2.6rem }
+.stop h3 { font-size: 1.5rem; line-height: 1.15; align-self: end }
+.stop .show { margin: 0; color: var(--muted); font-size: .92rem }
+.meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .6rem }
+.chip { display: inline-flex; align-items: center; gap: .35rem; border-radius: 99px; padding: .25rem .7rem; font-size: .78rem; font-weight: 600; background: var(--surface-2); color: var(--ink-2); font-variant-numeric: tabular-nums }
+.chip.short { background: var(--gold-soft); color: var(--gold) }
+.open { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.5rem; padding: 0 1rem; border-radius: 12px; background: var(--wine); color: var(--wine-on); text-decoration: none; font-weight: 650; font-size: .88rem; max-width: 100%; min-width: 0 }
+.open .p { font: .78rem var(--mono); opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.open:hover { filter: brightness(1.12) }
+.gonote { font-size: .85rem; color: var(--ink-2) }
+.donebox { margin-left: auto; display: inline-flex; align-items: center; gap: .45rem; font-size: .82rem; font-weight: 600; color: var(--ink-2); cursor: pointer; user-select: none }
+.donebox input { width: 1.15rem; height: 1.15rem; accent-color: var(--ok) }
+
+.body { padding: 1.1rem clamp(1rem, 3vw, 1.6rem) 1.4rem; display: flex; flex-direction: column; gap: 1rem }
+.body > p { margin: 0; color: var(--ink-2); max-width: 65ch }
+.tag { display: inline-block; font-size: .66rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase }
+.say { margin: 0; background: var(--wine-soft); border-radius: 14px; padding: .85rem 1.1rem 1rem }
+.say .tag { color: var(--wine) }
+.say p { margin: .15rem 0 0; font: 400 1.16rem/1.5 var(--display); color: var(--ink); max-width: 60ch }
+h4.do { margin: .2rem 0 -.3rem; font: 600 .95rem var(--body); color: var(--ink); display: flex; align-items: baseline; gap: .5rem; text-transform: none }
+h4.do span { font-size: .66rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); background: var(--gold-soft); border-radius: 6px; padding: .15rem .45rem }
+ol.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .55rem }
+ol.steps > li { counter-increment: step; display: grid; grid-template-columns: 1.9rem minmax(0, 1fr); gap: .7rem; align-items: start; color: var(--ink-2) }
+ol.steps > li::before { content: counter(step); display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 50%; border: 1.5px solid var(--line-2); font: 600 .82rem var(--display); color: var(--wine); font-variant-numeric: tabular-nums; background: var(--surface) }
+ol.steps > li > div { padding-top: .12rem; max-width: 64ch }
+ol.steps p { margin: .4rem 0 0 }
+.cmd { display: flex; align-items: center; gap: .5rem; margin-top: .5rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: .45rem .5rem .45rem .75rem }
+.cmd code { flex: 1; min-width: 0; background: none; border: 0; padding: 0; overflow-x: auto; white-space: nowrap }
+.copy { border: 1px solid var(--line-2); background: var(--surface); border-radius: 8px; padding: .25rem .6rem; font-size: .75rem; font-weight: 600; cursor: pointer }
+.cleanup { border: 1px dashed var(--line-2); border-radius: 12px; padding: .7rem 1rem .8rem }
+.cleanup .tag { color: var(--muted) }
+.cleanup p { margin: .15rem 0 0; font-size: .92rem; color: var(--ink-2); max-width: 65ch }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin-top: .5rem }
+table { border-collapse: collapse; width: 100%; font-size: .9rem }
+th, td { text-align: left; padding: .5rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top }
+th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--surface-2) }
+td:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--wine); font-weight: 600 }
+tr:last-child td { border-bottom: 0 }
+tr.grouprow td { background: var(--surface-2); color: var(--ink); font-weight: 700 }
+.qa { border-top: 1px solid var(--line); padding-top: .9rem; margin-top: .9rem }
+.qa:first-of-type { border-top: 0; padding-top: 0 }
+.qa h4 { margin: 0; font: 600 1.08rem var(--display) }
+.qa p { margin: .3rem 0 0 }
+.empty { text-align: center; color: var(--muted); padding: 2rem 1rem }
+.empty[hidden] { display: none }
+
+.drawer { display: none }
+@media (max-width: 62rem) {
+  .shell { grid-template-columns: minmax(0, 1fr) }
+  .rail { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: .9rem 1rem }
+  .rail .toc, .rail .controls { display: none }
+  .rail.open .toc, .rail.open .controls { display: flex }
+  .controls { flex-direction: column; gap: 1rem }
+  .drawer { display: inline-flex; margin-left: auto; border: 1px solid var(--line-2); background: var(--surface); border-radius: 10px; min-height: 2.4rem; padding: 0 .9rem; font-weight: 600; font-size: .85rem; cursor: pointer }
+  .brandrow { display: flex; align-items: center; gap: .6rem }
+  .stop .num { font-size: 2rem; min-width: 2rem }
+  .stop h3 { font-size: 1.25rem }
+  .donebox { margin-left: 0 }
+}
+@media (min-width: 62.01rem) { .controls { display: flex; flex-direction: column; gap: 1rem } .brandrow { display: block } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } .bar i { transition: none } }
+@media print { .rail, .donebox, .copy { display: none } .shell { display: block } .stop { break-inside: avoid; box-shadow: none } body { background: #fff } }
+</style>
+<div class="shell" id="top">
+  <aside class="rail" id="rail">
+    <div class="brandrow">
+      <div class="brand"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="4" width="56" height="56" rx="16" fill="#800020"/><path d="M18 36 L32 22 L46 36" fill="none" stroke="#E3C565" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="24" y="36" width="16" height="10" rx="2" fill="#FBF7F3"/><rect x="30" y="39" width="4" height="7" rx="1" fill="#800020"/></svg><span>Sojourn Demo Tour</span></div>
+      <button type="button" class="drawer" id="drawer" aria-expanded="false" aria-controls="rail">Contents</button>
+    </div>
+    <div class="controls">
+      <div class="progress">
+        <div class="label">Progress</div>
+        <div class="bar"><i id="bar"></i></div>
+        <small id="progress">0 of 38 done · 97 min left</small>
+      </div>
+      <div class="field">
+        <label class="label" for="base">Site address for the links</label>
+        <input id="base" type="url" inputmode="url" spellcheck="false" value="https://real-estate-ms-mu.vercel.app" aria-describedby="basehint">
+        <div class="quick" id="basehint"><button type="button" data-base="https://real-estate-ms-mu.vercel.app">Live site</button><button type="button" data-base="http://localhost:3000">My computer</button></div>
+      </div>
+      <div class="field">
+        <span class="label">Show</span>
+        <div class="seg"><button type="button" id="all" aria-pressed="true">Full tour · 97 min</button><button type="button" id="short" aria-pressed="false">Short · 15 min</button></div>
+      </div>
+      <div class="field">
+        <label class="label" for="q">Find a screen or button</label>
+        <input id="q" type="search" placeholder="e.g. invoice, receipt, roles">
+      </div>
+    </div>
+    <nav class="toc" aria-label="Contents">
+      <div><ol><li><a href="#before"><span class="n">·</span><span>Before you start</span><span class="t"></span></a></li></ol></div>
+      <div><div class="label">Opening</div><ol><li data-n="1"><a href="#s1"><span class="n">1</span><span>Public landing page</span><span class="t">3m</span></a></li><li data-n="2"><a href="#s2"><span class="n">2</span><span>Sign up and sign in</span><span class="t">2m</span></a></li><li data-n="3"><a href="#s3"><span class="n">3</span><span>Setup wizard (optional)</span><span class="t">2m</span></a></li><li data-n="4"><a href="#s4"><span class="n">4</span><span>App shell and navigation</span><span class="t">3m</span></a></li></ol></div><div><div class="label">Dashboards</div><ol><li data-n="5"><a href="#s5"><span class="n">5</span><span>Overview</span><span class="t">3m</span></a></li><li data-n="6"><a href="#s6"><span class="n">6</span><span>Operations</span><span class="t">4m</span></a></li></ol></div><div><div class="label">Daily operations and money</div><ol><li data-n="7"><a href="#s7"><span class="n">7</span><span>Guests</span><span class="t">8m</span></a></li><li data-n="8"><a href="#s8"><span class="n">8</span><span>Occupancy</span><span class="t">2m</span></a></li><li data-n="9"><a href="#s9"><span class="n">9</span><span>Rooms and room detail</span><span class="t">3m</span></a></li><li data-n="10"><a href="#s10"><span class="n">10</span><span>Revenue</span><span class="t">3m</span></a></li><li data-n="11"><a href="#s11"><span class="n">11</span><span>Expenses</span><span class="t">6m</span></a></li><li data-n="12"><a href="#s12"><span class="n">12</span><span>Accounts</span><span class="t">3m</span></a></li><li data-n="13"><a href="#s13"><span class="n">13</span><span>Legal and accounting</span><span class="t">4m</span></a></li><li data-n="14"><a href="#s14"><span class="n">14</span><span>Budget</span><span class="t">5m</span></a></li></ol></div><div><div class="label">Partners</div><ol><li data-n="15"><a href="#s15"><span class="n">15</span><span>Partner dashboard</span><span class="t">5m</span></a></li><li data-n="16"><a href="#s16"><span class="n">16</span><span>Partners</span><span class="t">2m</span></a></li><li data-n="17"><a href="#s17"><span class="n">17</span><span>Capital</span><span class="t">2m</span></a></li><li data-n="18"><a href="#s18"><span class="n">18</span><span>Partner work</span><span class="t">1m</span></a></li><li data-n="19"><a href="#s19"><span class="n">19</span><span>Meetings</span><span class="t">2m</span></a></li></ol></div><div><div class="label">Team and company</div><ol><li data-n="20"><a href="#s20"><span class="n">20</span><span>Tasks</span><span class="t">2m</span></a></li><li data-n="21"><a href="#s21"><span class="n">21</span><span>Complaints</span><span class="t">2m</span></a></li><li data-n="22"><a href="#s22"><span class="n">22</span><span>Staff hours</span><span class="t">2m</span></a></li><li data-n="23"><a href="#s23"><span class="n">23</span><span>Documents</span><span class="t">2m</span></a></li><li data-n="24"><a href="#s24"><span class="n">24</span><span>Log-in vault</span><span class="t">2m</span></a></li></ol></div><div><div class="label">Settings</div><ol><li data-n="25"><a href="#s25"><span class="n">25</span><span>Settings: Profile</span><span class="t">1m</span></a></li><li data-n="26"><a href="#s26"><span class="n">26</span><span>Settings: Organisation</span><span class="t">2m</span></a></li><li data-n="27"><a href="#s27"><span class="n">27</span><span>Settings: Invoices</span><span class="t">1m</span></a></li><li data-n="28"><a href="#s28"><span class="n">28</span><span>Settings: Categories</span><span class="t">1m</span></a></li><li data-n="29"><a href="#s29"><span class="n">29</span><span>Settings: Properties</span><span class="t">1m</span></a></li><li data-n="30"><a href="#s30"><span class="n">30</span><span>Settings: Payments</span><span class="t">1m</span></a></li><li data-n="31"><a href="#s31"><span class="n">31</span><span>Settings: Team</span><span class="t">2m</span></a></li><li data-n="32"><a href="#s32"><span class="n">32</span><span>Settings: Roles</span><span class="t">2m</span></a></li><li data-n="33"><a href="#s33"><span class="n">33</span><span>Settings: Data</span><span class="t">3m</span></a></li><li data-n="34"><a href="#s34"><span class="n">34</span><span>Settings: Billing</span><span class="t">1m</span></a></li></ol></div><div><div class="label">Finish</div><ol><li data-n="35"><a href="#s35"><span class="n">35</span><span>Roles demo</span><span class="t">3m</span></a></li><li data-n="36"><a href="#s36"><span class="n">36</span><span>Phone and install</span><span class="t">3m</span></a></li><li data-n="37"><a href="#s37"><span class="n">37</span><span>Dark theme</span><span class="t">1m</span></a></li><li data-n="38"><a href="#s38"><span class="n">38</span><span>Closing</span><span class="t">2m</span></a></li></ol></div>
+      <div><div class="label">Reference</div><ol><li><a href="#appendix-a-coverage-checklist"><span class="n">·</span><span>Coverage checklist</span><span class="t"></span></a></li><li><a href="#appendix-b-if-they-ask"><span class="n">·</span><span>If they ask</span><span class="t"></span></a></li></ol></div>
+    </nav>
+  </aside>
+  <main class="main"><div class="col">
+    <section class="hero">
+      <span class="label" style="color:#EBD68F">Presenter's script</span>
+      <h1>Sojourn Demo Tour</h1>
+      <p>One continuous walk through the whole app. Each stop gives you the screen to open, what to say, and exactly what to click. Tick a stop when you finish it.</p>
+      <div class="facts"><span><b>38</b> stops</span><span><b>97</b> min full tour</span><span><b>15</b> min short version</span><span>Sign in as <b>admin@seaview.com</b></span></div>
+    </section>
+    <section class="panel" id="before"><h2>Before you start</h2><p>Do these before the audience arrives.</p>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div><strong>Regenerate the demo data on the day</strong>, so that "today" looks right (arrivals, departures, in-house guests, expiring fire extinguishers). Open a terminal in the project folder and run:<div class="cmd"><code>node scripts/seed-demo.mjs "Seaview Resort Co." --reset</code><button type="button" class="copy" data-copy="node scripts/seed-demo.mjs &quot;Seaview Resort Co.&quot; --reset">Copy</button></div><p>It wipes and refills only that workspace's demo data. Team, roles, rooms and settings stay.</p></div></li><li><div><strong>Sign in</strong> at <a class="applink" data-path="/login" href="https://real-estate-ms-mu.vercel.app/login" target="_blank" rel="noopener"><span class="u-base"></span>/login</a> as <strong>admin@seaview.com</strong>. You are the Owner of "Seaview Resort Co.", property "Seaview Resort", with Room 1 to Room 5.</div></li><li><div><strong>Have a receipt photo ready</strong> on the device you present from (a clear photo of any shop receipt, as a picture file, not a PDF). Try <strong>Scan receipt</strong> once before the demo. If it answers that receipt scanning "is not switched on for this service yet", the scanning service is not switched on; use the by-hand steps in section 11 instead and say so honestly.</div></li><li><div><strong>Check the Log-in vault</strong> at <a class="applink" data-path="/app/logins" href="https://real-estate-ms-mu.vercel.app/app/logins" target="_blank" rel="noopener"><span class="u-base"></span>/app/logins</a>: it should list 5 log-ins and show no "vault is locked" box.</div></li><li><div><strong>Decide the currency.</strong> The figures are kept in THB. The switch at the bottom of the sidebar also offers <strong>EUR</strong> and <strong>USD</strong>. Pick the one your audience thinks in and tap the small dot next to the codes so it is green (fresh rates).</div></li><li><div><strong>Open the links in one browser window</strong>, maximised, in the light theme. Allow pop-ups for the site (Print / PDF and invoices open new tabs). Keep one private (incognito) window ready for sections 2, 7 and 35.</div></li><li><div><strong>Know what the app does not do</strong>, and never claim otherwise: it sends no email by itself, online payment is not connected, and password reset by email is not available. See <a href="#appendix-b-if-they-ask">Appendix B</a>.</div></li></ol>
+<p><strong>What is in the demo workspace:</strong> 271 bookings from January to November, several guests in-house tonight, 12 invoices (INV-2026-0001 to INV-2026-0012), 136 expenses, 33 manual revenue lines, Bank and Cash accounts, 4 partners, a budget for this year, 18 tasks, 10 complaints, about 295 staff-hours entries, 11 documents and 5 vault log-ins. Guest names change every time the data is regenerated, so this script describes guests ("the in-house guest with a red balance") instead of naming them. Each room has two example photos. Attachments open a placeholder picture (the app logo).</p>
+<p><strong>Records you add live</strong> all start with the word "Demo" so they are easy to find and delete. Each section says when to clean up. If you forget, regenerating the data removes them.</p>
+<p><strong>Short version (15 minutes):</strong> sections 5, 7 (skip the email step), 10, 11 (scan only), 13 and 15 (first and fourth tab only).</p></section>
+    <div class="grouphead" data-group><h2>Opening</h2></div>
+<article class="stop" id="s1" data-n="1" data-min="3" data-short="0">
+<header>
+  <div class="num">1</div>
+  <h3>Public landing page</h3>
+  <p class="show">What a new customer sees: features, how it works, mobile, pricing, FAQ.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/" href="https://real-estate-ms-mu.vercel.app/" target="_blank" rel="noopener">Open screen <span class="p">/</span></a>
+    <label class="donebox" for="done1"><input type="checkbox" id="done1" data-done="1"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>This is what a new customer sees first. It explains the product in one page and lets them start a free trial without talking to anyone.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the headline, then point at <strong>Start free trial</strong> and <strong>See how it works</strong>, and the line "14-day trial · No card required · Cancel anytime".</div></li><li><div>In the top menu click <strong>Features</strong>. Show the six cards (bookings and invoices, receipts scanned into expenses, one revenue table, legal review, budgets and partner reporting, day-to-day operations).</div></li><li><div>Click <strong>How it works</strong>. Read the four steps "Guest → Revenue → Legal → Partners". This is the idea of the whole demo: a booking is typed once.</div></li><li><div>Click <strong>Mobile</strong>. Point at "Installs like an app", "Camera-first receipts", "Exports anywhere" and "Nothing lost". Scroll a little to the dark "Built to be trusted" block (data isolation, roles, encrypted vault, audit log).</div></li><li><div>Click <strong>Pricing</strong>. Flip the <strong>Monthly</strong> / <strong>Yearly</strong> switch. Show <strong>Starter</strong>, <strong>Growth</strong> and <strong>Enterprise</strong> (<strong>Talk to us</strong>).</div></li><li><div>Click <strong>FAQ</strong> and open one question, for example "Is this a booking engine or channel manager?" (the honest answer is no; it is the back office).</div></li><li><div>Click the sun/moon icon in the top bar once to show the page also has a dark theme, then click it until it is light again.</div></li></ol></div>
+</article>
+<article class="stop" id="s2" data-n="2" data-min="2" data-short="0">
+<header>
+  <div class="num">2</div>
+  <h3>Sign up and sign in</h3>
+  <p class="show">The three-field sign-up, the sign-in screen and the honest "Forgot?" page.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/signup" href="https://real-estate-ms-mu.vercel.app/signup" target="_blank" rel="noopener">Open screen <span class="p">/signup</span></a>
+    <label class="donebox" for="done2"><input type="checkbox" id="done2" data-done="2"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Creating an account takes three fields. You are signed in straight away; there is no confirmation email to wait for.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the form: <strong>Your name</strong>, <strong>Work email</strong>, <strong>Password</strong> (at least 8 characters, eye icon to see it) and <strong>Create account</strong>. Do not submit.</div></li><li><div>Click <strong>Sign in</strong> at the bottom, or go to <a class="applink" data-path="/login" href="https://real-estate-ms-mu.vercel.app/login" target="_blank" rel="noopener"><span class="u-base"></span>/login</a>. Show <strong>Email</strong>, <strong>Password</strong>, <strong>Sign in</strong> and the <strong>Create an account</strong> link.</div></li><li><div>Click <strong>Forgot?</strong>. Read the page out: password reset by email is not available yet; a signed-in user changes the password under Settings, Profile, otherwise the operator sets a new one. Click <strong>Back to sign in</strong>.</div></li><li><div>Close the private window and return to your signed-in window.</div></li></ol></div>
+</article>
+<article class="stop" id="s3" data-n="3" data-min="2" data-short="0">
+<header>
+  <div class="num">3</div>
+  <h3>Setup wizard (optional)</h3>
+  <p class="show">The one form that creates a workspace with rooms, accounts and payment methods.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/onboarding" href="https://real-estate-ms-mu.vercel.app/onboarding" target="_blank" rel="noopener">Open screen <span class="p">/onboarding</span></a>
+    <label class="donebox" for="done3"><input type="checkbox" id="done3" data-done="3"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>A new customer fills in one short form and gets a working workspace: rooms, two accounts and four payment methods are created for them.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Describe the form <strong>Set up your workspace</strong> without submitting it: <strong>Organisation / company name</strong>, <strong>First property name</strong>, <strong>Property timezone</strong>, <strong>Base currency</strong>, <strong>VAT rate (%)</strong>, <strong>Rooms to create</strong> and <strong>Room name prefix</strong>.</div></li><li><div>Explain what <strong>Create workspace</strong> produces: you become the <strong>Owner</strong>; rooms named "Room 1", "Room 2" and so on; the accounts <strong>Bank</strong> and <strong>Cash</strong>; the payment methods <strong>Cash</strong>, <strong>Bank Transfer</strong>, <strong>Card</strong> and <strong>Other</strong>.</div></li><li><div>Stress the two choices that matter: the base currency (all amounts are stored in it) and the timezone ("today" follows the property, not the phone).</div></li><li><div>Optional, only if the audience wants to see it live: type "Demo Hotel Co.", "Demo Hotel", 3 rooms, prefix "Room", and tap <strong>Create workspace</strong>. This creates a second, separate organisation that stays in your account. Switch back by tapping the property name at the top of the sidebar and choosing "Seaview Resort Co." under <strong>Organisation</strong>.</div></li><li><div>Go back to <a class="applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener"><span class="u-base"></span>/app</a>.</div></li></ol></div>
+</article>
+<article class="stop" id="s4" data-n="4" data-min="3" data-short="0">
+<header>
+  <div class="num">4</div>
+  <h3>App shell and navigation</h3>
+  <p class="show">Sidebar groups, workspace box, currency switch and rate dot, phone bottom bar and More menu.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener">Open screen <span class="p">/app</span></a>
+    <label class="donebox" for="done4"><input type="checkbox" id="done4" data-done="4"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Everything is one click away, and each person only sees the screens their role allows. The same app works on a computer and on a phone.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Point at the left sidebar and read the six groups: <strong>Dashboards</strong>, <strong>Operations</strong>, <strong>Finance</strong>, <strong>Partners</strong>, <strong>Company</strong>, <strong>Admin</strong>.</div></li><li><div>Point at the box at the top of the sidebar: property "Seaview Resort", organisation "Seaview Resort Co.". Explain that tapping it opens <strong>Switch workspace</strong> (lists under <strong>Organisation</strong> and <strong>Property</strong>, plus a <strong>New organisation</strong> link). It can only be tapped when there is more than one active property or organisation. It is shown live in section 29.</div></li><li><div>At the bottom of the sidebar, tap <strong>EUR</strong>, then <strong>USD</strong>, then <strong>THB</strong>. Every amount on the page changes at once. Say: this only changes what you see; records stay in the base currency, and converted figures are estimates at the latest rate.</div></li><li><div>Point at the small dot next to the currency codes. Green means the rates are less than a week old, amber means older or missing. Tap the dot to fetch new rates (daily European Central Bank rates).</div></li><li><div>Point at the theme icon next to it (shown in section 37), your name and role (<strong>Owner</strong>), the person icon (<strong>Your profile</strong>) and the <strong>Sign out</strong> icon.</div></li><li><div>Phone layout: make the browser window narrow until the sidebar disappears. Point at the bottom bar: <strong>Home</strong>, <strong>Guests</strong>, <strong>Expenses</strong>, <strong>Revenue</strong> and <strong>More</strong>. Tap <strong>More</strong> to open the <strong>Menu</strong> with every screen in the same six groups, plus <strong>Profile</strong> and <strong>Sign out</strong>. The top bar holds the property name, the currency switch and your initials. Widen the window again. (The full phone part is section 36.)</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Dashboards</h2></div>
+<article class="stop" id="s5" data-n="5" data-min="3" data-short="1">
+<header>
+  <div class="num">5</div>
+  <h3>Overview</h3>
+  <p class="show">The owner's one-page picture: money in and out, cash, in-house guests, arrivals, tasks.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener">Open screen <span class="p">/app</span></a>
+    <label class="donebox" for="done5"><input type="checkbox" id="done5" data-done="5"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>One page tells the owner how the business stands: money in, money out, cash, who is staying now and who is arriving.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>Total revenue</strong>, <strong>Total expenses</strong>, <strong>Capital funded</strong>, <strong>Net position</strong>.</div></li><li><div>At the top right tap the year button <strong>2026</strong>, then <strong>All</strong>. Only the four cards and the chart follow the year.</div></li><li><div>Under <strong>Revenue vs expenses</strong>, point at a month to see its figures. Tap <strong>Show table</strong> (twelve months with a <strong>Net</strong> column), then <strong>Show chart</strong>.</div></li><li><div>Under <strong>Cash position</strong>, read <strong>Total cash on hand</strong>, the <strong>Bank</strong> and <strong>Cash</strong> cards, and <strong>No invoice / receipt</strong> (expenses with no file attached: paperwork still to collect).</div></li><li><div>Under <strong>In-house now</strong>, point at the guest marked "balance due" in red and the ones marked "settled" in green.</div></li><li><div>Show <strong>Arriving in 7 days</strong> and the <strong>Tasks</strong> counts (Pending, Ongoing, Complete, Blocked).</div></li><li><div>Show the shortcuts: tap <strong>Guests</strong> next to a section title, then use the browser Back button. Say the <strong>No invoice / receipt</strong> card opens Expenses and a task card opens Tasks.</div></li></ol></div>
+</article>
+<article class="stop" id="s6" data-n="6" data-min="4" data-short="0">
+<header>
+  <div class="num">6</div>
+  <h3>Operations</h3>
+  <p class="show">The manager's morning screen and its five tabs, including TM30 and fire-safety alerts.</p>
+  <div class="meta">
+    <span class="chip">4 min</span>
+    
+    <a class="open applink" data-path="/app/operations" href="https://real-estate-ms-mu.vercel.app/app/operations" target="_blank" rel="noopener">Open screen <span class="p">/app/operations</span></a>
+    <label class="donebox" for="done6"><input type="checkbox" id="done6" data-done="6"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>This is the manager's morning screen. It shows what needs attention today without opening five different lists.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Point at the five tabs and the numbers on them. Point at the <strong>Tourism board portal</strong> button at the top right: a shortcut link the owner saved in Settings.</div></li><li><div>Tab <strong>Today's ops</strong>: read <strong>Check-ins today</strong>, <strong>Check-outs today</strong>, <strong>In-house</strong>, <strong>Available</strong>. Below, show <strong>Arriving today</strong>, <strong>Departing today</strong> (amount still due or <strong>Paid</strong>), <strong>TM30 pending</strong> (in-house guests not yet registered with immigration) and <strong>Fire safety</strong> (Room 1 expired, Room 2 a few days left, Room 3 within the month).</div></li><li><div>Tab <strong>Bookings</strong>: show <strong>Arriving in 14 days</strong> and <strong>Departing in 7 days</strong> with the balance to collect before they leave.</div></li><li><div>Tab <strong>Revenue &amp; collection</strong>: read <strong>Revenue this month</strong>, <strong>Outstanding</strong>, <strong>Older than 90d</strong>, <strong>In-house receivables</strong>. Show <strong>By source this month</strong> and the <strong>Outstanding balances</strong> list, biggest first. Tick <strong>Include older</strong> to add guests who left more than 90 days ago, then untick it.</div></li><li><div>Tab <strong>Tasks &amp; issues</strong>: read <strong>Overdue</strong>, <strong>Due today</strong>, <strong>Pending</strong>, <strong>Complete</strong>, and the two lists.</div></li><li><div>Tab <strong>Cash control</strong>: read <strong>Cash on hand</strong>, <strong>No invoice / receipt</strong>, <strong>Guest receivables</strong>, <strong>Revenue this month</strong>. Show <strong>Accounts</strong> and <strong>Latest expenses</strong> (a <strong>No invoice</strong> label marks those without a file).</div></li><li><div>Say: nothing is edited here. The buttons <strong>Guests</strong>, <strong>Tasks</strong>, <strong>Rooms</strong>, <strong>Accounts</strong> and <strong>Expenses</strong> jump to where the work is done.</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Daily operations and money</h2></div>
+<article class="stop" id="s7" data-n="7" data-min="8" data-short="1">
+<header>
+  <div class="num">7</div>
+  <h3>Guests</h3>
+  <p class="show">Search, filter, sort, export; add a booking live, split payment, invoice, email, public invoice link.</p>
+  <div class="meta">
+    <span class="chip">8 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app/guests" href="https://real-estate-ms-mu.vercel.app/app/guests" target="_blank" rel="noopener">Open screen <span class="p">/app/guests</span></a>
+    <label class="donebox" for="done7"><input type="checkbox" id="done7" data-done="7"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>This is the most important screen. You type a booking once, and the calendar, the revenue, the cash account and the guest invoice all follow from it.</p></blockquote>
+<h4 class="do"><span>Do</span> look around</h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>In-house</strong>, <strong>Arriving 7d</strong>, <strong>Departing 7d</strong>, <strong>Outstanding</strong>. Tap <strong>In-house</strong> to filter; find the guest with a red <strong>Balance</strong> and the <strong>TM30 pending</strong> label.</div></li><li><div>Tap the filter buttons <strong>All</strong>, <strong>Upcoming</strong>, <strong>In-house</strong>, <strong>Checked out</strong>. On an upcoming booking, point at the 30% deposit in <strong>Paid</strong>.</div></li><li><div>Type "Booking.com" in the search box, then clear it. Say the search also covers room, email, phone and passport number.</div></li><li><div>Click a column heading to sort, and click again to reverse.</div></li><li><div>At the bottom show "1–10 of 271", use the arrows, and change <strong>10 / page</strong> to 25.</div></li><li><div>Tap <strong>Export</strong> and show the four choices: <strong>Excel (.xlsx)</strong>, <strong>CSV</strong>, <strong>JSON</strong>, <strong>Print / PDF</strong>. Choose <strong>Excel (.xlsx)</strong>. Say: the file holds exactly what the filters show, on all pages. The same Export menu is on almost every list in the app.</div></li></ol>
+<h4 class="do"><span>Do</span> add a booking live</h4>
+<ol class="steps" start="7" style="counter-reset: step 6"><li><div>Tap <strong>Add booking</strong>. In <strong>New booking</strong>, under <strong>Stay</strong>: <strong>Room</strong> "Room 4 (No. 4)" (free tonight in fresh demo data), <strong>Guest name</strong> "Demo Guest", <strong>Check-in</strong> today, <strong>Check-out</strong> tomorrow, <strong>Booking source</strong> "Direct Booking", <strong>Guests</strong> 2.</div></li><li><div>Under <strong>Pricing</strong>: <strong>Rate per night</strong> 3500. <strong>Total stay</strong> fills in by itself.</div></li><li><div>Under <strong>Payment</strong>: <strong>Payment method</strong> "Cash", <strong>Payment 1 date</strong> today, <strong>Payment 1 amount</strong> 1000. Point out that <strong>Amount paid</strong> locks and shows the sum.</div></li><li><div>Under <strong>Contact &amp; immigration</strong>: <strong>Email</strong> "demo.guest@example.com". Leave <strong>TM30 immigration notification filed</strong> unticked.</div></li><li><div>Under <strong>Reporting</strong>: leave <strong>Add to revenue</strong> ticked and tick <strong>Show on legal page</strong>. Explain the two tick boxes: one makes it income, the other shows it to the lawyer or accountant.</div></li><li><div>Point at the red <strong>Balance</strong> at the bottom (2,500), then tap <strong>Save booking</strong>. The message "Booking added" appears.</div></li></ol>
+<h4 class="do"><span>Do</span> split payment, invoice, email</h4>
+<ol class="steps" start="13" style="counter-reset: step 12"><li><div>Search "Demo Guest". Point at the labels <strong>In-House</strong>, <strong>TM30 pending</strong>, <strong>Revenue</strong>, <strong>Legal</strong>.</div></li><li><div>Tap the pencil icon (<strong>Edit</strong>). Fill <strong>Payment 2 date</strong> today and <strong>Payment 2 amount</strong> 2500, tick <strong>TM30 immigration notification filed</strong>, and tap <strong>Save booking</strong>. The balance is now zero.</div></li><li><div>Tap the document icon (<strong>Create invoice</strong>). The invoice opens in a new tab as INV-2026-0013: company details, <strong>Bill to</strong>, the room line, <strong>Subtotal</strong>, <strong>VAT</strong>, <strong>Total</strong>, <strong>Deposit / paid</strong>, <strong>Balance due</strong> and "Paid in full".</div></li><li><div>On the invoice tap <strong>Print / Save PDF</strong> and show the printer window ("Save as PDF"), then cancel it.</div></li><li><div>Copy the invoice address and paste it into the private window: it opens without signing in. Say: this is the link the guest receives, so send it only to the guest.</div></li><li><div>Back on Guests, tap the envelope icon (<strong>Email invoice</strong>). Your own email app opens with the address, the subject and the link already written. Say honestly: the app prepares the message; you press send. Close the draft.</div></li><li><div>Say: the invoice is a copy of the booking at the moment it was created, so record all payments first. Also: the app does not block two bookings in the same room on the same dates; the Occupancy calendar makes an overlap visible.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>keep "Demo Guest" for now. It is used in sections 8, 10 and 12 and deleted at the end of section 12. If you present this section alone, delete it now with the bin icon (<strong>Delete</strong>).</p></div></div>
+</article>
+<article class="stop" id="s8" data-n="8" data-min="2" data-short="0">
+<header>
+  <div class="num">8</div>
+  <h3>Occupancy</h3>
+  <p class="show">The room calendar, occupancy, ADR and RevPAR for any month.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/occupancy" href="https://real-estate-ms-mu.vercel.app/app/occupancy" target="_blank" rel="noopener">Open screen <span class="p">/app/occupancy</span></a>
+    <label class="donebox" for="done8"><input type="checkbox" id="done8" data-done="8"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>One look shows which rooms are taken on which nights, and how well the property is filled this month.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the six cards: <strong>Occupancy</strong>, <strong>Nights sold</strong>, <strong>Bookings</strong>, <strong>Room revenue</strong>, <strong>ADR</strong> (average price of a sold night) and <strong>RevPAR</strong> (revenue per available room night).</div></li><li><div>On the calendar, point at today's column, one row per room, and the "Demo" bar in the Room 4 row. Say that overlapping bookings are drawn one above the other, so a double booking is easy to spot.</div></li><li><div>Tap a coloured bar. The pop-up shows check-in, check-out, <strong>Stay total</strong>, <strong>Paid</strong>, <strong>Balance</strong>, <strong>Source</strong> and TM30 status. Show <strong>Open guests</strong>, then tap <strong>Close</strong>.</div></li><li><div>Tap the right arrow (<strong>Next month</strong>) to see the bookings already taken, then <strong>This month</strong>. Mention the month box between the arrows for any month and year.</div></li><li><div>Point at <strong>Guests this month</strong> under the calendar.</div></li></ol></div>
+</article>
+<article class="stop" id="s9" data-n="9" data-min="3" data-short="0">
+<header>
+  <div class="num">9</div>
+  <h3>Rooms and room detail</h3>
+  <p class="show">Room cards, then one room's guest, inventory, fire extinguishers and photos.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/app/rooms" href="https://real-estate-ms-mu.vercel.app/app/rooms" target="_blank" rel="noopener">Open screen <span class="p">/app/rooms</span></a>
+    <label class="donebox" for="done9"><input type="checkbox" id="done9" data-done="9"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Every room has its own record: who is in it, what is inside it, and when its fire extinguisher expires.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the five room cards with the labels <strong>Occupied</strong> (guest name and leaving day) or <strong>Available</strong>. Point at <strong>Add room</strong>, the pencil icon (<strong>Edit</strong>), the bin icon (<strong>Delete</strong>) and the <strong>Show inactive</strong> tick box. Say a closed room is switched off with <strong>Active</strong>, not deleted.</div></li><li><div>Tap the <strong>Room 3</strong> card. At the top right it says <strong>Occupied</strong> with the guest's name.</div></li><li><div>Under <strong>Current guest</strong>, show the dates and the balance owed. Under <strong>Upcoming</strong>, the next bookings for this room.</div></li><li><div>Under <strong>Inventory</strong>, show the items grouped by category (Furniture, Electronics, Bathroom and so on) and the <strong>Add item</strong> button.</div></li><li><div>Under <strong>Fire safety</strong>, show the amber label (about "21d left"). Tap <strong>Add</strong> to show the form (<strong>Location</strong>, <strong>Serial number</strong>, <strong>Expiry date</strong>, <strong>Last inspected</strong>, <strong>Notes</strong>), then close it.</div></li><li><div>Under <strong>Photos</strong>, show the two example photos, then tap <strong>Attach</strong> and pick any picture to show a third appear (up to 5 per room; the first one is used on the room card). Tap the photo to see it large.</div></li><li><div>Tap <strong>Back</strong>, open <strong>Room 1</strong> and show the red "Expired" label. This is the same alert the manager saw on Operations.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>the photo can stay, or remove it with the X on its corner and <strong>Remove</strong>.</p></div></div>
+</article>
+<article class="stop" id="s10" data-n="10" data-min="3" data-short="1">
+<header>
+  <div class="num">10</div>
+  <h3>Revenue</h3>
+  <p class="show">The one income list: locked booking lines and manual income added live.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app/revenue" href="https://real-estate-ms-mu.vercel.app/app/revenue" target="_blank" rel="noopener">Open screen <span class="p">/app/revenue</span></a>
+    <label class="donebox" for="done10"><input type="checkbox" id="done10" data-done="10"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>There is one list of income, and every dashboard adds up this same list. That is why the numbers never disagree.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>Total revenue</strong>, <strong>This month</strong>, <strong>Filtered total</strong>, <strong>Shown to legal</strong>.</div></li><li><div>Under <strong>By source</strong>, tap <strong>Booking.com</strong>, then tap it again. Under <strong>Monthly</strong>, tap a month tile, then tap it again.</div></li><li><div>Search "Demo Guest". The line carries the <strong>Booking</strong> label with a lock; the pencil and bin are greyed out. Say: booking income can only be changed on the booking, so it cannot drift. It is dated on the check-out day and counts the <strong>Total stay</strong>.</div></li><li><div>Clear the search and choose "Other Income" in the <strong>All sources</strong> box. These are the <strong>Manual</strong> lines: "Restaurant &amp; bar takings", "Island tours commission", "Laundry &amp; airport transfers". Set the box back.</div></li><li><div>Tap <strong>Add revenue</strong>. In <strong>New revenue</strong>: <strong>Date</strong> today, <strong>Type / source</strong> "Other Income", <strong>Description</strong> "Demo: minibar sales", <strong>Amount</strong> 800, tick <strong>Show to legal</strong>. Tap <strong>Save revenue</strong>.</div></li><li><div>Tap <strong>Legal: yes</strong>, then <strong>All</strong>. Tap <strong>Export</strong> and say the file has an <strong>Origin</strong> column that reads "Booking" or "Manual".</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>search "Demo: minibar", tap the bin icon (<strong>Delete</strong>) and confirm. Or keep it until section 13 to show it on the legal page, and delete it afterwards.</p></div></div>
+</article>
+<article class="stop" id="s11" data-n="11" data-min="6" data-short="1">
+<header>
+  <div class="num">11</div>
+  <h3>Expenses</h3>
+  <p class="show">Scan a receipt into an expense, attach the image, and expenses paid in EUR and USD.</p>
+  <div class="meta">
+    <span class="chip">6 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app/expenses" href="https://real-estate-ms-mu.vercel.app/app/expenses" target="_blank" rel="noopener">Open screen <span class="p">/app/expenses</span></a>
+    <label class="donebox" for="done11"><input type="checkbox" id="done11" data-done="11"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Photograph a receipt and the expense fills itself in. Every expense keeps its receipt, and you decide which ones your accountant sees.</p></blockquote>
+<h4 class="do"><span>Do</span> look around</h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>Total expenses</strong>, <strong>Filtered total</strong>, <strong>Legal expenses</strong>, <strong>Records</strong>.</div></li><li><div>In the list point at <strong>Transaction #</strong>, <strong>Doc #</strong>, the <strong>Audit</strong> label (<strong>To check</strong>, <strong>Checked</strong>, <strong>YES</strong>), the <strong>Legal</strong> label (<strong>Pending</strong>, <strong>Accepted</strong>, <strong>Clarification Needed</strong>, <strong>Rejected</strong>) and the paperclip. No paperclip means no receipt.</div></li><li><div>Choose "Maintenance" in <strong>All categories</strong> and find "Santos Construction" (Room 5 bathroom renovation, type CAPEX). Set the box back. Tap <strong>Legal only</strong>, then tap it again. Tap a year button, then <strong>All years</strong>.</div></li></ol>
+<h4 class="do"><span>Do</span> scan a receipt live</h4>
+<ol class="steps" start="4" style="counter-reset: step 3"><li><div>Tap <strong>Add expense</strong>. At the top of <strong>New expense</strong> tap <strong>Scan receipt</strong> and choose your receipt photo (on a phone, <strong>Camera</strong> takes it on the spot).</div></li><li><div>Wait a few seconds. The filled fields are outlined: <strong>Supplier</strong>, <strong>Document #</strong>, <strong>Payment date</strong>, <strong>Amount</strong>, <strong>Currency</strong>, <strong>Description</strong>, <strong>Category</strong>. Say: always check the amount and the date against the paper.</div></li><li><div>Tap <strong>Attach this image</strong>. The label changes to <strong>Attached</strong>. Say: scanning only reads; this button keeps the photo with the expense.</div></li><li><div>Type "Demo" at the start of <strong>Description</strong>. Choose <strong>Payment method</strong> "Cash" and a <strong>Category</strong> if it is empty. Tick <strong>Share with legal</strong>. Tap <strong>Save expense</strong>. The message gives the automatic number.</div></li><li><div>If scanning is not switched on (the message says it "is not switched on for this service yet"): say so, then type it by hand: <strong>Category</strong> "Maintenance", <strong>Supplier</strong> "Demo Hardware Store", <strong>Amount</strong> 1250, <strong>Payment method</strong> "Cash", <strong>Paid by</strong> "General Manager", <strong>Description</strong> "Demo: light bulbs", tick <strong>Share with legal</strong>, attach the photo under <strong>Receipt or invoice</strong> with <strong>Choose file</strong>, wait for "File uploaded", and tap <strong>Save expense</strong>.</div></li></ol>
+<h4 class="do"><span>Do</span> foreign currency</h4>
+<ol class="steps" start="9" style="counter-reset: step 8"><li><div>Tap <strong>Add expense</strong>. Set <strong>Currency</strong> to "EUR" and type <strong>Amount</strong> 100. Point at the note under the amount showing roughly what it is worth in THB. Tap <strong>Cancel</strong>.</div></li><li><div>Search "Channel Manager" (paid in EUR), then "Meta Ads" (paid in USD). Each line shows the original amount and the THB value. Say: the value is fixed once, with the rate on the day it was saved.</div></li><li><div>Tap <strong>Export</strong> and say the file has both the original amount and <strong>Amount (base)</strong>.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>keep the "Demo" expense. It is reviewed and then deleted in section 13.</p></div></div>
+</article>
+<article class="stop" id="s12" data-n="12" data-min="3" data-short="0">
+<header>
+  <div class="num">12</div>
+  <h3>Accounts</h3>
+  <p class="show">Bank and Cash balances that moved by themselves, and Adjust balance.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/app/accounts" href="https://real-estate-ms-mu.vercel.app/app/accounts" target="_blank" rel="noopener">Open screen <span class="p">/app/accounts</span></a>
+    <label class="donebox" for="done12"><input type="checkbox" id="done12" data-done="12"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>The cash position keeps itself up to date. Record a guest payment or an expense and the right account moves without anyone doing a second entry.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>Total cash on hand</strong>, <strong>Accounts</strong>, <strong>Inflows</strong>, <strong>Outflows</strong>. Under <strong>Balances</strong>, show the <strong>Bank</strong> and <strong>Cash</strong> cards.</div></li><li><div>Under <strong>Movements</strong>, find today's lines: two <strong>Guest payment</strong> lines for "Demo Guest" (1,000 and 2,500, green) and one <strong>Expense</strong> line for the demo expense (red). The <strong>Actions</strong> column says <strong>auto</strong>: the app created them.</div></li><li><div>Choose "Cash" in <strong>All accounts</strong>. Search "deposited" to show the monthly "Cash takings deposited to the bank" adjustments. Clear the search and tap <strong>Clear</strong>.</div></li><li><div>On the <strong>Cash</strong> card tap <strong>Adjust balance</strong>. <strong>Direction</strong> <strong>Remove money (−)</strong>, <strong>Amount</strong> 100, <strong>Description</strong> "Demo: cash count short". Point at <strong>New balance</strong>, then tap <strong>Post adjustment</strong>.</div></li><li><div>Show <strong>Add account</strong> (types <strong>Bank account</strong>, <strong>Cash</strong>, <strong>E-wallet</strong>, <strong>Other</strong>; <strong>Opening balance</strong>) and close the form. Mention <strong>Show inactive</strong> and the <strong>Export</strong> menu.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p></p></div>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>In <strong>Movements</strong>, tap the bin icon (<strong>Delete adjustment</strong>) on "Demo: cash count short" and confirm.</div></li><li><div>Go to <a class="applink" data-path="/app/guests" href="https://real-estate-ms-mu.vercel.app/app/guests" target="_blank" rel="noopener"><span class="u-base"></span>/app/guests</a>, search "Demo Guest", tap the bin icon (<strong>Delete</strong>) and confirm. Its revenue line and its two account movements disappear with it. The invoice already created is kept for the record.</div></li></ol></div>
+</article>
+<article class="stop" id="s13" data-n="13" data-min="4" data-short="1">
+<header>
+  <div class="num">13</div>
+  <h3>Legal and accounting</h3>
+  <p class="show">The accountant's page: review an expense, then the CSV and Print report.</p>
+  <div class="meta">
+    <span class="chip">4 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app/legal" href="https://real-estate-ms-mu.vercel.app/app/legal" target="_blank" rel="noopener">Open screen <span class="p">/app/legal</span></a>
+    <label class="donebox" for="done13"><input type="checkbox" id="done13" data-done="13"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Your lawyer or accountant gets their own page. They see only what you chose to share, mark each expense, and take the month away as a report.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the <strong>Year</strong> and <strong>Month</strong> lists and the search box. Read the five cards: <strong>Total</strong>, <strong>Pending</strong>, <strong>Accepted</strong>, <strong>Clarification</strong>, <strong>Rejected</strong>.</div></li><li><div>Under <strong>Shared expenses</strong>, tap the tabs <strong>All</strong>, <strong>Pending</strong>, <strong>Accepted</strong>, <strong>Clarification</strong>, <strong>Rejected</strong>. Point at a reviewer's note shown in colour under a line and at each group's <strong>Subtotal</strong>.</div></li><li><div>In <strong>Pending</strong>, find the "Demo" expense. Tap the small arrow at its left to open the details (<strong>Description</strong>, <strong>Method</strong>, <strong>Paid by</strong>, <strong>Type</strong>, <strong>Transaction</strong>, <strong>Audit</strong>, <strong>Legal notes</strong>) and tap the paperclip (<strong>Open attachment</strong>) to see the receipt.</div></li><li><div>Point at the three icons on the right: tick (<strong>Accept</strong>), question mark (<strong>Needs clarification</strong>), cross (<strong>Reject</strong>). Tap the tick. In <strong>Review expense</strong>, check <strong>Decision</strong> and <strong>Review date</strong>, type "Receipt checked" in <strong>Notes / reason</strong>, and tap <strong>Save review</strong>. The expense moves to <strong>Accepted</strong> and the cards update.</div></li><li><div>Scroll to <strong>Revenue shown to legal</strong>: lines tagged <strong>Booking</strong> or <strong>Manual</strong>, with a page icon for the invoice and a paperclip for a file, and <strong>Total (Legal)</strong> underneath.</div></li><li><div>Choose a month in <strong>Month</strong>. Tap <strong>CSV</strong> (top right): a file named legal-report- with the period is saved and opens in Excel.</div></li><li><div>Tap <strong>Print</strong>: the <strong>Legal / Accounting Report</strong> opens with the printer window. Show "Save as PDF", then cancel. Set <strong>Month</strong> back to <strong>All months</strong>.</div></li><li><div>Say: nothing is added or deleted here. Items arrive through three tick boxes: <strong>Share with legal</strong> on an expense, <strong>Show on legal page</strong> on a booking, <strong>Show to legal</strong> on manual revenue.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>go to <a class="applink" data-path="/app/expenses" href="https://real-estate-ms-mu.vercel.app/app/expenses" target="_blank" rel="noopener"><span class="u-base"></span>/app/expenses</a>, search "Demo", tap the bin icon (<strong>Delete</strong>) and confirm. The money goes back to the Cash account. Delete "Demo: minibar sales" on Revenue if you kept it.</p></div></div>
+</article>
+<article class="stop" id="s14" data-n="14" data-min="5" data-short="0">
+<header>
+  <div class="num">14</div>
+  <h3>Budget</h3>
+  <p class="show">Setup, Input (revenue matrix, expense items, rent schedule) and Control (P&amp;L, Monthly).</p>
+  <div class="meta">
+    <span class="chip">5 min</span>
+    
+    <a class="open applink" data-path="/app/budget" href="https://real-estate-ms-mu.vercel.app/app/budget" target="_blank" rel="noopener">Open screen <span class="p">/app/budget</span></a>
+    <label class="donebox" for="done14"><input type="checkbox" id="done14" data-done="14"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Plan the year once, room by room and cost by cost. The app then compares the plan with what really happened, with no extra typing.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Point at the <strong>Year</strong> list (top right) and the three tabs <strong>Setup</strong>, <strong>Input</strong>, <strong>Control</strong>. The screen opens on <strong>Input</strong>.</div></li><li><div>Tab <strong>Setup</strong>: one line per room with <strong>High season rate</strong>, <strong>Low season rate</strong> and <strong>Target occupancy %</strong>. Tap the pencil icon (<strong>Edit</strong>) on Room 1 to show the form, then close it. Say these are reference figures only. (<strong>Create rows for all rooms</strong> appears when a room has no line yet.)</div></li><li><div>Tab <strong>Input</strong>, <strong>Revenue matrix</strong>: one line per room, one column per month, a <strong>Total</strong> column and a <strong>Total</strong> line. Tap the cell for Room 1 in Dec. Note the amount, type 150000 in <strong>Amount</strong>, show <strong>Season</strong>, tap <strong>Save</strong> and watch the totals change. Tap the cell again, type the old amount back and tap <strong>Save</strong>. Mention <strong>Clear</strong> empties a cell.</div></li><li><div><strong>Expense items</strong>: show the bands <strong>OPEX · operating</strong> and <strong>CAPEX · capital</strong>, the bold category lines, and <strong>Total OPEX</strong>, <strong>Total CAPEX</strong>, <strong>Total expenses</strong>. Point at the three CAPEX items (Room 5 bathroom renovation, New air conditioners, Solar water heating).</div></li><li><div>Tap the Jan cell of "Internet". Type <strong>Amount</strong> 3000, tap <strong>Copy this amount to all 12 months</strong>, then <strong>Copy</strong>. (The item is already 3,000 in every month, so nothing changes.) Mention <strong>Subcategory</strong>, <strong>Save</strong> and <strong>Delete</strong> in the same form.</div></li><li><div>Tap <strong>Add item</strong> to show the form (<strong>Item</strong>, <strong>Category</strong>, <strong>Type</strong> <strong>OPEX</strong> or <strong>CAPEX</strong>, <strong>Amount</strong>, <strong>Apply to</strong>), then close it without adding.</div></li><li><div><strong>Rent schedule</strong>: three lease years with <strong>Year</strong>, <strong>Label</strong>, <strong>Annual rent</strong>, <strong>VAT</strong>, <strong>Monthly</strong>. Show <strong>Add year</strong> and close it.</div></li><li><div>Tab <strong>Control</strong>: read the six cards (<strong>Budget revenue</strong>, <strong>Actual revenue</strong>, <strong>Budget expenses</strong>, <strong>Actual expenses</strong>, <strong>Budget result</strong>, <strong>Actual result</strong>). Tap <strong>P&amp;L</strong> for the year table (<strong>Line</strong>, <strong>Budget</strong>, <strong>Actual</strong>, <strong>Variance</strong>), then <strong>Monthly</strong>. Green is good news, red is bad news.</div></li><li><div>Tap <strong>Export</strong> next to the P&amp;L. Say each part of the budget exports on its own.</div></li><li><div>Honest note if asked: real expenses are matched to the budget by category and all count under OPEX, so CAPEX lines show a dash under <strong>Actual</strong>.</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Partners</h2></div>
+<article class="stop" id="s15" data-n="15" data-min="5" data-short="1">
+<header>
+  <div class="num">15</div>
+  <h3>Partner dashboard</h3>
+  <p class="show">All eight tabs of the read-only report for owners and partners.</p>
+  <div class="meta">
+    <span class="chip">5 min</span>
+    <span class="chip short">In the 15-minute version</span>
+    <a class="open applink" data-path="/app/partner-dashboard" href="https://real-estate-ms-mu.vercel.app/app/partner-dashboard" target="_blank" rel="noopener">Open screen <span class="p">/app/partner-dashboard</span></a>
+    <label class="donebox" for="done15"><input type="checkbox" id="done15" data-done="15"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Partners open one read-only page and find every answer they normally ask the manager for. It reads the same records the team works on.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div><strong>Financial overview</strong>: read <strong>Total revenue</strong>, <strong>Total expenses</strong>, <strong>Net position</strong>, <strong>Account total</strong>. Show <strong>Revenue by source</strong>, <strong>Accounts</strong> and <strong>Monthly revenue vs expenses</strong>, and tap a year button.</div></li><li><div><strong>Funding &amp; investment</strong>: read <strong>Total capital</strong>, <strong>Partners</strong>, <strong>Agreed capital</strong>, <strong>Funded</strong>. On the partner cards show Elena Marquez and David Okonkwo fully paid in, Mika Sorensen at 80% and Lucia Ferreira at 60% of agreed.</div></li><li><div><strong>Shareholding</strong>: read <strong>Total allocated</strong> (100%, "ownership adds up"), <strong>Fully settled</strong>, <strong>Still owed</strong>, <strong>Total capital</strong>. In the table explain <strong>Ownership</strong>, <strong>Nominal</strong>, <strong>Paid in</strong>, <strong>Balance</strong>, <strong>Funded</strong>. Click a column header to sort. Tap the pencil icon (<strong>Edit ownership %</strong>) on one partner to show it is the only thing editable here, then close without saving.</div></li><li><div><strong>Budget vs actual</strong>: read <strong>Revenue</strong>, <strong>Expenses</strong>, <strong>Net result</strong>, <strong>Variance</strong>. Show the three tables: <strong>Revenue</strong>, <strong>Operating expenses (OPEX)</strong>, <strong>Capital expenditure (CAPEX)</strong>, and the box with <strong>Net budget</strong>, <strong>Net actual</strong>, <strong>Variance</strong>.</div></li><li><div><strong>Business KPIs</strong>: read <strong>Occupancy</strong>, <strong>ADR</strong>, <strong>RevPAR</strong>, <strong>Avg stay</strong>. Change the month in the month box at the top right. Show <strong>Last 12 months</strong> (occupancy green from 70%, amber from 40%).</div></li><li><div><strong>Cost structure</strong>: read <strong>Total expenses</strong>, <strong>Categories</strong>, <strong>Largest</strong>, <strong>Share of largest</strong>, and the list <strong>Expenses by category</strong>.</div></li><li><div><strong>Forecast</strong>: read <strong>Projected cash</strong>, <strong>Future bookings</strong>, <strong>Budget revenue left</strong>, <strong>Budget expenses left</strong>. Show <strong>Upcoming bookings</strong> with <strong>Total</strong> and <strong>Balance</strong>, and page through it with the arrows.</div></li><li><div><strong>Partners</strong>: one profile card per partner. Tap <strong>Manage partners</strong> to go to the next screen.</div></li></ol></div>
+</article>
+<article class="stop" id="s16" data-n="16" data-min="2" data-short="0">
+<header>
+  <div class="num">16</div>
+  <h3>Partners</h3>
+  <p class="show">The four partner profiles with ownership and agreed capital.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/partners" href="https://real-estate-ms-mu.vercel.app/app/partners" target="_blank" rel="noopener">Open screen <span class="p">/app/partners</span></a>
+    <label class="donebox" for="done16"><input type="checkbox" id="done16" data-done="16"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Each partner has a profile with their share and what they agreed to pay in. The app checks that the shares add up to 100%.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the line under the title: "4 partners · 100.00% ownership recorded". Say a warning <strong>Ownership ≠ 100%</strong> appears when it does not add up.</div></li><li><div>On the cards show Elena Marquez 40%, David Okonkwo 25%, Mika Sorensen 20%, Lucia Ferreira 15%, with <strong>Contributed</strong> and the progress bar.</div></li><li><div>Tap Lucia Ferreira's card. The pop-up shows the bio, <strong>Email</strong>, <strong>Phone</strong>, <strong>Nationality</strong>, <strong>Joined</strong> and <strong>Hour rate</strong>. Tap <strong>Close</strong>.</div></li><li><div>Tap the pencil icon (<strong>Edit</strong>) on a card (move the mouse over the card to see it). Show the sections <strong>Profile</strong>, <strong>Ownership &amp; capital</strong> (<strong>Ownership %</strong>, <strong>Agreed capital</strong>, <strong>Hour rate</strong>) and <strong>Contact &amp; access</strong> (<strong>Linked team member</strong>), the <strong>Photo</strong> field and the <strong>Active</strong> tick box. Tap <strong>Cancel</strong>.</div></li><li><div>Point at <strong>Add partner</strong>.</div></li></ol></div>
+</article>
+<article class="stop" id="s17" data-n="17" data-min="2" data-short="0">
+<header>
+  <div class="num">17</div>
+  <h3>Capital</h3>
+  <p class="show">Who paid in what and when; add a contribution live.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/founding" href="https://real-estate-ms-mu.vercel.app/app/founding" target="_blank" rel="noopener">Open screen <span class="p">/app/founding</span></a>
+    <label class="donebox" for="done17"><input type="checkbox" id="done17" data-done="17"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Every payment a partner puts into the company is on record, so nobody argues about who paid what and when.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the cards: <strong>Total capital founded</strong>, <strong>Partners</strong>, <strong>Contributions</strong>, <strong>Latest</strong>. Under <strong>By partner</strong>, show each partner's total and share of capital.</div></li><li><div>In the list show <strong>Date</strong>, <strong>Partner</strong>, <strong>Method</strong>, <strong>Amount</strong>, <strong>EUR (as paid)</strong>, <strong>Notes</strong> ("Initial capital call", "Second tranche", "Renovation top-up").</div></li><li><div>Type "Lucia" in the search box; the total under the list follows the search. Clear it. Click the <strong>Amount</strong> header to sort.</div></li><li><div>Tap <strong>Add contribution</strong>: <strong>Date</strong> today, <strong>Partner</strong> "Lucia Ferreira", <strong>Amount</strong> 50000, <strong>Method</strong> "Bank Transfer", <strong>Notes</strong> "Demo contribution". Tap <strong>Save</strong>. Her card and the totals go up.</div></li><li><div>Mention <strong>Export</strong>. Say: a contribution counts as partner capital only; it does not move an account.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>tap the bin icon (<strong>Delete</strong>) on "Demo contribution" and confirm.</p></div></div>
+</article>
+<article class="stop" id="s18" data-n="18" data-min="1" data-short="0">
+<header>
+  <div class="num">18</div>
+  <h3>Partner work</h3>
+  <p class="show">Partner hours per month and what they are worth.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/partner-work" href="https://real-estate-ms-mu.vercel.app/app/partner-work" target="_blank" rel="noopener">Open screen <span class="p">/app/partner-work</span></a>
+    <label class="donebox" for="done18"><input type="checkbox" id="done18" data-done="18"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Partners who work in the business log their hours, and the app shows what that work is worth.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read <strong>Total value</strong>, <strong>Total hours</strong>, <strong>Months</strong>, <strong>Partners</strong> and the <strong>By partner</strong> cards.</div></li><li><div>Show the records grouped by month, newest first, each as hours × rate with its value.</div></li><li><div>Choose a partner in <strong>All partners</strong> and a year in <strong>All years</strong>; the cards follow. Set both back.</div></li><li><div>Tap <strong>Add hours</strong> to show <strong>Month</strong>, <strong>Partner</strong>, <strong>Hours</strong>, <strong>Rate per hour</strong> and the <strong>Value</strong> at the bottom, then close it. Mention <strong>Export</strong>. Say: for information only; it pays nobody and moves no account.</div></li></ol></div>
+</article>
+<article class="stop" id="s19" data-n="19" data-min="2" data-short="0">
+<header>
+  <div class="num">19</div>
+  <h3>Meetings</h3>
+  <p class="show">Meeting minutes with decisions, action items and an attachment.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/meetings" href="https://real-estate-ms-mu.vercel.app/app/meetings" target="_blank" rel="noopener">Open screen <span class="p">/app/meetings</span></a>
+    <label class="donebox" for="done19"><input type="checkbox" id="done19" data-done="19"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>The minutes of every partner meeting are in one place: who was there, what was decided and who does what next.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the four meetings, newest first, with their labels (participants, files, <strong>Decisions</strong>, <strong>Action items</strong>).</div></li><li><div>Tap "Annual planning meeting". It opens out to show the participants, <strong>Agenda</strong>, <strong>Decisions</strong>, <strong>Action items</strong> and <strong>Attachments</strong>. Tap the icon at the end of "Budget summary.png" (<strong>Open</strong>); the placeholder picture opens in a new tab.</div></li><li><div>Point at <strong>Edit</strong> and <strong>Delete</strong> at the bottom of the opened meeting.</div></li><li><div>Type "capital" in the search box (it searches title, agenda and decisions), then clear it.</div></li><li><div>Tap <strong>New meeting</strong> to show <strong>Date</strong>, <strong>Title</strong>, <strong>Participants</strong> (tap names to tick them), <strong>Other participant</strong> with <strong>Add</strong>, the <strong>Minutes</strong> boxes and <strong>Attach</strong>. Tap <strong>Cancel</strong>.</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Team and company</h2></div>
+<article class="stop" id="s20" data-n="20" data-min="2" data-short="0">
+<header>
+  <div class="num">20</div>
+  <h3>Tasks</h3>
+  <p class="show">The shared to-do list: overdue first, filters, quick status change.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/tasks" href="https://real-estate-ms-mu.vercel.app/app/tasks" target="_blank" rel="noopener">Open screen <span class="p">/app/tasks</span></a>
+    <label class="donebox" for="done20"><input type="checkbox" id="done20" data-done="20"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>A shared to-do list for the whole team, with a name and a date on every job, so overdue work is visible to everyone.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the line under the title (open and overdue tasks). Overdue tasks come first with a red <strong>Overdue</strong> label.</div></li><li><div>Tap <strong>All</strong>, <strong>Overdue</strong>, <strong>Pending</strong>, <strong>Ongoing</strong>, <strong>Complete</strong>, <strong>Blocked</strong>. Under <strong>Blocked</strong> show "Pool pump warranty claim". Tap <strong>All</strong>.</div></li><li><div>Choose "Finance" in <strong>All departments</strong>, then set it back. Tap <strong>Assigned to me</strong> and tap it again.</div></li><li><div>On "Staff fire drill", open the status box in the <strong>Status</strong> column and choose <strong>Ongoing</strong>. It is saved at once.</div></li><li><div>Tap <strong>Add task</strong> to show <strong>Topic</strong>, <strong>Project</strong>, <strong>Department</strong>, <strong>Assign to team member</strong>, <strong>Responsible person</strong>, <strong>Target date</strong>, <strong>Status</strong>, <strong>Status notes</strong> and <strong>Visible to managers</strong>. Tap <strong>Cancel</strong>. Mention search and <strong>Export</strong>.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>none needed; the status change can stay.</p></div></div>
+</article>
+<article class="stop" id="s21" data-n="21" data-min="2" data-short="0">
+<header>
+  <div class="num">21</div>
+  <h3>Complaints</h3>
+  <p class="show">The open Critical complaint, resolved live.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/complaints" href="https://real-estate-ms-mu.vercel.app/app/complaints" target="_blank" rel="noopener">Open screen <span class="p">/app/complaints</span></a>
+    <label class="donebox" for="done21"><input type="checkbox" id="done21" data-done="21"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Guest complaints are written down and followed until they are solved, so nothing serious is forgotten.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the four cards: <strong>Open</strong>, <strong>In progress</strong>, <strong>Critical</strong>, <strong>Resolved this month</strong>.</div></li><li><div>Tap <strong>Critical</strong>. The list shows the loose balcony railing in Room 5 and a <strong>Critical only ×</strong> button appears.</div></li><li><div>Tap the pencil icon (<strong>Edit</strong>) on it. Change <strong>Status</strong> to <strong>Resolved</strong>, type "Railing fixed and checked" in <strong>Resolution notes</strong>, see <strong>Resolved on</strong> fill in with today, and tap <strong>Save complaint</strong>.</div></li><li><div>Tap <strong>Critical only ×</strong>. Tap the filters <strong>All</strong>, <strong>Open</strong>, <strong>In Progress</strong>, <strong>Resolved</strong>, <strong>Closed</strong>. Click <strong>Severity</strong> to sort.</div></li><li><div>Tap <strong>Log complaint</strong> to show <strong>Date</strong>, <strong>Guest name</strong>, <strong>Room</strong>, <strong>Category</strong>, <strong>Description</strong>, <strong>Severity</strong>, <strong>Status</strong> and <strong>Filed by</strong>, then close it. Mention <strong>Export</strong>.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>none needed; it can stay.</p></div></div>
+</article>
+<article class="stop" id="s22" data-n="22" data-min="2" data-short="0">
+<header>
+  <div class="num">22</div>
+  <h3>Staff hours</h3>
+  <p class="show">Hours and pay per staff member per month.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/staff-hours" href="https://real-estate-ms-mu.vercel.app/app/staff-hours" target="_blank" rel="noopener">Open screen <span class="p">/app/staff-hours</span></a>
+    <label class="donebox" for="done22"><input type="checkbox" id="done22" data-done="22"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Record who worked how many hours, and the pay per person per month is worked out for you.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the line under the title: the month, total hours and total pay. The screen opens on the current month.</div></li><li><div>Show the cards for the six staff members. Tap one to see only that person, tap again for everyone.</div></li><li><div>In the list show <strong>Hours</strong>, <strong>Rate</strong> and <strong>Total</strong>, and the totals line with <strong>Hours</strong> and <strong>Pay</strong>.</div></li><li><div>Change the month box to last month, then to <strong>All months</strong>, then back to this month. Mention the <strong>All staff</strong> box.</div></li><li><div>Tap <strong>Add hours</strong> to show <strong>Staff member</strong> (names are suggested), <strong>Date</strong>, <strong>Hours</strong>, <strong>Hourly rate</strong>, <strong>Role</strong>, <strong>Department</strong>, <strong>Notes</strong> and the <strong>Pay</strong> at the bottom, then close it. Mention <strong>Export</strong>.</div></li><li><div>Say: this records hours and works out pay. Paying wages is recorded as an expense.</div></li></ol></div>
+</article>
+<article class="stop" id="s23" data-n="23" data-min="2" data-short="0">
+<header>
+  <div class="num">23</div>
+  <h3>Documents</h3>
+  <p class="show">The company filing cabinet; add a document with a file.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/documents" href="https://real-estate-ms-mu.vercel.app/app/documents" target="_blank" rel="noopener">Open screen <span class="p">/app/documents</span></a>
+    <label class="donebox" for="done23"><input type="checkbox" id="done23" data-done="23"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>A filing cabinet for the company's papers. The lease, the licence and the insurance policy are found in seconds.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the 11 documents and the category buttons (<strong>All</strong>, Contracts, Permits, Legal and so on). Tap "Contracts", then <strong>All</strong>.</div></li><li><div>Type "lease" in the search box, then clear it. Click the <strong>Date</strong> header to sort.</div></li><li><div>Click the name "Fire safety inspection certificate". The file opens in a new tab (the placeholder picture in the demo).</div></li><li><div>Tap <strong>Add document</strong>. Under <strong>File</strong> tap <strong>Choose file</strong> and pick any file; wait for "File uploaded". Set <strong>Name</strong> "Demo licence", <strong>Category</strong> "Permits", <strong>Document date</strong> today. Tap <strong>Save document</strong>. Say: files up to 10 MB; on a phone most forms also have a <strong>Camera</strong> button.</div></li><li><div>Tap <strong>Export</strong> and say it lists the documents, not the files themselves.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>tap the bin icon (<strong>Delete</strong>) on "Demo licence" and confirm.</p></div></div>
+</article>
+<article class="stop" id="s24" data-n="24" data-min="2" data-short="0">
+<header>
+  <div class="num">24</div>
+  <h3>Log-in vault</h3>
+  <p class="show">Reveal, show and copy a stored password.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/logins" href="https://real-estate-ms-mu.vercel.app/app/logins" target="_blank" rel="noopener">Open screen <span class="p">/app/logins</span></a>
+    <label class="donebox" for="done24"><input type="checkbox" id="done24" data-done="24"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>The passwords for the booking sites and the bank are no longer on a sticky note. They are stored scrambled, and only trusted roles can open this screen.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the five log-ins with <strong>Service</strong>, <strong>Username</strong>, <strong>Password</strong>, <strong>Notes</strong>, <strong>Added by</strong>.</div></li><li><div>On "Booking.com extranet" tap <strong>Reveal</strong>. The password is fetched but still shown as dots.</div></li><li><div>Tap the eye icon (<strong>Show</strong>): it reads demo-Booking-2026!. Tap the eye again (<strong>Hide</strong>).</div></li><li><div>Tap the copy icon (<strong>Copy password</strong>); "Password copied" appears. Tap the copy icon next to the user name (<strong>Copy username</strong>).</div></li><li><div>Tap the X icon (<strong>Forget</strong>) to put it away. Say a revealed password hides itself after 30 seconds.</div></li><li><div>Tap <strong>Add log-in</strong> to show <strong>Service</strong>, <strong>URL</strong>, <strong>Username</strong>, <strong>Password</strong> and <strong>Notes</strong>, then close it.</div></li><li><div>Tap <strong>Export</strong> and say passwords are never included. Say only Owner and Manager see this screen by default.</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Settings</h2></div>
+<article class="stop" id="s25" data-n="25" data-min="1" data-short="0">
+<header>
+  <div class="num">25</div>
+  <h3>Settings: Profile</h3>
+  <p class="show">The ten settings pages; your name, password, appearance and organisations.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/profile" href="https://real-estate-ms-mu.vercel.app/app/settings/profile" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/profile</span></a>
+    <label class="donebox" for="done25"><input type="checkbox" id="done25" data-done="25"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Settings has ten pages, listed on the left. The first one is personal and is open to everyone, whatever their role.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Point at the ten pages: <strong>Profile</strong>, <strong>Organisation</strong>, <strong>Invoices</strong>, <strong>Categories</strong>, <strong>Properties</strong>, <strong>Payments</strong>, <strong>Team</strong>, <strong>Roles</strong>, <strong>Data</strong>, <strong>Billing</strong>.</div></li><li><div>Show <strong>Display name</strong> (<strong>Full name</strong>) and the locked <strong>Email</strong>.</div></li><li><div>Show <strong>Change password</strong>: <strong>Current password</strong>, <strong>New password</strong>, <strong>Confirm new password</strong>, <strong>Update password</strong>. Do not change it.</div></li><li><div>Under <strong>Appearance</strong> show <strong>Light</strong>, <strong>Dark</strong>, <strong>Auto</strong>.</div></li><li><div>Show <strong>Your organisations</strong> (role and plan, the one in use marked <strong>Current</strong>), <strong>New organisation</strong> and <strong>Sign out</strong>.</div></li></ol></div>
+</article>
+<article class="stop" id="s26" data-n="26" data-min="2" data-short="0">
+<header>
+  <div class="num">26</div>
+  <h3>Settings: Organisation</h3>
+  <p class="show">Currencies, VAT, alert timings, partner hour rate, shortcut links.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/settings/organisation" href="https://real-estate-ms-mu.vercel.app/app/settings/organisation" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/organisation</span></a>
+    <label class="donebox" for="done26"><input type="checkbox" id="done26" data-done="26"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>The owner sets the rules of the business once: currency, VAT and how early the app should warn.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show <strong>Organisation name</strong> at the top of the <strong>General</strong> form.</div></li><li><div>Under <strong>Currencies</strong>, show <strong>Base currency</strong> (THB) and <strong>Display currencies</strong> with <strong>EUR</strong> and <strong>USD</strong> selected. Say: never change the base currency on a running business; existing amounts are not converted.</div></li><li><div>Under <strong>Tax and fiscal year</strong>, show <strong>VAT rate (%)</strong>, the <strong>Prices include VAT</strong> switch and <strong>Fiscal year starts in</strong>.</div></li><li><div>Under <strong>Alerts</strong>, show <strong>Fire extinguisher warning (days before expiry)</strong>, <strong>Arrivals window (days)</strong> and <strong>Departures window (days)</strong>.</div></li><li><div>Under <strong>Partners</strong>, show <strong>Partner hour rate</strong>.</div></li><li><div>Under <strong>External links</strong>, show "Tourism board portal" (the button seen on Operations and Guests) and <strong>Add link</strong>.</div></li><li><div>Point at <strong>Save changes</strong>: it stays grey until something is changed. Change nothing.</div></li></ol></div>
+</article>
+<article class="stop" id="s27" data-n="27" data-min="1" data-short="0">
+<header>
+  <div class="num">27</div>
+  <h3>Settings: Invoices</h3>
+  <p class="show">Invoice details, logo and the live preview.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/invoices" href="https://real-estate-ms-mu.vercel.app/app/settings/invoices" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/invoices</span></a>
+    <label class="donebox" for="done27"><input type="checkbox" id="done27" data-done="27"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Your invoices carry your company details, your numbering and your logo.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show <strong>Number prefix</strong>, <strong>Company name</strong>, <strong>Address</strong>, <strong>Tax ID</strong>, <strong>Branch</strong>, <strong>Email</strong>, <strong>Phone</strong>.</div></li><li><div>Under <strong>Signature and footer</strong>, type a few words in <strong>Footer</strong> and watch the <strong>Preview</strong> update as you type.</div></li><li><div>Under <strong>Logo</strong>, point at <strong>Choose file</strong>.</div></li><li><div>Leave the page without tapping <strong>Save changes</strong>. Say: changes apply to invoices created from then on.</div></li></ol></div>
+</article>
+<article class="stop" id="s28" data-n="28" data-min="1" data-short="0">
+<header>
+  <div class="num">28</div>
+  <h3>Settings: Categories</h3>
+  <p class="show">The nine drop-down lists you can change.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/categories" href="https://real-estate-ms-mu.vercel.app/app/settings/categories" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/categories</span></a>
+    <label class="donebox" for="done28"><input type="checkbox" id="done28" data-done="28"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Every drop-down list in the app is yours to change, so the app speaks your language.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the nine tabs: <strong>Expense</strong>, <strong>Booking sources</strong>, <strong>Revenue sources</strong>, <strong>Task departments</strong>, <strong>Task projects</strong>, <strong>Staff departments</strong>, <strong>Complaint</strong>, <strong>Document</strong>, <strong>Inventory</strong>.</div></li><li><div>On <strong>Expense</strong>, type "Demo Spa" in the box at the bottom and tap <strong>Add</strong>. Show the arrow icons (<strong>Move up</strong> / <strong>Move down</strong>).</div></li><li><div>Tap the bin icon (<strong>Remove</strong>) on "Demo Spa". Say: nothing is kept until <strong>Save changes</strong>, and one save covers all nine lists.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>none; nothing was saved.</p></div></div>
+</article>
+<article class="stop" id="s29" data-n="29" data-min="1" data-short="0">
+<header>
+  <div class="num">29</div>
+  <h3>Settings: Properties</h3>
+  <p class="show">Several properties in one organisation and the workspace switcher.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/properties" href="https://real-estate-ms-mu.vercel.app/app/settings/properties" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/properties</span></a>
+    <label class="donebox" for="done29"><input type="checkbox" id="done29" data-done="29"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>One organisation can run several properties. Each has its own rooms, calendar and timezone, while the money is reported for the whole company.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the "Seaview Resort" card marked <strong>Current</strong>, its timezone and the <strong>Manage rooms</strong> button.</div></li><li><div>Tap <strong>Add property</strong> to show <strong>Name</strong>, <strong>Timezone</strong>, <strong>Address</strong> and <strong>Active</strong>. Tap <strong>Cancel</strong>.</div></li><li><div>Explain the switcher: with a second active property, the property name at the top of the sidebar opens <strong>Switch workspace</strong>.</div></li><li><div>Optional, live: add a property named "Demo Annex" and tap <strong>Save</strong>. Tap the property name at the top of the sidebar, show <strong>Switch workspace</strong>, choose "Demo Annex" (the app goes to Overview with no rooms or guests, while money totals still cover the company), then switch back to "Seaview Resort". Warning: a property cannot be deleted, only deactivated, so it stays in the list.</div></li></ol>
+<p><strong>Clean up (only if you did step 4):</strong> tap the pencil icon (<strong>Edit</strong>) on "Demo Annex", untick <strong>Active</strong>, tap <strong>Save</strong>.</p></div>
+</article>
+<article class="stop" id="s30" data-n="30" data-min="1" data-short="0">
+<header>
+  <div class="num">30</div>
+  <h3>Settings: Payments</h3>
+  <p class="show">Payment methods linked to accounts.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/payments" href="https://real-estate-ms-mu.vercel.app/app/settings/payments" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/payments</span></a>
+    <label class="donebox" for="done30"><input type="checkbox" id="done30" data-done="30"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>This small page is why the cash position stays right: each way of paying is linked to one of your accounts.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Under <strong>Payment methods</strong>, show Cash (linked to the Cash account), Bank Transfer and Card (both linked to Bank) and Other (no account).</div></li><li><div>Tap the pencil icon (<strong>Edit</strong>) on "Cash" to show <strong>Name</strong>, <strong>Account</strong>, <strong>Order</strong> and <strong>Active</strong>. Close it.</div></li><li><div>Point at <strong>Add method</strong>. Say: this is why "Cash" on the demo booking raised the Cash balance in section 12.</div></li></ol></div>
+</article>
+<article class="stop" id="s31" data-n="31" data-min="2" data-short="0">
+<header>
+  <div class="num">31</div>
+  <h3>Settings: Team</h3>
+  <p class="show">Members, and an invitation link created and copied live.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/settings/team" href="https://real-estate-ms-mu.vercel.app/app/settings/team" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/team</span></a>
+    <label class="donebox" for="done31"><input type="checkbox" id="done31" data-done="31"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>You decide who gets in and with which role. Inviting someone takes ten seconds.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the two boxes <strong>Members</strong> and <strong>Invitations</strong>. Your own row is marked <strong>You</strong>. Point at the <strong>Role</strong> drop-down, the <strong>Active</strong> switch (off means <strong>Suspended</strong>) and the bin icon (<strong>Remove from organisation</strong>).</div></li><li><div>Tap <strong>Invite</strong>. <strong>Email</strong> "reception@seaview.com", <strong>Role</strong> "Staff". Tap <strong>Create invitation</strong>.</div></li><li><div>In <strong>Share the invitation</strong>, point at the <strong>Invitation link</strong>. Tap <strong>Copy</strong>. Point at <strong>Open in your email app</strong>. Tap <strong>Done</strong>.</div></li><li><div>Say honestly: the app does not send the invitation. You paste the link into a message yourself. It works once and for 7 days.</div></li><li><div>Under <strong>Invitations</strong>, show the status, the <strong>Expires</strong> column, the copy icon (<strong>Show link</strong>), the circular arrow (<strong>Resend (new link)</strong>) and the stop icon (<strong>Revoke</strong>).</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>keep the invitation; it is used in section 35. If you skip section 35, tap <strong>Revoke</strong> and confirm.</p></div></div>
+</article>
+<article class="stop" id="s32" data-n="32" data-min="2" data-short="0">
+<header>
+  <div class="num">32</div>
+  <h3>Settings: Roles</h3>
+  <p class="show">The permission grid per role and a custom role.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app/settings/roles" href="https://real-estate-ms-mu.vercel.app/app/settings/roles" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/roles</span></a>
+    <label class="donebox" for="done32"><input type="checkbox" id="done32" data-done="32"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Seven ready-made roles cover most teams. If they do not fit, you tick exactly what each role may see and do on each screen.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Read the role tabs: Owner, Manager, Finance, Legal, Partner, Staff, Viewer. <strong>Owner</strong> has a padlock and a <strong>System</strong> badge and cannot be changed.</div></li><li><div>Tap <strong>Staff</strong>. Show the grid: one row per screen, with tick boxes for <strong>View</strong>, <strong>Add</strong>, <strong>Edit</strong>, <strong>Delete</strong>. Staff see Operations, Guests, Occupancy, Rooms, Tasks and Complaints and nothing about money.</div></li><li><div>Tap <strong>Legal</strong>: only Revenue, Expenses, Legal &amp; accounting and Documents. Tap <strong>Finance</strong>, then <strong>Partner</strong>, to show the difference.</div></li><li><div>Point at the shortcuts <strong>all</strong> / <strong>none</strong> under a column heading and in the <strong>Row</strong> column, and at <strong>Save changes</strong>. Change nothing.</div></li><li><div>Tap <strong>Add role</strong>. <strong>Role name</strong> "Demo Reception", <strong>Start from</strong> <strong>Template: Staff</strong>. Tap <strong>Create role</strong>. Show the new tab with <strong>Rename</strong> and <strong>Delete</strong>.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>on the "Demo Reception" tab tap <strong>Delete</strong>, then <strong>Delete</strong> in the pop-up.</p></div></div>
+</article>
+<article class="stop" id="s33" data-n="33" data-min="3" data-short="0">
+<header>
+  <div class="num">33</div>
+  <h3>Settings: Data</h3>
+  <p class="show">Export of every list, the audit log, and the Reset data box (shown, not run).</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/app/settings/data" href="https://real-estate-ms-mu.vercel.app/app/settings/data" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/data</span></a>
+    <label class="donebox" for="done33"><input type="checkbox" id="done33" data-done="33"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Your data is yours. You can take all of it out at any time, and you can see who changed what.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>In the <strong>Export</strong> box, show the file types <strong>Excel</strong>, <strong>CSV</strong>, <strong>JSON</strong>. Tap the single list <strong>Expenses</strong> to download one file.</div></li><li><div>Point at <strong>Export everything</strong> (every list, one file each; the browser may ask to allow multiple downloads). Read a few of the lists: Guests / bookings, Revenue, Tasks, Accounts, Invoices, Audit log. Say attached files are not part of the export.</div></li><li><div>Scroll to <strong>Audit log</strong>. Show today's entries from this demo: time, list, INSERT / UPDATE / DELETE and who did it. Tap a link in the <strong>Changes</strong> column (for example "3 fields") to see the old value struck through and the new one.</div></li><li><div>Use the <strong>All tables</strong> drop-down to choose "guests" and find the demo booking being added, changed and deleted. Say: list names appear in technical form here.</div></li><li><div>Scroll to the red <strong>Reset data</strong> box and read its description ("Danger zone"). Show the tick boxes, <strong>Select all</strong>, the box where the organisation name must be typed, and the grey <strong>Delete selected data</strong> button. <strong>Do not tick anything and do not run it.</strong> Say: it deletes permanently, only an Owner sees it, and it never touches settings, rooms, team or roles.</div></li></ol></div>
+</article>
+<article class="stop" id="s34" data-n="34" data-min="1" data-short="0">
+<header>
+  <div class="num">34</div>
+  <h3>Settings: Billing</h3>
+  <p class="show">The plan, the trial and how an upgrade is requested.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app/settings/billing" href="https://real-estate-ms-mu.vercel.app/app/settings/billing" target="_blank" rel="noopener">Open screen <span class="p">/app/settings/billing</span></a>
+    <label class="donebox" for="done34"><input type="checkbox" id="done34" data-done="34"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>You always see which plan you are on. Changing plan today is done by email with us.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the top box with the plan (<strong>Trial</strong>) and the days left or <strong>Trial ended</strong>. Show <strong>Payment method</strong> "None on file".</div></li><li><div>Under <strong>Plans</strong>, show Starter, Growth and Enterprise (<strong>Custom</strong>), the one marked <strong>Current</strong>, and the buttons <strong>Ask to switch</strong> / <strong>Talk to us</strong>.</div></li><li><div>Point at <strong>Contact us to upgrade</strong>. Say honestly: there is no card form, nothing is charged automatically, and the button opens an email.</div></li></ol></div>
+</article>
+<div class="grouphead" data-group><h2>Finish</h2></div>
+<article class="stop" id="s35" data-n="35" data-min="3" data-short="0">
+<header>
+  <div class="num">35</div>
+  <h3>Roles demo</h3>
+  <p class="show">The app as a receptionist sees it: six screens, no money, no settings.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <span class="gonote">the invitation link you copied in section 31, pasted into the private window (it starts with <span class="u-base"></span>/invite/)</span>
+    <label class="donebox" for="done35"><input type="checkbox" id="done35" data-done="35"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>Here is the same app through the eyes of a receptionist. They see their six screens and nothing about money, partners or settings.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>The page says "You are invited", "Join Seaview Resort Co.", the role Staff, the email and the expiry.</div></li><li><div>Tap <strong>Create account with reception@seaview.com</strong>. Fill <strong>Your name</strong> "Demo Reception", <strong>Work email</strong> "reception@seaview.com", <strong>Password</strong> (8 characters or more), and tap <strong>Create account</strong>. If the account exists from an earlier demo, tap <strong>I already have an account</strong> and sign in.</div></li><li><div>Tap <strong>Accept invitation</strong>. The app opens in Seaview Resort Co.</div></li><li><div>Read the menu: only Operations, Guests, Occupancy, Rooms, Tasks and Complaints. No Overview, no Finance, no Partners, no Settings.</div></li><li><div>Open <strong>Guests</strong>: <strong>Add booking</strong> and the pencil are there, the bin icon is not (Staff may add and edit, not delete).</div></li><li><div>In this private window open <a class="applink" data-path="/app/expenses" href="https://real-estate-ms-mu.vercel.app/app/expenses" target="_blank" rel="noopener"><span class="u-base"></span>/app/expenses</a>. The app quietly goes to the first allowed screen instead.</div></li><li><div>Open the person icon (<strong>Your profile</strong>): the profile page is there, the other nine settings pages are not.</div></li><li><div>Back in your owner window on <a class="applink" data-path="/app/settings/team" href="https://real-estate-ms-mu.vercel.app/app/settings/team" target="_blank" rel="noopener"><span class="u-base"></span>/app/settings/team</a>, change this person's <strong>Role</strong> to "Viewer". Reload the private window: more screens appear, with no add or edit buttons.</div></li></ol>
+<div class="cleanup"><span class="tag">Clean up</span><p>in <strong>Members</strong>, tap the bin icon (<strong>Remove from organisation</strong>) on "Demo Reception" and tap <strong>Remove</strong>. Close the private window.</p></div></div>
+</article>
+<article class="stop" id="s36" data-n="36" data-min="3" data-short="0">
+<header>
+  <div class="num">36</div>
+  <h3>Phone and install</h3>
+  <p class="show">Bottom bar, More menu, cards and slide-up forms, and adding the app to the home screen.</p>
+  <div class="meta">
+    <span class="chip">3 min</span>
+    
+    <a class="open applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener">Open screen <span class="p">/app</span></a>
+    <label class="donebox" for="done36"><input type="checkbox" id="done36" data-done="36"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>The manager is rarely at a desk. Everything you have just seen works on a phone with one thumb, and it sits on the home screen like any other app.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Show the bottom bar: <strong>Home</strong>, <strong>Guests</strong>, <strong>Expenses</strong>, <strong>Revenue</strong>, <strong>More</strong>.</div></li><li><div>Tap <strong>More</strong>. The <strong>Menu</strong> lists every screen by group, with the theme icon at the top and <strong>Profile</strong> and <strong>Sign out</strong> at the bottom. Open <strong>Operations</strong> from it.</div></li><li><div>Show the top bar: property and organisation name, the currency switch with its dot, and the round badge with your initials (it opens the same Menu).</div></li><li><div>Tap <strong>Guests</strong>. Lists show as cards, with the action icons at the bottom of each card. Tap <strong>Add booking</strong>: the form slides up from the bottom. Close it with the X.</div></li><li><div>Tap <strong>Expenses</strong>, <strong>Add expense</strong>, and point at <strong>Scan receipt</strong> and <strong>Camera</strong>: photograph the receipt on the spot. Close the form.</div></li><li><div>Open <strong>More</strong>, <strong>Occupancy</strong> and swipe the calendar sideways. Open <strong>More</strong>, <strong>Partner dashboard</strong> and swipe the row of tabs.</div></li><li><div>Install on Android (Chrome): browser menu (three dots), <strong>Install app</strong> (on some phones <strong>Add to Home screen</strong>), confirm.</div></li><li><div>Install on iPhone or iPad (Safari): <strong>Share</strong> button, <strong>Add to Home Screen</strong>, <strong>Add</strong>.</div></li><li><div>Open the app from the new home-screen icon: full screen, starting on Overview. Say honestly: it still needs an internet connection.</div></li></ol></div>
+</article>
+<article class="stop" id="s37" data-n="37" data-min="1" data-short="0">
+<header>
+  <div class="num">37</div>
+  <h3>Dark theme</h3>
+  <p class="show">Light, dark and automatic theme.</p>
+  <div class="meta">
+    <span class="chip">1 min</span>
+    
+    <a class="open applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener">Open screen <span class="p">/app</span></a>
+    <label class="donebox" for="done37"><input type="checkbox" id="done37" data-done="37"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>For night shifts and personal taste: light, dark, or follow the device.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>On a computer, click the sun, moon or screen icon at the bottom of the sidebar. Each click moves on: light, dark, automatic.</div></li><li><div>In dark, open <a class="applink" data-path="/app/guests" href="https://real-estate-ms-mu.vercel.app/app/guests" target="_blank" rel="noopener"><span class="u-base"></span>/app/guests</a> and <a class="applink" data-path="/app/partner-dashboard" href="https://real-estate-ms-mu.vercel.app/app/partner-dashboard" target="_blank" rel="noopener"><span class="u-base"></span>/app/partner-dashboard</a> to show lists and charts.</div></li><li><div>Say: on a phone it is the same icon at the top of the <strong>More</strong> Menu, and also <strong>Light</strong> / <strong>Dark</strong> / <strong>Auto</strong> under Settings, Profile. The choice is remembered per device.</div></li><li><div>Click the icon until it is light again.</div></li></ol></div>
+</article>
+<article class="stop" id="s38" data-n="38" data-min="2" data-short="0">
+<header>
+  <div class="num">38</div>
+  <h3>Closing</h3>
+  <p class="show">The recap, the three honest limits and the next step.</p>
+  <div class="meta">
+    <span class="chip">2 min</span>
+    
+    <a class="open applink" data-path="/app" href="https://real-estate-ms-mu.vercel.app/app" target="_blank" rel="noopener">Open screen <span class="p">/app</span></a>
+    <label class="donebox" for="done38"><input type="checkbox" id="done38" data-done="38"> Done</label>
+  </div>
+</header>
+<div class="body"><blockquote class="say"><span class="tag">Say</span><p>You typed one booking and one receipt today. From those, the calendar, the invoice, the revenue, the cash position, the accountant's report, the budget comparison and the partner dashboard all updated by themselves. That is the product.</p></blockquote>
+<h4 class="do"><span>Do</span></h4>
+<ol class="steps" start="1" style="counter-reset: step 0"><li><div>Stay on Overview while you recap the flow: Guest → Revenue → Legal → Partners.</div></li><li><div>Repeat the three honest limits before they ask: no automatic emails, no online payment, no email password reset yet.</div></li><li><div>Offer the next step: a free trial workspace with their own rooms at <a class="applink" data-path="/signup" href="https://real-estate-ms-mu.vercel.app/signup" target="_blank" rel="noopener"><span class="u-base"></span>/signup</a>, set up in about a minute.</div></li><li><div>Take questions. Use Appendix B.</div></li><li><div>After the audience has left, check the clean-up list: no "Demo" booking, expense, revenue line, contribution, document, role or team member remains. Or simply regenerate the data.</div></li></ol></div>
+</article>
+    <p class="empty" id="empty" hidden>No stop matches that search.</p>
+    <section class="panel" id="appendix-a-coverage-checklist"><h2>Appendix A. Coverage checklist</h2><p>Every screen, tab and feature, and the section where it is shown.</p>
+<div class="tablewrap"><table><thead><tr><th>Feature, screen or tab</th><th>Section</th></tr></thead><tbody><tr class="grouprow"><td colspan="2"><strong>Public and account</strong></td></tr><tr><td>Landing page: hero, Features, How it works, Mobile, security block, Pricing, FAQ</td><td>1</td></tr><tr><td>Create an account (sign up)</td><td>2</td></tr><tr><td>Sign in, sign out</td><td>2, 4, 25</td></tr><tr><td>Forgot password page (honest notice)</td><td>2</td></tr><tr><td>Set up your workspace (wizard) and what it creates</td><td>3</td></tr><tr><td>Join by invitation link (invitation page, Accept invitation)</td><td>31, 35</td></tr><tr class="grouprow"><td colspan="2"><strong>Shell and things that work the same everywhere</strong></td></tr><tr><td>Sidebar and its six groups</td><td>4</td></tr><tr><td>Currency switch and rate refresh dot</td><td>4</td></tr><tr><td>Theme switch (light, dark, automatic)</td><td>1, 25, 37</td></tr><tr><td>Workspace / property switcher, New organisation</td><td>3, 4, 29</td></tr><tr><td>Phone bottom bar, More menu, top bar</td><td>4, 36</td></tr><tr><td>Install on phone (Android, iPhone)</td><td>36</td></tr><tr><td>Search</td><td>7</td></tr><tr><td>Filters, chips and clickable number cards</td><td>7</td></tr><tr><td>Sort by column</td><td>7</td></tr><tr><td>Paging and rows per page</td><td>7</td></tr><tr><td>Export menu: Excel (.xlsx), CSV, JSON, Print / PDF</td><td>7</td></tr><tr><td>Add, edit, delete with confirmation</td><td>7, 12</td></tr><tr><td>File attachment (Choose file, Camera)</td><td>11, 23</td></tr><tr class="grouprow"><td colspan="2"><strong>Dashboards</strong></td></tr><tr><td>Overview: cards, year buttons, chart and table, cash position, in-house, arrivals, tasks, shortcuts</td><td>5</td></tr><tr><td>Operations: Today's ops tab</td><td>6</td></tr><tr><td>Operations: Bookings tab</td><td>6</td></tr><tr><td>Operations: Revenue &amp; collection tab, Include older</td><td>6</td></tr><tr><td>Operations: Tasks &amp; issues tab</td><td>6</td></tr><tr><td>Operations: Cash control tab</td><td>6</td></tr><tr><td>Operations: external link buttons</td><td>6, 26</td></tr><tr><td>Partner dashboard: Financial overview tab</td><td>15</td></tr><tr><td>Partner dashboard: Funding &amp; investment tab</td><td>15</td></tr><tr><td>Partner dashboard: Shareholding tab, Edit ownership %</td><td>15</td></tr><tr><td>Partner dashboard: Budget vs actual tab</td><td>15</td></tr><tr><td>Partner dashboard: Business KPIs tab, month box</td><td>15</td></tr><tr><td>Partner dashboard: Cost structure tab</td><td>15</td></tr><tr><td>Partner dashboard: Forecast tab</td><td>15</td></tr><tr><td>Partner dashboard: Partners tab, Manage partners</td><td>15</td></tr><tr class="grouprow"><td colspan="2"><strong>Operations group</strong></td></tr><tr><td>Guests: cards, labels, list</td><td>7</td></tr><tr><td>Guests: Add booking</td><td>7</td></tr><tr><td>Guests: payments in several parts</td><td>7</td></tr><tr><td>Guests: check-in / check-out (status from dates, TM30 tick)</td><td>7</td></tr><tr><td>Guests: Create invoice</td><td>7</td></tr><tr><td>Guests: Email invoice</td><td>7</td></tr><tr><td>Public invoice page, Print / Save PDF, opens without sign-in</td><td>7</td></tr><tr><td>Guests: Add to revenue and Show on legal page tick boxes</td><td>7</td></tr><tr><td>Guests: delete a booking (revenue and movements follow)</td><td>12</td></tr><tr><td>Occupancy: six cards, calendar, booking pop-up, month navigation</td><td>8</td></tr><tr><td>Rooms: cards, Add room, Edit, Delete, Show inactive</td><td>9</td></tr><tr><td>Room detail: Current guest, Upcoming</td><td>9</td></tr><tr><td>Room detail: Photos</td><td>9</td></tr><tr><td>Room detail: Inventory</td><td>9</td></tr><tr><td>Room detail: Fire safety and expiry labels</td><td>6, 9</td></tr><tr><td>Tasks: filters, Assigned to me, quick status change, Add task</td><td>20</td></tr><tr><td>Complaints: cards, Critical filter, resolve, Log complaint</td><td>21</td></tr><tr><td>Staff hours: person cards, month and staff filters, Add hours</td><td>22</td></tr><tr class="grouprow"><td colspan="2"><strong>Finance group</strong></td></tr><tr><td>Revenue: cards, By source, Monthly, locked booking lines</td><td>10</td></tr><tr><td>Revenue: Add revenue (manual income), Show to legal</td><td>10</td></tr><tr><td>Expenses: cards, Audit and Legal labels, filters</td><td>11</td></tr><tr><td>Expenses: Add expense by hand</td><td>11</td></tr><tr><td>Expenses: Scan receipt and Attach this image</td><td>11</td></tr><tr><td>Expenses: foreign currency (EUR, USD)</td><td>11</td></tr><tr><td>Expenses: Share with legal</td><td>11, 13</td></tr><tr><td>Expenses without a receipt (No invoice / receipt)</td><td>5, 6, 11</td></tr><tr><td>Accounts: balances, movements, auto lines, filters</td><td>12</td></tr><tr><td>Accounts: Adjust balance, Delete adjustment</td><td>12</td></tr><tr><td>Accounts: Add account, Show inactive</td><td>12</td></tr><tr><td>Legal &amp; accounting: period, cards, status tabs, details, attachment</td><td>13</td></tr><tr><td>Legal &amp; accounting: review buttons (Accept, Needs clarification, Reject)</td><td>13</td></tr><tr><td>Legal &amp; accounting: Revenue shown to legal</td><td>13</td></tr><tr><td>Legal &amp; accounting: CSV and Print</td><td>13</td></tr><tr><td>Budget: Year list</td><td>14</td></tr><tr><td>Budget: Setup tab</td><td>14</td></tr><tr><td>Budget: Input tab, Revenue matrix, cell editing, Clear</td><td>14</td></tr><tr><td>Budget: Input tab, Expense items, Add item, OPEX and CAPEX</td><td>14</td></tr><tr><td>Budget: Copy this amount to all 12 months</td><td>14</td></tr><tr><td>Budget: Input tab, Rent schedule</td><td>14</td></tr><tr><td>Budget: Control tab, P&amp;L view</td><td>14</td></tr><tr><td>Budget: Control tab, Monthly view</td><td>14</td></tr><tr><td>Budget: Export per part</td><td>14</td></tr><tr class="grouprow"><td colspan="2"><strong>Partners group</strong></td></tr><tr><td>Partners: cards, profile pop-up, edit form, Add partner</td><td>16</td></tr><tr><td>Capital: cards, By partner, Add contribution, search, sort, Export</td><td>17</td></tr><tr><td>Partner work: cards, filters, Add hours, Export</td><td>18</td></tr><tr><td>Meetings: open a meeting, attachment, search, New meeting</td><td>19</td></tr><tr class="grouprow"><td colspan="2"><strong>Company group</strong></td></tr><tr><td>Documents: category buttons, open, Add document, Export</td><td>23</td></tr><tr><td>Log-in vault: Reveal, Show, Copy password, Copy username, Forget, Add log-in</td><td>24</td></tr><tr class="grouprow"><td colspan="2"><strong>Admin group (Settings)</strong></td></tr><tr><td>Profile</td><td>25</td></tr><tr><td>Organisation: currencies, VAT, alerts, partner hour rate, external links</td><td>26</td></tr><tr><td>Invoices: details, logo, Preview</td><td>27</td></tr><tr><td>Categories: nine lists</td><td>28</td></tr><tr><td>Properties: Add property, Switch to this property, Manage rooms</td><td>29</td></tr><tr><td>Payments: methods linked to accounts</td><td>30</td></tr><tr><td>Team: Members, Invite, Invitation link, Resend, Revoke, role change, suspend, remove</td><td>31, 35</td></tr><tr><td>Roles: permission matrix (View, Add, Edit, Delete), Add role, Rename, Delete</td><td>32</td></tr><tr><td>Data: export tables, Export everything</td><td>33</td></tr><tr><td>Data: Audit log</td><td>33</td></tr><tr><td>Data: Reset data (shown, not run)</td><td>33</td></tr><tr><td>Billing: plan, trial, Contact us to upgrade</td><td>34</td></tr><tr><td>Roles and who can see what (live with a Staff account)</td><td>32, 35</td></tr></tbody></table></div></section>
+<section class="panel" id="appendix-b-if-they-ask"><h2>Appendix B. If they ask</h2><p>Short, honest answers.</p>
+<p><strong>Does it send emails?</strong> No. The app sends no invoices, invitations, reminders or password resets by itself. For an invoice or an invitation it opens a ready-written message in your own email app, or gives you a link to copy, and you send it.</p>
+<p><strong>Can guests pay online? Can I pay my subscription by card?</strong> Not today. Online payment is not connected. Guest payments are recorded by hand on the booking. The Billing page shows the plans and opens an email to us; nothing is charged automatically.</p>
+<p><strong>What if someone forgets their password?</strong> Password reset by email is not available yet. Someone who is still signed in on another device changes it under Settings, Profile. Otherwise the person who runs the service sets a new password for them.</p>
+<p><strong>Does it stop double bookings?</strong> No. The app does not block two bookings in the same room on the same dates. The Occupancy calendar draws overlapping bookings one above the other, so they are easy to spot.</p>
+<p><strong>If I change a booking, does the invoice change?</strong> No. An invoice is a copy of the booking at the moment it was first created, and there is no button yet to make a fresh one. Record all payments first, then create the invoice.</p>
+<p><strong>Does receipt scanning always work?</strong> It needs a paid reading service (an AI key) that the operator of the app switches on. Without it the screen says scanning "is not switched on for this service yet" and you add the expense by hand and attach the photo. When it is on, it reads photos, not PDFs, and it can make mistakes, so always check the amount and date. The limit is 60 scans per hour per person.</p>
+<p><strong>What happens when the 14-day trial ends?</strong> At the moment nothing is locked or limited. The date is shown for information. Plans and prices are arranged by email.</p>
+<p><strong>Can other customers see my data?</strong> No. Every record belongs to one organisation and the database itself keeps organisations apart. Files are private and opened through short-lived links. Stored log-ins are encrypted. Inside your organisation, roles decide who sees which screen.</p>
+<p><strong>Does it work offline?</strong> No. It needs an internet connection to load and to save, also when installed on a phone.</p>
+<p><strong>Is it a booking engine or channel manager?</strong> No. It is the back office. You record bookings that arrive from your channels or directly, and the app turns them into occupancy, revenue, invoices and reports.</p>
+<p><strong>Can I get my data out?</strong> Yes. Every list has an Export menu, and Settings, Data downloads every list as Excel, CSV or JSON. Attached files stay in the app and are opened from each record.</p>
+<p><strong>Can something deleted be brought back?</strong> No. Deleting cannot be undone. The Audit log shows what was changed and by whom, but the record has to be typed in again.</p></section>
+  </div></main>
+</div>
+<script>
+(function () {
+  var KEY = 'demo-tour', state = { done: [], base: "https://real-estate-ms-mu.vercel.app", short: false }
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) state = Object.assign(state, saved) } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)) } catch (e) {} }
+  var $ = function (s, r) { return (r || document).querySelector(s) }, $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)) }
+  var stops = $$('.stop'), total = stops.length
+
+  function applyBase() {
+    var b = (state.base || '').trim().replace(/\/+$/, '')
+    if (!/^https?:\/\//.test(b)) b = "https://real-estate-ms-mu.vercel.app"
+    $$('.applink').forEach(function (a) { a.href = b + a.getAttribute('data-path') })
+    $$('.u-base').forEach(function (s) { s.textContent = b })
+  }
+  function applyDone() {
+    var left = 0, n = 0
+    stops.forEach(function (st) {
+      var id = +st.dataset.n, d = state.done.indexOf(id) >= 0, counted = !state.short || st.dataset.short === '1'
+      st.classList.toggle('done', d)
+      $('[data-done="' + id + '"]').checked = d
+      var li = $('.toc li[data-n="' + id + '"]'); if (li) li.classList.toggle('done', d)
+      if (counted) { if (d) n++; else left += +st.dataset.min }
+    })
+    var of = state.short ? stops.filter(function (s) { return s.dataset.short === '1' }).length : total
+    $('#bar').style.width = (of ? (n / of) * 100 : 0) + '%'
+    $('#progress').textContent = n + ' of ' + of + ' done' + (state.short ? ' · short version, trimmed stops' : ' · ' + left + ' min left')
+  }
+  function applyFilter() {
+    var q = ($('#q').value || '').trim().toLowerCase(), shownCount = 0
+    stops.forEach(function (st) {
+      var ok = (!state.short || st.dataset.short === '1') && (!q || st.textContent.toLowerCase().indexOf(q) >= 0)
+      st.hidden = !ok; if (ok) shownCount++
+      var li = $('.toc li[data-n="' + st.dataset.n + '"]'); if (li) li.hidden = !ok
+    })
+    $$('[data-group]').forEach(function (h) {
+      var el = h.nextElementSibling, any = false
+      while (el && el.classList.contains('stop')) { if (!el.hidden) any = true; el = el.nextElementSibling }
+      h.hidden = !any
+    })
+    $('#empty').hidden = shownCount > 0
+    $('#all').setAttribute('aria-pressed', String(!state.short)); $('#short').setAttribute('aria-pressed', String(state.short))
+    applyDone()
+  }
+
+  $('#base').value = state.base
+  $('#base').addEventListener('input', function (e) { state.base = e.target.value; save(); applyBase() })
+  $$('[data-base]').forEach(function (b) { b.addEventListener('click', function () { state.base = b.dataset.base; $('#base').value = state.base; save(); applyBase() }) })
+  $('#all').addEventListener('click', function () { state.short = false; save(); applyFilter() })
+  $('#short').addEventListener('click', function () { state.short = true; save(); applyFilter() })
+  $('#q').addEventListener('input', applyFilter)
+  $$('[data-done]').forEach(function (c) { c.addEventListener('change', function () {
+    var id = +c.dataset.done, i = state.done.indexOf(id)
+    if (c.checked && i < 0) state.done.push(id); if (!c.checked && i >= 0) state.done.splice(i, 1)
+    save(); applyDone()
+  }) })
+  $$('.copy').forEach(function (b) { b.addEventListener('click', function () {
+    var t = b.dataset.copy, done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy' }, 1500) }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function () { select(b) }); else select(b)
+  }) })
+  function select(b) { var r = document.createRange(); r.selectNodeContents(b.previousElementSibling); var s = getSelection(); s.removeAllRanges(); s.addRange(r) }
+  $('#drawer').addEventListener('click', function () { var o = $('#rail').classList.toggle('open'); this.setAttribute('aria-expanded', String(o)) })
+  $$('.toc a').forEach(function (a) { a.addEventListener('click', function () { $('#rail').classList.remove('open'); $('#drawer').setAttribute('aria-expanded', 'false') }) })
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { $$('.toc a.active').forEach(function (a) { a.classList.remove('active') }); var a = $('.toc a[href="#' + e.target.id + '"]'); if (a) { a.classList.add('active'); if (window.matchMedia('(min-width: 62.01rem)').matches) a.scrollIntoView({ block: 'nearest' }) } } }) }, { rootMargin: '-10% 0px -75% 0px' })
+    stops.forEach(function (s) { io.observe(s) })
+  }
+  applyBase(); applyFilter()
+})()
+</script>
+</body>
+</html>
