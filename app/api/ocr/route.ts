@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Not allowed' }, { status: 403 })
   }
   if (!env.openaiApiKey) {
-    return NextResponse.json({ error: 'Receipt scanning is not configured. Add OPENAI_API_KEY to .env and restart the server.' }, { status: 503 })
+    return NextResponse.json({ error: 'Receipt scanning is not switched on for this service yet. You can still type the expense in by hand.' }, { status: 503 })
   }
   if (throttled(ctx.userId)) return NextResponse.json({ error: 'Too many scans. Try again in a while.' }, { status: 429 })
 

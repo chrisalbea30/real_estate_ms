@@ -33,14 +33,14 @@ export function PageHeader({
 
 export function Section({ title, description, actions, children, className }: { title?: React.ReactNode; description?: React.ReactNode; actions?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
-    <section className={cn('mb-6', className)}>
+    <section className={cn('mb-6 min-w-0', className)}>
       {(title || actions) && (
         <div className="mb-3 flex items-end justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             {title && <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>}
             {description && <p className="text-sm text-muted">{description}</p>}
           </div>
-          {actions}
+          {actions && <div className="shrink-0">{actions}</div>}
         </div>
       )}
       {children}

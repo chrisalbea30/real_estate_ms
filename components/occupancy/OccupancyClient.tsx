@@ -102,7 +102,7 @@ export function OccupancyClient({ year, month, rooms, guests }: { year: number; 
         }
       />
 
-      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
         <StatCard label="Occupancy" value={formatPct(stats.occupancy, 1)} icon={Percent} tone={stats.occupancy >= 70 ? 'success' : stats.occupancy >= 40 ? 'warning' : 'default'} sub={`${formatNumber(stats.sold)} of ${formatNumber(stats.available)} room nights`} />
         <StatCard label="Nights sold" value={formatNumber(stats.sold)} icon={Moon} tone="primary" sub={`${rooms.length} rooms × ${dim} nights`} />
         <StatCard label="Bookings" value={stats.bookings} icon={BedDouble} tone="info" sub="Stays touching this month" />

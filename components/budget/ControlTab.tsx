@@ -161,7 +161,7 @@ export function ControlTab({
 
   return (
     <div>
-      <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+      <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3 2xl:grid-cols-6">
         <StatCard label="Budget revenue" value={fmt(budgetRevenueTotal)} icon={Target} tone="primary" />
         <StatCard label="Actual revenue" value={fmt(actuals.revenueTotal)} icon={TrendingUp} tone="success" sub={varianceCell(budgetRevenueTotal, actuals.revenueTotal, false, true)} />
         <StatCard label="Budget expenses" value={fmt(budgetExpenseTotal)} icon={Receipt} tone="primary" />

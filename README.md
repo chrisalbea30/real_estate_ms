@@ -34,12 +34,14 @@ Sign up at `/signup` (you are signed in immediately; no email is sent unless `EM
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint |
 | `npm run db:check` | Checks the Supabase project (tables, bucket, auth settings) |
+| `node scripts/seed-demo.mjs "<organisation name>" [--reset|--wipe]` | Fills one organisation with realistic demo data, or wipes it again |
 | `node scripts/make-icons.mjs` | Regenerates the PWA icons |
 
 ## Documentation
 
 | File | Content |
 |------|---------|
+| [docs/USER-GUIDE.md](docs/USER-GUIDE.md) | **How to use every feature**: step-by-step tutorial in plain language for owners, managers and staff |
 | [docs/08-app-guide.md](docs/08-app-guide.md) | **How this application is built**: stack, layout, tenancy, module recipe, UI kit, mobile rules |
 | [docs/01-overview.md](docs/01-overview.md) … [docs/07-runbook.md](docs/07-runbook.md) | Notes on the original single-tenant system: screens, formulas, data model, known issues, SaaS requirements |
 | [migrations/](migrations/) | `0001` original structure, `0002` SaaS layer |

@@ -108,7 +108,7 @@ export function CategoriesClient({ categories }: { categories: Partial<Record<Ca
             <div className="mt-4 flex gap-2">
               <input
                 className="input flex-1"
-                placeholder={`Add a ${def.label.replace(/ categories$/, '').replace(/s$/, '').toLowerCase()}…`}
+                placeholder="Add a new entry…"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={(e) => {

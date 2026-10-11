@@ -11,9 +11,9 @@ async function refreshRates() {
   const res = await fetch(ECB_URL, { cache: 'no-store' })
   if (!res.ok) throw new Error(`ECB returned ${res.status}`)
   const xml = await res.text()
-  const date = xml.match(/<Cube time="(\d{4}-\d{2}-\d{2})"/)?.[1] ?? new Date().toISOString().slice(0, 10)
+  const date = xml.match(/<Cube time=["'](\d{4}-\d{2}-\d{2})["']/)?.[1] ?? new Date().toISOString().slice(0, 10)
   const rows: { base_currency: string; quote_currency: string; rate: number; source: string; fetched_at: string }[] = []
-  for (const m of xml.matchAll(/<Cube currency="([A-Z]{3})" rate="([\d.]+)"/g)) {
+  for (const m of xml.matchAll(/<Cube currency=["']([A-Z]{3})["'] rate=["']([\d.]+)["']/g)) {
     rows.push({ base_currency: 'EUR', quote_currency: m[1]!, rate: Number(m[2]), source: `ECB ${date}`, fetched_at: new Date().toISOString() })
   }
   if (rows.length === 0) throw new Error('No rates found in the ECB feed')
