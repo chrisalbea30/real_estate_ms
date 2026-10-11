@@ -23,7 +23,7 @@ npm run dev                 # http://localhost:3000
 4. `.env`: add `OPENAI_API_KEY` (receipt scanning), `CREDENTIALS_ENCRYPTION_KEY` (login vault), `CRON_SECRET` (FX refresh) — see `.env.example`.
 5. Run `npm run db:check`.
 
-Sign up at `/signup`, confirm the email, and the onboarding wizard creates your organisation, first property, rooms, roles, accounts and payment methods.
+Sign up at `/signup` (you are signed in immediately; no email is sent unless `EMAIL_ENABLED=true`) and the onboarding wizard creates your organisation, first property, rooms, roles, accounts and payment methods.
 
 ## Scripts
 

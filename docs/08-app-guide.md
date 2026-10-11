@@ -9,7 +9,7 @@ How the Next.js application in this repository is put together, and the conventi
 | Framework | Next.js 16 (App Router, Turbopack, `proxy.ts`), React 19, TypeScript 5 |
 | Styling | Tailwind CSS v4 with a burgundy design-token theme in `app/globals.css` (light + dark) |
 | Database | Supabase Postgres with row-level security on every table (`migrations/0002_saas_tenancy.sql`) |
-| Auth | Supabase Auth (email + password, confirmation and reset emails) via `@supabase/ssr` |
+| Auth | Supabase Auth (email + password; sign-up is instant and no email is sent unless `EMAIL_ENABLED=true` with SMTP configured in Supabase) via `@supabase/ssr` |
 | Storage | One private bucket `tenant-files`, paths `org/<orgId>/<module>/<file>`, signed links |
 | AI | OpenAI vision model for receipt OCR (`/api/ocr`) |
 | FX | ECB daily rates for every currency, stored in `exchange_rates` (`/api/cron/fx`) |

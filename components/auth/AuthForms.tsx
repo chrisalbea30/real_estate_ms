@@ -77,7 +77,7 @@ export function SignupForm({ next }: { next?: string }) {
       <input type="hidden" name="next" value={next ?? ''} />
       <div>
         <h1 className="font-display text-3xl font-semibold text-ink">Create your account</h1>
-        <p className="mt-1 text-sm text-muted">14-day free trial. No card required.</p>
+        <p className="mt-1 text-sm text-muted">14-day free trial. No card required. You are signed in straight away.</p>
       </div>
       <FormError error={state.error} />
       <div>
