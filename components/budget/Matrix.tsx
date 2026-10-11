@@ -53,7 +53,7 @@ export function MatrixCell({ value, filled, onClick, title, className }: { value
 
 /** A bold totals row (per-month values + overall total) with a sticky label. */
 export function TotalsRow({ label, months, total, soft, className, format }: { label: React.ReactNode; months: number[]; total: number; soft?: boolean; className?: string; format: (v: number) => string }) {
-  const bg = soft ? 'bg-surface-2' : 'bg-primary-soft/40'
+  const bg = soft ? 'bg-surface-2' : 'bg-primary-tint'
   return (
     <tr className={cn('font-semibold', className)}>
       <td className={cn(TD_LABEL, 'sticky left-0 z-10', bg)}>{label}</td>

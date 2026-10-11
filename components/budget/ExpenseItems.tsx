@@ -59,8 +59,8 @@ export function ExpenseItems({ year, rows }: { year: number; rows: BudgetExpense
   const renderGroup = (g: ExpenseTypeGroup) => (
     <tbody key={g.type}>
       <tr>
-        <td className={cn(TD_LABEL, 'sticky left-0 z-10 bg-primary-soft/40 font-display text-xs font-semibold uppercase tracking-wide text-primary-soft-fg')}>{TYPE_LABEL[g.type]}</td>
-        <td className={cn(TD, 'bg-primary-soft/40')} colSpan={13}>
+        <td className={cn(TD_LABEL, 'sticky left-0 z-10 bg-primary-tint font-display text-xs font-semibold uppercase tracking-wide text-primary-soft-fg')}>{TYPE_LABEL[g.type]}</td>
+        <td className={cn(TD, 'bg-primary-tint')} colSpan={13}>
           <div className="flex h-9 items-center justify-end gap-2 px-2 text-xs text-muted">
             {can('budget', 'add') && (
               <button type="button" className="btn-ghost btn-sm" onClick={() => setAdding(g.type)}>

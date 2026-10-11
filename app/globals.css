@@ -146,6 +146,7 @@
   --color-primary-fg: var(--primary-fg);
   --color-primary-soft: var(--primary-soft);
   --color-primary-soft-fg: var(--primary-soft-fg);
+  --color-primary-tint: color-mix(in srgb, var(--primary-soft) 40%, var(--surface));
 
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);

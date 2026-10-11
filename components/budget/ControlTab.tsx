@@ -222,8 +222,8 @@ export function ControlTab({
                   if (r.kind === 'header') {
                     return (
                       <tr key={r.key}>
-                        <td className={cn(TD_LABEL, 'sticky left-0 z-10 bg-primary-soft/40 text-xs font-semibold uppercase tracking-wide text-primary-soft-fg')}>{r.label}</td>
-                        <td className={cn(TD, 'bg-primary-soft/40')} colSpan={3} />
+                        <td className={cn(TD_LABEL, 'sticky left-0 z-10 bg-primary-tint text-xs font-semibold uppercase tracking-wide text-primary-soft-fg')}>{r.label}</td>
+                        <td className={cn(TD, 'bg-primary-tint')} colSpan={3} />
                       </tr>
                     )
                   }
