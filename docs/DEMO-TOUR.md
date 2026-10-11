@@ -24,7 +24,7 @@ Do these before the audience arrives.
 6. **Open the links in one browser window**, maximised, in the light theme. Allow pop-ups for the site (Print / PDF and invoices open new tabs). Keep one private (incognito) window ready for sections 2, 7 and 35.
 7. **Know what the app does not do**, and never claim otherwise: it sends no email by itself, online payment is not connected, and password reset by email is not available. See [Appendix B](#appendix-b-if-they-ask).
 
-**What is in the demo workspace:** 271 bookings from January to November, several guests in-house tonight, 12 invoices (INV-2026-0001 to INV-2026-0012), 136 expenses, 33 manual revenue lines, Bank and Cash accounts, 4 partners, a budget for this year, 18 tasks, 10 complaints, about 295 staff-hours entries, 11 documents and 5 vault log-ins. Guest names change every time the data is regenerated, so this script describes guests ("the in-house guest with a red balance") instead of naming them. Rooms have no photos. Attachments open a placeholder picture (the app logo).
+**What is in the demo workspace:** 271 bookings from January to November, several guests in-house tonight, 12 invoices (INV-2026-0001 to INV-2026-0012), 136 expenses, 33 manual revenue lines, Bank and Cash accounts, 4 partners, a budget for this year, 18 tasks, 10 complaints, about 295 staff-hours entries, 11 documents and 5 vault log-ins. Guest names change every time the data is regenerated, so this script describes guests ("the in-house guest with a red balance") instead of naming them. Each room has two example photos. Attachments open a placeholder picture (the app logo).
 
 **Records you add live** all start with the word "Demo" so they are easy to find and delete. Each section says when to clean up. If you forget, regenerating the data removes them.
 
@@ -174,7 +174,7 @@ Do these before the audience arrives.
 3. Under **Current guest**, show the dates and the balance owed. Under **Upcoming**, the next bookings for this room.
 4. Under **Inventory**, show the items grouped by category (Furniture, Electronics, Bathroom and so on) and the **Add item** button.
 5. Under **Fire safety**, show the amber label (about "21d left"). Tap **Add** to show the form (**Location**, **Serial number**, **Expiry date**, **Last inspected**, **Notes**), then close it.
-6. Under **Photos**, say the demo rooms have none. Tap **Attach** and pick any picture to show it appear (up to 5 per room; the first one is used on the room card). Tap the photo to see it large.
+6. Under **Photos**, show the two example photos, then tap **Attach** and pick any picture to show a third appear (up to 5 per room; the first one is used on the room card). Tap the photo to see it large.
 7. Tap **Back**, open **Room 1** and show the red "Expired" label. This is the same alert the manager saw on Operations.
 
 **Clean up:** the photo can stay, or remove it with the X on its corner and **Remove**.
