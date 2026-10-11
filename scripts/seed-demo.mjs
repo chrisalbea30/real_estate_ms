@@ -3,10 +3,11 @@
 //   node scripts/seed-demo.mjs "Seaview Resort Co."            # refuses if bookings already exist
 //   node scripts/seed-demo.mjs "Seaview Resort Co." --reset    # wipes that organisation's business data first
 //   node scripts/seed-demo.mjs "Seaview Resort Co." --wipe     # only wipes, adds nothing
+//   node scripts/seed-demo.mjs "Seaview Resort Co." --photos   # only (re)attaches the example room photos
 //
 // Uses the service key from .env. Touches only rows of the named organisation
 // (plus the shared exchange_rates table). Team, roles, rooms and settings stay.
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { createCipheriv, randomBytes } from 'node:crypto'
 
 for (const line of existsSync('.env') ? readFileSync('.env', 'utf8').split(/\r?\n/) : []) {
@@ -69,7 +70,7 @@ const MONTH = +TODAY.slice(5, 7)
 console.log(`Organisation: ${org.name}  ·  property: ${prop.name}  ·  today there: ${TODAY}  ·  base currency: ${BASE}`)
 
 const existing = await get(`guests?select=id&organization_id=eq.${ORG}&limit=1`)
-if (existing.length && !RESET) {
+if (existing.length && !RESET && !process.argv.includes('--photos')) {
   console.error('This organisation already has bookings. Re-run with --reset to wipe its business data and seed again.')
   process.exit(1)
 }
@@ -90,6 +91,29 @@ if (rooms.length === 0) {
   console.error('Add rooms first (Rooms → Add room).')
   process.exit(1)
 }
+// ---------- room photos from scripts/demo-photos/room-<number>-<n>.jpg ----------
+async function seedPhotos() {
+  if (!existsSync('scripts/demo-photos')) return
+  const files = readdirSync('scripts/demo-photos').filter((f) => /^room-\d+-\d+\.jpe?g$/i.test(f)).sort()
+  await del('room_photos', `organization_id=eq.${ORG}`)
+  const rows = []
+  for (const f of files) {
+    const [, slot, pos] = f.match(/^room-(\d+)-(\d+)/)
+    const room = rooms[(+slot - 1) % rooms.length]
+    if (!room || +slot > rooms.length) continue
+    const path = `org/${ORG}/rooms/demo-${f}`
+    const res = await fetch(`${URL_}/storage/v1/object/tenant-files/${path}`, { method: 'POST', headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'image/jpeg', 'x-upsert': 'true' }, body: readFileSync(`scripts/demo-photos/${f}`) })
+    if (!res.ok) { console.log('  ! photo upload failed:', f, (await res.text()).slice(0, 120)); continue }
+    rows.push({ organization_id: ORG, property_id: PROP, room_id: room.id, url: path, position: +pos - 1 })
+  }
+  if (rows.length) await insert('room_photos', rows)
+}
+if (process.argv.includes('--photos')) {
+  await seedPhotos()
+  console.log('Done (photos only).')
+  process.exit(0)
+}
+
 const pms = await get(`payment_methods?select=*&organization_id=eq.${ORG}`)
 const pm = (name) => pms.find((p) => p.name === name) ?? pms[0]
 const accounts = await get(`accounts?select=*&organization_id=eq.${ORG}`)
@@ -378,6 +402,7 @@ rooms.forEach((room, i) => {
   extinguishers.push({ organization_id: ORG, property_id: PROP, room_id: room.id, location: 'Room', serial_number: `FX-${YEAR - 1}-${pad(int(100, 999), 3)}`, expiry_date: expiry, last_inspected: addDays(TODAY, -int(40, 200)), notes: i === 0 ? 'Needs replacing' : null })
 })
 extinguishers.push({ organization_id: ORG, property_id: PROP, room_id: rooms[0].id, location: 'Corridor', serial_number: `FX-${YEAR}-044`, expiry_date: addDays(TODAY, 300), last_inspected: addDays(TODAY, -30), notes: null })
+await seedPhotos()
 await insert('room_inventory', inventory)
 await insert('room_fire_extinguishers', extinguishers)
 
