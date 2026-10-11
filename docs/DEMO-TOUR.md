@@ -211,7 +211,7 @@ Do these before the audience arrives.
 5. Wait a few seconds. The filled fields are outlined: **Supplier**, **Document #**, **Payment date**, **Amount**, **Currency**, **Description**, **Category**. Say: always check the amount and the date against the paper.
 6. Tap **Attach this image**. The label changes to **Attached**. Say: scanning only reads; this button keeps the photo with the expense.
 7. Type "Demo" at the start of **Description**. Choose **Payment method** "Cash" and a **Category** if it is empty. Tick **Share with legal**. Tap **Save expense**. The message gives the automatic number.
-8. If scanning is not switched on (the message says it "is not configured"): say so, then type it by hand: **Category** "Maintenance", **Supplier** "Demo Hardware Store", **Amount** 1250, **Payment method** "Cash", **Paid by** "General Manager", **Description** "Demo: light bulbs", tick **Share with legal**, attach the photo under **Receipt or invoice** with **Choose file**, wait for "File uploaded", and tap **Save expense**.
+8. If scanning is not switched on (the message says it "is not switched on for this service yet"): say so, then type it by hand: **Category** "Maintenance", **Supplier** "Demo Hardware Store", **Amount** 1250, **Payment method** "Cash", **Paid by** "General Manager", **Description** "Demo: light bulbs", tick **Share with legal**, attach the photo under **Receipt or invoice** with **Choose file**, wait for "File uploaded", and tap **Save expense**.
 
 **Do: foreign currency**
 9. Tap **Add expense**. Set **Currency** to "EUR" and type **Amount** 100. Point at the note under the amount showing roughly what it is worth in THB. Tap **Cancel**.
@@ -742,7 +742,7 @@ No. The app does not block two bookings in the same room on the same dates. The 
 No. An invoice is a copy of the booking at the moment it was first created, and there is no button yet to make a fresh one. Record all payments first, then create the invoice.
 
 **Does receipt scanning always work?**
-It needs a paid reading service (an AI key) that the operator of the app switches on. Without it the screen says scanning "is not configured" and you add the expense by hand and attach the photo. When it is on, it reads photos, not PDFs, and it can make mistakes, so always check the amount and date. The limit is 60 scans per hour per person.
+It needs a paid reading service (an AI key) that the operator of the app switches on. Without it the screen says scanning "is not switched on for this service yet" and you add the expense by hand and attach the photo. When it is on, it reads photos, not PDFs, and it can make mistakes, so always check the amount and date. The limit is 60 scans per hour per person.
 
 **What happens when the 14-day trial ends?**
 At the moment nothing is locked or limited. The date is shown for information. Plans and prices are arranged by email.

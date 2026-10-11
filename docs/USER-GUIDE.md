@@ -1112,7 +1112,7 @@ A paperclip means a receipt or invoice is attached.
 - The reading is done by an automatic service and can make mistakes, especially with handwriting or faded paper. Always check the amount and date.
 - To throw away a scan, tap the X next to the picture (**Discard scan**). The fields that were filled stay as they are.
 - You can scan at most 60 receipts per hour.
-- Scanning has to be switched on by whoever runs the service. If it is not, you see a message that receipt scanning "is not configured". You can still add the expense by hand and attach the photo.
+- Scanning has to be switched on by whoever runs the service. If it is not, you see a message that receipt scanning "is not switched on for this service yet". You can still add the expense by hand and attach the photo.
 
 #### An expense in another currency
 1. In the form, choose the **Currency** the receipt is in.
