@@ -13,7 +13,7 @@ Sections that add "Demo" records and depend on each other: 7 adds the demo booki
 
 | No. | Section | Time | App link | What you show |
 |---|---|---|---|---|
-| 1 | [Public landing page](DEMO-TOUR.md#1-public-landing-page) | 3 min | [http://localhost:3000/](http://localhost:3000/) | What a new customer sees: features, how it works, mobile, pricing, FAQ. |
+| 1 | [Public landing page](DEMO-TOUR.md#1-public-landing-page) | 3 min | [http://localhost:3000/](http://localhost:3000/) | What a new customer sees: features, how it works, mobile, FAQ. |
 | 2 | [Sign up and sign in](DEMO-TOUR.md#2-sign-up-and-sign-in) | 2 min | [http://localhost:3000/signup](http://localhost:3000/signup) | The three-field sign-up, the sign-in screen and the honest "Forgot?" page. |
 | 3 | [Setup wizard (optional)](DEMO-TOUR.md#3-setup-wizard-optional) | 2 min | [http://localhost:3000/onboarding](http://localhost:3000/onboarding) | The one form that creates a workspace with rooms, accounts and payment methods. |
 | 4 | [App shell and navigation](DEMO-TOUR.md#4-app-shell-and-navigation) | 3 min | [http://localhost:3000/app](http://localhost:3000/app) | Sidebar groups, workspace box, currency switch and rate dot, phone bottom bar and More menu. |
@@ -71,7 +71,7 @@ Sections that add "Demo" records and depend on each other: 7 adds the demo booki
 | 31 | [Settings: People](DEMO-TOUR.md#31-settings-people) | 2 min | [http://localhost:3000/app/settings/team](http://localhost:3000/app/settings/team) | Members, the people limit of the plan, and an invitation link created and copied live. |
 | 32 | [Settings: Roles](DEMO-TOUR.md#32-settings-roles) | 2 min | [http://localhost:3000/app/settings/roles](http://localhost:3000/app/settings/roles) | The permission grid per role and a custom role. |
 | 33 | [Settings: Data](DEMO-TOUR.md#33-settings-data) | 3 min | [http://localhost:3000/app/settings/data](http://localhost:3000/app/settings/data) | Export of every list, the audit log, and the Reset data box (shown, not run). |
-| 34 | [Settings: Workspace and Billing](DEMO-TOUR.md#34-settings-workspace-and-billing) | 3 min | [http://localhost:3000/app/settings/workspace](http://localhost:3000/app/settings/workspace) | The workspace page (plan, people, properties, files, data) and the price per workspace and per person. |
+| 34 | [Settings: Workspace and Limits](DEMO-TOUR.md#34-settings-workspace-and-limits) | 3 min | [http://localhost:3000/app/settings/workspace](http://localhost:3000/app/settings/workspace) | The workspace page (people, properties, files, data) and the limits page. |
 
 ## Finish
 

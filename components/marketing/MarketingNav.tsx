@@ -7,12 +7,13 @@ import { APP_NAME } from '@/lib/brand'
 import { Logo } from '@/components/Logo'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { cn } from '@/lib/format'
+import { SHOW_PRICING, SIGNUP_CTA } from '@/lib/plans'
 
 const LINKS = [
   { href: '/#features', label: 'Features' },
   { href: '/#how', label: 'How it works' },
   { href: '/#mobile', label: 'Mobile' },
-  { href: '/#pricing', label: 'Pricing' },
+  ...(SHOW_PRICING ? [{ href: '/#pricing', label: 'Pricing' }] : []),
   { href: '/#faq', label: 'FAQ' },
 ]
 
@@ -44,7 +45,7 @@ export function MarketingNav() {
         <div className="ml-auto hidden items-center gap-2 md:flex">
           <ThemeToggle compact />
           <Link href="/login" className="btn-ghost btn-sm">Sign in</Link>
-          <Link href="/signup" className="btn-primary btn-sm">Start free trial</Link>
+          <Link href="/signup" className="btn-primary btn-sm">{SIGNUP_CTA}</Link>
         </div>
         <button className="icon-btn ml-auto md:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open}>
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -61,7 +62,7 @@ export function MarketingNav() {
           </nav>
           <div className="mt-3 flex items-center gap-2">
             <Link href="/login" className="btn-secondary flex-1" onClick={() => setOpen(false)}>Sign in</Link>
-            <Link href="/signup" className="btn-primary flex-1" onClick={() => setOpen(false)}>Start free trial</Link>
+            <Link href="/signup" className="btn-primary flex-1" onClick={() => setOpen(false)}>{SIGNUP_CTA}</Link>
             <ThemeToggle compact />
           </div>
         </div>

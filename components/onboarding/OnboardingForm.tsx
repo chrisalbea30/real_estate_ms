@@ -63,7 +63,7 @@ export function OnboardingForm({ hasOrg }: { hasOrg: boolean }) {
           <Building2 className="h-6 w-6" />
         </span>
         <h1 className="font-display text-3xl font-semibold text-ink">{hasOrg ? 'Create another workspace' : 'Set up your workspace'}</h1>
-        <p className="mt-1 text-sm text-muted">{hasOrg ? 'A new workspace has its own data, people and plan, and is priced separately.' : 'Takes a minute. Everything can be changed later in Settings.'}</p>
+        <p className="mt-1 text-sm text-muted">{hasOrg ? 'A new workspace has its own data, people and settings.' : 'Takes a minute. Everything can be changed later in Settings.'}</p>
         {hasOrg && (
           <p className="mt-2 text-sm">
             <Link href="/app" className="font-medium text-primary hover:underline">← Back to your workspace</Link>

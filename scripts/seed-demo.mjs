@@ -176,7 +176,7 @@ const settings = {
     signatory: inv.signatory || 'General Manager',
   },
   partner_hour_rate: BASE === 'THB' ? (org.settings.partner_hour_rate ?? 200) : org.settings.partner_hour_rate && org.settings.partner_hour_rate < 100 ? org.settings.partner_hour_rate : 6,
-  external_links: org.settings.external_links?.length ? org.settings.external_links : [{ label: 'Tourism board portal', url: 'https://example.com/tourism-portal' }],
+  external_links: org.settings.external_links ?? [],
 }
 await api('PATCH', `/rest/v1/organizations?id=eq.${ORG}`, { settings })
 

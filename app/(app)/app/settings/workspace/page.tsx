@@ -4,7 +4,7 @@ import { BadgeDollarSign, Building2, Database, FileText, Home, Plus, ShieldCheck
 import { pageContext } from '@/lib/page'
 import { createServerSupabase } from '@/lib/supabase/server'
 import { getStorageUsage, getWorkspaceUsage } from '@/lib/usage'
-import { formatBytes, priceFor, trialState, PLANS } from '@/lib/plans'
+import { formatBytes, priceFor, trialState, PLANS, SHOW_PRICING } from '@/lib/plans'
 import { formatDate, formatNumber, todayIn } from '@/lib/format'
 import { hasPerm } from '@/lib/permissions'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -84,7 +84,7 @@ export default async function WorkspacePage() {
     { href: '/app/settings/categories', icon: Tags, label: 'Categories', text: 'Your drop-down lists' },
     { href: '/app/settings/payments', icon: CreditCard, label: 'Payments', text: 'Payment methods and accounts' },
     { href: '/app/settings/data', icon: Database, label: 'Data', text: 'Export, change history, reset' },
-    { href: '/app/settings/billing', icon: BadgeDollarSign, label: 'Billing', text: 'Plan and price' },
+    { href: '/app/settings/billing', icon: BadgeDollarSign, label: SHOW_PRICING ? 'Billing' : 'Limits', text: SHOW_PRICING ? 'Plan and price' : 'People and properties allowed' },
   ]
 
   return (
@@ -95,7 +95,7 @@ export default async function WorkspacePage() {
         actions={
           canEdit && (
             <Link href={seatsFull ? '/app/settings/billing' : '/app/settings/team?invite=1'} className="btn-primary">
-              <UserPlus className="h-4 w-4" /> {seatsFull ? 'Add people to your plan' : 'Invite people'}
+              <UserPlus className="h-4 w-4" /> {seatsFull ? (SHOW_PRICING ? 'Add people to your plan' : 'Workspace is full') : 'Invite people'}
             </Link>
           )
         }
@@ -104,12 +104,14 @@ export default async function WorkspacePage() {
       <SettingsCard
         title={
           <span className="inline-flex flex-wrap items-center gap-2">
-            {plan.name}
-            {trial.onTrial && <Badge tone={trial.ended ? 'danger' : trial.daysLeft !== null && trial.daysLeft <= 3 ? 'warning' : 'info'}>{trial.ended ? 'Trial ended' : trial.daysLeft !== null ? `${trial.daysLeft} day${trial.daysLeft === 1 ? '' : 's'} left` : 'Trial'}</Badge>}
+            {SHOW_PRICING ? plan.name : 'What this workspace uses'}
+            {SHOW_PRICING && trial.onTrial && <Badge tone={trial.ended ? 'danger' : trial.daysLeft !== null && trial.daysLeft <= 3 ? 'warning' : 'info'}>{trial.ended ? 'Trial ended' : trial.daysLeft !== null ? `${trial.daysLeft} day${trial.daysLeft === 1 ? '' : 's'} left` : 'Trial'}</Badge>}
           </span>
         }
         description={
-          trial.onTrial
+          !SHOW_PRICING
+            ? 'People, properties, rooms and files in this workspace.'
+            : trial.onTrial
             ? `Free until ${ctx.org.trial_ends_at ? formatDate(ctx.org.trial_ends_at.slice(0, 10)) : 'the trial ends'}. With your ${usage.seatsUsed} ${usage.seatsUsed === 1 ? 'person' : 'people'} a paid plan would be ${starter ? `$${starter.total} a month on Starter` : ''}${starter && growth ? ' or ' : ''}${growth ? `$${growth.total} on Growth` : ''}, billed yearly.`
             : price
               ? `$${price.total} a month for this workspace, billed yearly${price.extraPeople > 0 ? ` ($${price.base} plus ${price.extraPeople} extra ${price.extraPeople === 1 ? 'person' : 'people'})` : ''}.`
@@ -117,28 +119,28 @@ export default async function WorkspacePage() {
         }
         actions={
           <Link href="/app/settings/billing" className="btn-secondary btn-sm">
-            <BadgeDollarSign className="h-4 w-4" /> Plan and price
+            <BadgeDollarSign className="h-4 w-4" /> {SHOW_PRICING ? 'Plan and price' : 'Limits'}
           </Link>
         }
       >
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Meter icon={Users} label="People" used={usage.seatsUsed} limit={usage.seatLimit} note={`${usage.members} ${usage.members === 1 ? 'member' : 'members'}, ${usage.pendingInvitations} invited and waiting`} />
-          <Meter icon={Home} label="Properties" used={usage.properties} limit={usage.propertyLimit} note={usage.propertyLimit == null ? 'No limit on your plan' : undefined} />
-          <Meter icon={DoorOpen} label="Rooms" used={usage.rooms} limit={null} note="Not limited on any plan" />
+          <Meter icon={Home} label="Properties" used={usage.properties} limit={usage.propertyLimit} note={usage.propertyLimit == null ? 'No limit' : undefined} />
+          <Meter icon={DoorOpen} label="Rooms" used={usage.rooms} limit={null} note="Not limited" />
           <Meter
             icon={HardDrive}
             label="Files"
             used={storage?.bytes ?? 0}
-            limit={storageLimitBytes}
+            limit={SHOW_PRICING ? storageLimitBytes : null}
             unit={storage ? formatBytes(storage.bytes) : 'Not available'}
-            note={storage ? `${formatNumber(storage.files)} files${plan.storageGb != null ? ` of ${plan.storageGb} GB` : ''}` : undefined}
+            note={storage ? `${formatNumber(storage.files)} files${SHOW_PRICING && plan.storageGb != null ? ` of ${plan.storageGb} GB` : ''}` : undefined}
           />
         </div>
       </SettingsCard>
 
       <SettingsCard
         title="People"
-        description="Everyone who can sign in to this workspace. Each person, and each invitation still waiting, counts towards your plan."
+        description="Everyone who can sign in to this workspace. Each person, and each invitation still waiting, counts towards the people limit."
         actions={
           <Link href="/app/settings/team" className="btn-secondary btn-sm">
             Manage people
@@ -165,7 +167,7 @@ export default async function WorkspacePage() {
 
       <SettingsCard
         title="Your data"
-        description="Records are not capped on any plan. Only files (receipts, documents, photos) count towards the storage allowance."
+        description={SHOW_PRICING ? 'Records are not capped on any plan. Only files (receipts, documents, photos) count towards the storage allowance.' : 'Everything recorded in this workspace. Records are never capped.'}
         actions={
           <Link href="/app/settings/data" className="btn-secondary btn-sm">
             <Database className="h-4 w-4" /> Export
@@ -205,7 +207,7 @@ export default async function WorkspacePage() {
         </div>
       </SettingsCard>
 
-      <SettingsCard title="Another business?" description="Each workspace keeps its own data, people and plan, and is priced separately. You switch between your workspaces from the name at the top of the menu.">
+      <SettingsCard title="Another business?" description="Each workspace keeps its own data, people and settings. You switch between your workspaces from the name at the top of the menu.">
         <Link href="/onboarding" className="btn-secondary">
           <Plus className="h-4 w-4" /> Create another workspace
         </Link>

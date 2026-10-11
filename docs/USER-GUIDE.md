@@ -2011,7 +2011,7 @@ While this box is showing:
 - On a phone: tap **More** (bottom right), then **Settings** under **Admin**.
 - Your own profile is always reachable, even if you cannot see **Settings**: on a computer click the person icon (**Your profile**) at the bottom of the sidebar; on a phone tap **More**, then **Profile**.
 
-Settings is split into eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data** and **Billing**. Opening Settings takes you to **Workspace**. People without permission for Settings see only **Your profile**.
+Settings is split into eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data** and **Limits**. Opening Settings takes you to **Workspace**. People without permission for Settings see only **Your profile**.
 
 **Who can see which pages**
 - **Profile** is open to everyone.
@@ -2027,23 +2027,23 @@ Settings is split into eleven pages: **Workspace**, **People**, **Your profile**
 
 **What it's for:** Seeing your whole workspace on one page: the plan, how many people, properties and files it uses, and shortcuts to manage everything.
 
-A workspace is one business with its own data, people and settings. You pay per workspace.
+A workspace is one business with its own data, people and settings.
 
 1. Open **Settings**. The **Workspace** page opens first. You can also tap the workspace box at the top of the menu and choose **Manage workspace**.
-2. Read the top box: your plan, the days left in a free trial, and the price for your number of people.
+2. Read the top box, **What this workspace uses**.
 3. Read the four meters:
-   **People** is members plus invitations still waiting, against the number your plan covers.
-   **Properties** is the number of active properties against the plan.
-   **Rooms** is not limited on any plan.
-   **Files** is the space used by receipts, documents and photos against the storage allowance.
+   **People** is members plus invitations still waiting, against the number allowed.
+   **Properties** is the number of active properties against the number allowed.
+   **Rooms** is not limited.
+   **Files** is the space used by receipts, documents and photos.
 4. Under **People**, see who can sign in. Tap **Manage people** to change roles or remove someone.
-5. Tap **Invite people** (top right) to invite someone new. If the plan is full the button reads **Add people to your plan** and opens Billing.
+5. Tap **Invite people** (top right) to invite someone new. If the workspace is full the button reads **Workspace is full** and opens Limits.
 6. Under **Your data**, see how many bookings, expenses, revenue lines, invoices and documents you have. Tap **Export** to download them.
 7. Under **Manage**, tap any card to open that settings page.
-8. Tap **Create another workspace** only for a separate business. It gets its own data, people and price.
+8. Tap **Create another workspace** only for a separate business. It gets its own data and people.
 
 **Good to know**
-- Bookings, expenses and other records are never capped. Only files count towards the storage allowance.
+- Bookings, expenses and other records are never capped.
 - A person is anyone who can sign in, plus invitations still waiting. Guests, suppliers and partners you only keep records about do not count.
 - Removing a member or cancelling a waiting invitation frees a place straight away.
 
@@ -2373,21 +2373,19 @@ Each role is a tab along the top. The number on the tab is how many members have
 - Reset only touches the organisation you are working in. Other organisations you belong to are not affected.
 - The **Audit log** shows the most recent changes (up to 500), newest first, with the time, what was changed, whether it was added (INSERT), changed (UPDATE) or deleted (DELETE), and by whom. It can be downloaded from its own export menu as Excel, CSV or Print / PDF. Names of data lists and fields appear here in their technical form (for example "todos" for Tasks).
 
-#### Billing
+#### Limits
 
-**What it's for:** Seeing which plan the workspace is on, what it costs, and how to change it.
+**What it's for:** Seeing how many people and properties your workspace can have, and asking for more.
 
-How the price works: you pay per workspace. Each plan includes a number of people, and each extra person adds a small monthly amount. Every plan includes every screen.
-
-1. Open **Settings**, then **Billing**.
-2. Read the top box: your plan, the days left in a trial, **People** used against the plan, **Properties**, and the price.
-3. Under **Plans**, set **People who will sign in** with the **+** and **-** buttons. The price of each plan changes to match. Switch between **Monthly** and **Yearly**. The cheapest plan for that number of people is marked "Best fit".
-4. To choose a plan, add people or extend a trial, tap **Contact us to change** or the button on a plan. Your email app opens with a ready-written message. Send it and we set it up.
+1. Open **Settings**, then **Limits**.
+2. Read **People**: how many are used out of how many are allowed. Members and invitations still waiting both count.
+3. Read **Properties**: how many active properties out of how many are allowed.
+4. To ask for more, tap **Contact us**. Your email app opens with a ready-written message. Send it and we raise the limit.
 
 **Good to know**
-- Online card payment is not available yet. Nothing is ever charged automatically.
-- You cannot change the plan yourself; only the service operator can.
-- When the workspace reaches the number of people in its plan, new invitations are refused until you free a place or add people.
+- Prices are not shown in the app. They are agreed with each customer.
+- You cannot change the limits yourself; only the service operator can.
+- When the workspace is full, new invitations are refused until you free a place or the limit is raised.
 
 ---
 

@@ -4,7 +4,7 @@ import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Briefcase, ChevronDown, LogOut, MoreHorizontal, Plus, RefreshCw, UserCircle2, UserPlus, Check } from 'lucide-react'
-import { trialState } from '@/lib/plans'
+import { SHOW_PRICING, trialState } from '@/lib/plans'
 import { APP_NAME } from '@/lib/brand'
 import { Logo } from '@/components/Logo'
 import { MODULES, MODULE_GROUPS, moduleForPath, type ModuleDef } from '@/lib/modules'
@@ -145,7 +145,7 @@ function ContextSwitcher({ className, compact }: { className?: string; compact?:
 function TrialNotice({ className }: { className?: string }) {
   const { org, today, can } = useApp()
   const t = trialState(org.plan, org.trial_ends_at ? org.trial_ends_at.slice(0, 10) : null, today)
-  if (!t.onTrial || t.daysLeft === null) return null
+  if (!SHOW_PRICING || !t.onTrial || t.daysLeft === null) return null
   const href = can('settings', 'view') ? '/app/settings/billing' : '/app/settings/profile'
   return (
     <Link href={href} className={cn('block rounded-xl border px-3 py-2 text-xs', t.ended ? 'border-danger/30 bg-danger-soft text-danger' : t.daysLeft <= 3 ? 'border-warning/30 bg-warning-soft text-warning' : 'border-line bg-surface-2 text-ink-2', className)}>

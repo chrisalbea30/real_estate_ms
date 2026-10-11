@@ -36,16 +36,15 @@ Do these before the audience arrives.
 
 **Time:** 3 min | **Go to:** [http://localhost:3000/](http://localhost:3000/)
 
-**Say:** This is what a new customer sees first. It explains the product in one page and lets them start a free trial without talking to anyone.
+**Say:** This is what a new customer sees first. It explains the product in one page and lets them create a workspace without talking to anyone.
 
 **Do:**
-1. Read the headline, then point at **Start free trial** and **See how it works**, and the line "14-day trial · No card required · Cancel anytime".
+1. Read the headline, then point at **Get started** and **See how it works**, and the line "Set up in a minute · No card required".
 2. In the top menu click **Features**. Show the six cards (bookings and invoices, receipts scanned into expenses, one revenue table, legal review, budgets and partner reporting, day-to-day operations).
 3. Click **How it works**. Read the four steps "Guest → Revenue → Legal → Partners". This is the idea of the whole demo: a booking is typed once.
 4. Click **Mobile**. Point at "Installs like an app", "Camera-first receipts", "Exports anywhere" and "Nothing lost". Scroll a little to the dark "Built to be trusted" block (data isolation, roles, encrypted vault, audit log).
-5. Click **Pricing**. Flip the **Monthly** / **Yearly** switch. Show **Starter**, **Growth** and **Enterprise** (**Talk to us**).
-6. Click **FAQ** and open one question, for example "Is this a booking engine or channel manager?" (the honest answer is no; it is the back office).
-7. Click the sun/moon icon in the top bar once to show the page also has a dark theme, then click it until it is light again.
+5. Click **FAQ** and open one question, for example "Is this a booking engine or channel manager?" (the honest answer is no; it is the back office).
+6. Click the sun/moon icon in the top bar once to show the page also has a dark theme, then click it until it is light again.
 
 ## 2. Sign up and sign in
 
@@ -108,7 +107,7 @@ Do these before the audience arrives.
 **Say:** This is the manager's morning screen. It shows what needs attention today without opening five different lists.
 
 **Do:**
-1. Point at the five tabs and the numbers on them. Point at the **Tourism board portal** button at the top right: a shortcut link the owner saved in Settings.
+1. Point at the five tabs and the numbers on them.
 2. Tab **Today's ops**: read **Check-ins today**, **Check-outs today**, **In-house**, **Available**. Below, show **Arriving today**, **Departing today** (amount still due or **Paid**), **TM30 pending** (in-house guests not yet registered with immigration) and **Fire safety** (Room 1 expired, Room 2 a few days left, Room 3 within the month).
 3. Tab **Bookings**: show **Arriving in 14 days** and **Departing in 7 days** with the balance to collect before they leave.
 4. Tab **Revenue & collection**: read **Revenue this month**, **Outstanding**, **Older than 90d**, **In-house receivables**. Show **By source this month** and the **Outstanding balances** list, biggest first. Tick **Include older** to add guests who left more than 90 days ago, then untick it.
@@ -423,7 +422,7 @@ Do these before the audience arrives.
 **Say:** Settings has ten pages, listed on the left. The first one is personal and is open to everyone, whatever their role.
 
 **Do:**
-1. Point at the eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data**, **Billing**.
+1. Point at the eleven pages: **Workspace**, **People**, **Your profile**, **Organisation**, **Invoices**, **Categories**, **Properties**, **Payments**, **Roles**, **Data**, **Limits**.
 2. Show **Display name** (**Full name**) and the locked **Email**.
 3. Show **Change password**: **Current password**, **New password**, **Confirm new password**, **Update password**. Do not change it.
 4. Under **Appearance** show **Light**, **Dark**, **Auto**.
@@ -441,7 +440,7 @@ Do these before the audience arrives.
 3. Under **Tax and fiscal year**, show **VAT rate (%)**, the **Prices include VAT** switch and **Fiscal year starts in**.
 4. Under **Alerts**, show **Fire extinguisher warning (days before expiry)**, **Arrivals window (days)** and **Departures window (days)**.
 5. Under **Partners**, show **Partner hour rate**.
-6. Under **External links**, show "Tourism board portal" (the button seen on Operations and Guests) and **Add link**.
+6. Under **External links**, show **Add link**. Say: a link saved here, for example a government portal, appears as a button on Operations and Guests.
 7. Point at **Save changes**: it stays grey until something is changed. Change nothing.
 
 ## 27. Settings: Invoices
@@ -501,13 +500,13 @@ Do these before the audience arrives.
 **Say:** You decide who gets in and with which role. Inviting someone takes ten seconds, and you always see how many people your plan covers.
 
 **Do:**
-1. Read the line under the title: members, invitations waiting, and "N of 5 people on Free trial". Say: every member and every invitation still waiting counts as one person on the plan.
+1. Read the line under the title: members, invitations waiting, and "N of 5 people". Say: every member and every invitation still waiting counts as one person.
 2. Show the two boxes **Members** and **Invitations**. Your own row is marked **You**. Point at the **Role** drop-down, the **Active** switch (off means **Suspended**) and the bin icon (**Remove from organisation**).
 3. Tap **Invite people**. **Email** "reception@seaview.com", **Role** "Staff". Tap **Create invitation**.
 4. In **Share the invitation**, point at the **Invitation link**. Tap **Copy**. Point at **Open in your email app**. Tap **Done**.
 5. Say honestly: the app does not send the invitation. You paste the link into a message yourself. It works once and for 7 days.
 6. Under **Invitations**, show the status, the **Expires** column, the copy icon (**Show link**), the circular arrow (**Resend (new link)**) and the stop icon (**Revoke**).
-7. Say: when the plan is full, **Invite people** switches off and a yellow box explains how to free a place or add people to the plan. The same **Invite people** button is at the bottom of the sidebar and in the workspace box at the top of the menu.
+7. Say: when the workspace is full, **Invite people** switches off and a yellow box explains how to free a place or ask for a higher limit. The same **Invite people** button is at the bottom of the sidebar and in the workspace box at the top of the menu.
 
 **Clean up:** keep the invitation; it is used in section 35. If you skip section 35, tap **Revoke** and confirm.
 
@@ -539,20 +538,20 @@ Do these before the audience arrives.
 4. Use the **All tables** drop-down to choose "guests" and find the demo booking being added, changed and deleted. Say: list names appear in technical form here.
 5. Scroll to the red **Reset data** box and read its description ("Danger zone"). Show the tick boxes, **Select all**, the box where the organisation name must be typed, and the grey **Delete selected data** button. **Do not tick anything and do not run it.** Say: it deletes permanently, only an Owner sees it, and it never touches settings, rooms, team or roles.
 
-## 34. Settings: Workspace and Billing
+## 34. Settings: Workspace and Limits
 
 **Time:** 3 min | **Go to:** [http://localhost:3000/app/settings/workspace](http://localhost:3000/app/settings/workspace)
 
-**Say:** One page shows what this workspace is: its plan, its people, its properties and its data. The price is simple: one price per workspace, with people included, and a small amount for each extra person.
+**Say:** One page shows what this workspace is: its people, its properties and its data.
 
 **Do:**
-1. On **Workspace**, read the top box: the plan (**Free trial**), the days left, and what a paid plan would cost for your number of people.
-2. Read the four meters: **People** (members plus invitations waiting, against the plan), **Properties**, **Rooms** (not limited on any plan) and **Files** (receipts, documents and photos against the storage allowance).
+1. On **Workspace**, read the top box, **What this workspace uses**.
+2. Read the four meters: **People** (members plus invitations waiting, against the limit), **Properties**, **Rooms** (not limited) and **Files** (receipts, documents and photos).
 3. Show the **People** box and **Manage people**. Point at **Invite people** at the top right.
-4. Show **Your data**: the number of bookings, expenses, revenue lines, invoices and documents. Say: records are not capped on any plan, the data is theirs, and **Export** gets all of it out.
-5. Show **Manage** (shortcuts to every settings page) and **Create another workspace**. Say: a second business is a second workspace, priced separately.
-6. Tap **Plan and price** to open **Billing**. Under **Plans**, tap the **+** next to **People who will sign in** and watch the prices change. Switch **Monthly** / **Yearly**. Point at "Best fit".
-7. Point at **Contact us to change**. Say honestly: there is no card form, nothing is charged automatically, and the button opens an email.
+4. Show **Your data**: the number of bookings, expenses, revenue lines, invoices and documents. Say: records are never capped, the data is theirs, and **Export** gets all of it out.
+5. Show **Manage** (shortcuts to every settings page) and **Create another workspace**. Say: a second business is a second workspace with its own data and people.
+6. Tap **Limits**. It shows how many people and properties this workspace can have. Point at **Contact us**: it opens an email asking us to raise a limit.
+7. If asked about price: say pricing is agreed with each customer and is not shown in the app.
 8. Tap the workspace box at the top of the sidebar: it lists your workspaces and properties, and holds **Manage workspace**, **Invite people** and **Create another workspace**.
 
 ## 35. Roles demo
@@ -611,7 +610,7 @@ Do these before the audience arrives.
 **Do:**
 1. Stay on Overview while you recap the flow: Guest → Revenue → Legal → Partners.
 2. Repeat the three honest limits before they ask: no automatic emails, no online payment, no email password reset yet.
-3. Offer the next step: a free trial workspace with their own rooms at [http://localhost:3000/signup](http://localhost:3000/signup), set up in about a minute.
+3. Offer the next step: a workspace with their own rooms at [http://localhost:3000/signup](http://localhost:3000/signup), set up in about a minute.
 4. Take questions. Use Appendix B.
 5. After the audience has left, check the clean-up list: no "Demo" booking, expense, revenue line, contribution, document, role or team member remains. Or simply regenerate the data.
 
@@ -624,7 +623,7 @@ Every screen, tab and feature, and the section where it is shown.
 | Feature, screen or tab | Section |
 |---|---|
 | **Public and account** | |
-| Landing page: hero, Features, How it works, Mobile, security block, Pricing, FAQ | 1 |
+| Landing page: hero, Features, How it works, Mobile, security block, FAQ | 1 |
 | Create an account (sign up) | 2 |
 | Sign in, sign out | 2, 4, 25 |
 | Forgot password page (honest notice) | 2 |
@@ -725,7 +724,7 @@ Every screen, tab and feature, and the section where it is shown.
 | Data: Audit log | 33 |
 | Data: Reset data (shown, not run) | 33 |
 | Workspace: plan, people, properties, rooms and files meters, your data, manage shortcuts, create another workspace | 34 |
-| Billing: plan, trial, price per workspace and per person, plan calculator, Contact us to change | 34 |
+| Limits: people and properties allowed, Contact us (prices are hidden for now) | 34 |
 | Roles and who can see what (live with a Staff account) | 32, 35 |
 
 ---
@@ -737,8 +736,8 @@ Short, honest answers.
 **Does it send emails?**
 No. The app sends no invoices, invitations, reminders or password resets by itself. For an invoice or an invitation it opens a ready-written message in your own email app, or gives you a link to copy, and you send it.
 
-**How is the price worked out?**
-Per workspace. Each plan includes a number of people, and each extra person adds a small monthly amount. Every plan includes every screen. Members and invitations still waiting count as people; guests, suppliers and partners you only record do not. Bookings and other records are not capped; only files count towards a storage allowance.
+**What does it cost?**
+Pricing is agreed with each customer and is not shown in the app or on the website for now. A workspace has a limit on people and properties, shown under Settings, Limits, and we raise it on request.
 
 **Can guests pay online? Can I pay my subscription by card?**
 Not today. Online payment is not connected. Guest payments are recorded by hand on the booking. The Billing page shows the plans and opens an email to us; nothing is charged automatically.
@@ -755,8 +754,8 @@ No. An invoice is a copy of the booking at the moment it was first created, and 
 **Does receipt scanning always work?**
 It needs a paid reading service (an AI key) that the operator of the app switches on. Without it the screen says scanning "is not switched on for this service yet" and you add the expense by hand and attach the photo. When it is on, it reads photos, not PDFs, and it can make mistakes, so always check the amount and date. The limit is 60 scans per hour per person.
 
-**What happens when the 14-day trial ends?**
-At the moment nothing is locked or limited. The date is shown for information. Plans and prices are arranged by email.
+**Is there a trial period?**
+Not as such. A new workspace is free to set up and use while pricing is being agreed with each customer. Nothing is charged automatically.
 
 **Can other customers see my data?**
 No. Every record belongs to one organisation and the database itself keeps organisations apart. Files are private and opened through short-lived links. Stored log-ins are encrypted. Inside your organisation, roles decide who sees which screen.

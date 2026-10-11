@@ -8,6 +8,17 @@
 // PRICES ARE PLACEHOLDERS: change the numbers here and they change everywhere.
 // Keep app_plan_limits() in migrations/0003_plans_and_limits.sql in step.
 
+/**
+ * Master switch for everything price-related. While false: no prices, plan
+ * names, plan cards or trial countdown are shown anywhere (landing page,
+ * Billing, Workspace, menus). The limits themselves (people, properties) keep
+ * working. Set to true to bring pricing back exactly as it was.
+ */
+export const SHOW_PRICING = false
+
+/** Label of the sign-up buttons. */
+export const SIGNUP_CTA = SHOW_PRICING ? 'Start free trial' : 'Get started'
+
 export type PlanKey = 'trial' | 'starter' | 'growth' | 'enterprise'
 
 export interface Plan {

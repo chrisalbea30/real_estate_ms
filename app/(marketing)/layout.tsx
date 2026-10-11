@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { APP_NAME, APP_TAGLINE } from '@/lib/brand'
 import { Logo } from '@/components/Logo'
 import { MarketingNav } from '@/components/marketing/MarketingNav'
+import { SHOW_PRICING, SIGNUP_CTA } from '@/lib/plans'
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -22,7 +23,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <ul className="space-y-2 text-sm text-ink-2">
               <li><Link href="/#features" className="hover:text-primary">Features</Link></li>
               <li><Link href="/#how" className="hover:text-primary">How it works</Link></li>
-              <li><Link href="/#pricing" className="hover:text-primary">Pricing</Link></li>
+              {SHOW_PRICING && <li><Link href="/#pricing" className="hover:text-primary">Pricing</Link></li>}
               <li><Link href="/#faq" className="hover:text-primary">FAQ</Link></li>
             </ul>
           </div>
@@ -30,7 +31,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             <h4 className="label">Account</h4>
             <ul className="space-y-2 text-sm text-ink-2">
               <li><Link href="/login" className="hover:text-primary">Sign in</Link></li>
-              <li><Link href="/signup" className="hover:text-primary">Start free trial</Link></li>
+              <li><Link href="/signup" className="hover:text-primary">{SIGNUP_CTA}</Link></li>
               <li><Link href="/forgot-password" className="hover:text-primary">Reset password</Link></li>
             </ul>
           </div>

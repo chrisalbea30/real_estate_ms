@@ -8,7 +8,7 @@ import { SettingsCard, Note } from '@/components/settings/SettingsCard'
 import { PlanCards } from '@/components/plans/PlanCards'
 import { APP_NAME, SUPPORT_EMAIL } from '@/lib/brand'
 import { formatDate } from '@/lib/format'
-import { PLANS, priceFor, type PlanKey } from '@/lib/plans'
+import { PLANS, SHOW_PRICING, priceFor, type PlanKey } from '@/lib/plans'
 
 export interface BillingProps {
   orgId: string
@@ -28,6 +28,40 @@ export function BillingPanel({ orgId, orgName, planKey, trial, seats, properties
     const subject = encodeURIComponent(`${APP_NAME}: plan for ${orgName}`)
     const body = encodeURIComponent(`Hello,\n\nWorkspace: "${orgName}" (id ${orgId})\nCurrent plan: ${plan.name}\nPeople now: ${seats.used} (${seats.members} members, ${seats.waiting} invitations waiting)\n\nPlan we would like: ${wanted}\nPeople we need: ${people}\n\nThanks`)
     return `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`
+  }
+
+  if (!SHOW_PRICING) {
+    const subject = encodeURIComponent(`${APP_NAME}: limits for ${orgName}`)
+    const body = encodeURIComponent(`Hello,\n\nWorkspace: "${orgName}" (id ${orgId})\nPeople now: ${seats.used}${seats.limit == null ? '' : ` of ${seats.limit}`}\nProperties now: ${properties.used}${properties.limit == null ? '' : ` of ${properties.limit}`}\n\nWhat we need: \n\nThanks`)
+    return (
+      <div>
+        <PageHeader title="Limits" subtitle="How many people and properties this workspace can have." />
+        <SettingsCard
+          title="This workspace"
+          description="Members and invitations that are still waiting both count as people."
+          actions={
+            <a href={`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`} className="btn-primary btn-sm">
+              <Mail className="h-4 w-4" /> Contact us
+            </a>
+          }
+        >
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+            <div>
+              <dt className="text-xs text-muted">People</dt>
+              <dd className="font-display text-2xl font-semibold tabular">{seats.limit == null ? seats.used : `${seats.used} of ${seats.limit}`}</dd>
+              <dd className="text-xs text-muted">{seats.members} members, {seats.waiting} invited and waiting</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted">Properties</dt>
+              <dd className="font-display text-2xl font-semibold tabular">{properties.limit == null ? properties.used : `${properties.used} of ${properties.limit}`}</dd>
+            </div>
+          </dl>
+          <Note className="mt-4">
+            Need more people or another property? Write to <span className="font-medium select-all">{SUPPORT_EMAIL}</span> and we will raise the limit for you. See everything this workspace uses on the <Link href="/app/settings/workspace" className="font-medium underline">Workspace</Link> page.
+          </Note>
+        </SettingsCard>
+      </div>
+    )
   }
 
   return (

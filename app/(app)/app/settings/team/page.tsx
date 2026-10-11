@@ -4,6 +4,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import { TeamClient, type TeamMember, type RoleLite } from '@/components/settings/TeamClient'
 import type { Invitation } from '@/lib/types'
 import { getWorkspaceUsage } from '@/lib/usage'
+import { SHOW_PRICING } from '@/lib/plans'
 
 export const metadata: Metadata = { title: 'People' }
 
@@ -43,5 +44,5 @@ export default async function TeamSettingsPage({ searchParams }: { searchParams:
     }
   })
 
-  return <TeamClient members={team} roles={(roles.data ?? []) as RoleLite[]} invitations={(invitations.data ?? []) as Invitation[]} currentUserId={ctx.userId} seats={{ used: usage.seatsUsed, limit: usage.seatLimit }} planName={usage.plan.name} openInvite={sp.invite === '1'} />
+  return <TeamClient members={team} roles={(roles.data ?? []) as RoleLite[]} invitations={(invitations.data ?? []) as Invitation[]} currentUserId={ctx.userId} seats={{ used: usage.seatsUsed, limit: usage.seatLimit }} planName={SHOW_PRICING ? usage.plan.name : ''} openInvite={sp.invite === '1'} />
 }

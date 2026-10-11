@@ -5,7 +5,7 @@ import { APP_NAME, APP_TAGLINE } from '@/lib/brand'
 import { HeroMock } from '@/components/marketing/HeroMock'
 import { Pricing } from '@/components/marketing/Pricing'
 import { FAQ } from '@/components/marketing/FAQ'
-import { TRIAL_DAYS } from '@/lib/plans'
+import { SHOW_PRICING, SIGNUP_CTA, TRIAL_DAYS } from '@/lib/plans'
 
 export const metadata: Metadata = {
   title: `${APP_NAME} · ${APP_TAGLINE}`,
@@ -46,13 +46,13 @@ export default function LandingPage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/signup" className="btn bg-gold-400 text-burgundy-950 hover:bg-gold-300 px-6 text-base">
-                Start free trial <ArrowRight className="h-4 w-4" />
+                {SIGNUP_CTA} <ArrowRight className="h-4 w-4" />
               </Link>
               <Link href="#how" className="btn border border-white/25 bg-white/5 text-white hover:bg-white/10 px-6 text-base">
                 See how it works
               </Link>
             </div>
-            <p className="mt-4 text-sm text-white/55">{TRIAL_DAYS}-day free trial · No card required · Priced per workspace and per person</p>
+            <p className="mt-4 text-sm text-white/55">{SHOW_PRICING ? `${TRIAL_DAYS}-day free trial · No card required · Priced per workspace and per person` : 'Set up in a minute · No card required'}</p>
           </div>
           <div className="animate-in [animation-delay:120ms]">
             <HeroMock />
@@ -186,7 +186,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
+      {/* Pricing (hidden while SHOW_PRICING is false) */}
+      {SHOW_PRICING && (
       <section id="pricing" className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-primary">Pricing</p>
@@ -197,6 +198,7 @@ export default function LandingPage() {
           <Pricing />
         </div>
       </section>
+      )}
 
       {/* FAQ */}
       <section id="faq" className="bg-surface border-y border-line">
@@ -219,7 +221,7 @@ export default function LandingPage() {
           <p className="mx-auto mt-3 max-w-xl text-white/70">Create your workspace in a minute, add your rooms and record the first booking from your phone tonight.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/signup" className="btn bg-gold-400 text-burgundy-950 hover:bg-gold-300 px-6 text-base">
-              Start free trial <ArrowRight className="h-4 w-4" />
+              {SIGNUP_CTA} <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/login" className="btn border border-white/25 bg-white/5 text-white hover:bg-white/10 px-6 text-base">
               Sign in

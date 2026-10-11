@@ -1,7 +1,7 @@
 import { ChevronDown } from 'lucide-react'
-import { PLANS, TRIAL_DAYS } from '@/lib/plans'
+import { PLANS, SHOW_PRICING, TRIAL_DAYS } from '@/lib/plans'
 
-const ITEMS = [
+const PRICING_ITEMS = [
   {
     q: 'How is the price worked out?',
     a: `You pay per workspace, and each plan includes a number of people: ${PLANS.starter.seats} on Starter and ${PLANS.growth.seats} on Growth. If more people need to sign in, each extra person is added for a small monthly amount. Every plan includes every screen, so you never pay more to unlock a feature.`,
@@ -14,9 +14,17 @@ const ITEMS = [
     q: 'How does the free trial work?',
     a: `You get ${TRIAL_DAYS} days with everything switched on and up to ${PLANS.trial.seats} people, without giving a card. When you want to continue, tell us which plan you want and we set it up. Online card payment is not available yet, so nothing is ever charged automatically.`,
   },
+]
+
+const ITEMS = [
+  ...(SHOW_PRICING ? PRICING_ITEMS : []),
   {
     q: 'Who owns the data, and can we get it out?',
-    a: 'You do. Bookings, expenses and other records are not capped on any plan. You can export every list to Excel, CSV or JSON at any time. Only files such as receipts, documents and photos count towards a storage allowance.',
+    a: 'You do. You can export every list to Excel, CSV or JSON at any time, and your records are never capped.',
+  },
+  {
+    q: 'What is a workspace?',
+    a: 'One business with its own data, team and settings. You invite the people who should sign in and give each one a role. Guests, suppliers and partners you only keep records about do not need an account.',
   },
   {
     q: 'Is this a booking engine or channel manager?',
@@ -32,11 +40,11 @@ const ITEMS = [
   },
   {
     q: 'Can my accountant and lawyer use it?',
-    a: 'Yes. Invite them with the Finance or Legal role. They see only what is shared with them, can mark expenses as accepted, needing clarification or rejected, and export the legal report for any month. Each of them counts as one person on your plan.',
+    a: 'Yes. Invite them with the Finance or Legal role. They see only what is shared with them, can mark expenses as accepted, needing clarification or rejected, and export the legal report for any month.',
   },
   {
     q: 'Can I run more than one property?',
-    a: `A workspace can hold several properties, each with its own rooms, timezone and calendar: ${PLANS.starter.properties} on Starter and up to ${PLANS.growth.properties} on Growth. Finance and partner reporting is kept for the workspace as a whole. A separate business is better as its own workspace.`,
+    a: 'A workspace can hold several properties, each with its own rooms, timezone and calendar. Finance and partner reporting is kept for the workspace as a whole. A separate business is better as its own workspace.',
   },
   {
     q: 'Is my data kept apart from other customers?',

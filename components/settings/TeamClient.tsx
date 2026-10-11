@@ -183,10 +183,10 @@ export function TeamClient({ members, roles, invitations, currentUserId, seats, 
     <div>
       <PageHeader
         title="People"
-        subtitle={`${members.length} member${members.length === 1 ? '' : 's'} · ${pendingCount} invitation${pendingCount === 1 ? '' : 's'} waiting · ${seats.limit == null ? `${seats.used} people` : `${seats.used} of ${seats.limit} people on ${planName}`}`}
+        subtitle={`${members.length} member${members.length === 1 ? '' : 's'} · ${pendingCount} invitation${pendingCount === 1 ? '' : 's'} waiting · ${seats.limit == null ? `${seats.used} people` : `${seats.used} of ${seats.limit} people${planName ? ` on ${planName}` : ''}`}`}
         actions={
           editable && (
-            <button className="btn-primary" onClick={() => setInviteOpen(true)} disabled={full} title={full ? 'Your plan is full' : undefined}>
+            <button className="btn-primary" onClick={() => setInviteOpen(true)} disabled={full} title={full ? 'This workspace is full' : undefined}>
               <UserPlus className="h-4 w-4" /> Invite people
             </button>
           )
@@ -195,7 +195,7 @@ export function TeamClient({ members, roles, invitations, currentUserId, seats, 
 
       {full && (
         <div className="mb-4 rounded-xl border border-warning/30 bg-warning-soft px-4 py-3 text-sm text-warning">
-          This workspace uses all {seats.limit} people included in its plan. Members and invitations that are still waiting both count. Remove someone or cancel a waiting invitation, or <a href="/app/settings/billing" className="font-semibold underline">add people to your plan</a>.
+          This workspace has reached its limit of {seats.limit} people. Members and invitations that are still waiting both count. Remove someone or cancel a waiting invitation, or <a href="/app/settings/billing" className="font-semibold underline">ask us to raise the limit</a>.
         </div>
       )}
 

@@ -178,7 +178,7 @@ export async function savePropertyAction(input: PropertyInput): Promise<ActionRe
       const limit = planOf(ctx.org.plan).properties
       const activeOthers = ctx.properties.filter((p) => p.id !== data.id && p.active).length
       if (limit != null && activeOthers + 1 > limit) {
-        throw new AppError(`The ${planOf(ctx.org.plan).name} plan allows ${limit} active ${limit === 1 ? 'property' : 'properties'} per workspace. Ask us to change your plan under Settings, Billing.`)
+        throw new AppError(`This workspace can have ${limit} active ${limit === 1 ? 'property' : 'properties'}. Contact us to raise the limit.`)
       }
     }
     const payload = { name: data.name, timezone: data.timezone, address: data.address || null, active: data.active }
@@ -291,7 +291,7 @@ async function insertInvitation(supabase: ServerSupabase, ctx: AppContext, email
   // People limit of the plan: members plus invitations still waiting count as people.
   const usage = await getWorkspaceUsage(ctx)
   if (usage.seatLimit != null && usage.seatsUsed + 1 > usage.seatLimit) {
-    throw new AppError(`This workspace has reached its limit of ${usage.seatLimit} people on the ${usage.plan.name} plan. Remove someone, cancel a waiting invitation, or add people to your plan under Settings, Billing.`)
+    throw new AppError(`This workspace has reached its limit of ${usage.seatLimit} people. Remove someone, cancel a waiting invitation, or contact us to raise the limit.`)
   }
   const row = must(
     await supabase.from('invitations').insert({ organization_id: ctx.org.id, email, role_id: roleId, invited_by: ctx.userId }).select().single(),
